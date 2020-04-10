@@ -1,13 +1,11 @@
 {
-  "name": "datta-able-rv18.0.4",
+  "name": "cafocc-cms",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://lite.codedthemes.com/datta-able/react/default/",
   "dependencies": {
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
     "fsevents": "^2.1.2",
-    "google-maps-react": "^2.0.2",
     "jquery": "^3.4.0",
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
