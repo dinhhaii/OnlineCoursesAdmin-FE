@@ -1,7 +1,7 @@
 import React from 'react';
 import {Row, Col, Card, Form, Button, InputGroup, FormControl, DropdownButton, Dropdown} from 'react-bootstrap';
 
-import Aux from "../../hoc/_Aux";
+import Aux from "../../../hoc/_Aux";
 
 class FormsElements extends React.Component {
 

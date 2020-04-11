@@ -6,9 +6,9 @@ import {
     Button
 } from 'react-bootstrap';
 
-import Aux from "../../../hoc/_Aux";
-import Card from "../../../App/components/MainCard";
-import UcFirst from "../../../App/components/UcFirst";
+import Aux from "../../../../hoc/_Aux";
+import Card from "../../MainCard";
+import UcFirst from "../../UcFirst";
 
 class Badges extends Component {
     render() {

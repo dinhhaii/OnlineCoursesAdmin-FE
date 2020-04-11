@@ -5,24 +5,21 @@ window.jQuery = $;
 window.$ = $;
 global.jQuery = $;
 
-const DashboardDefault = React.lazy(() => import('./Demo/Dashboard/Default'));
+const DashboardDefault = React.lazy(() => import('./App/components/Dashboard/Default'));
 
-const UIBasicButton = React.lazy(() => import('./Demo/UIElements/Basic/Button'));
-const UIBasicBadges = React.lazy(() => import('./Demo/UIElements/Basic/Badges'));
-const UIBasicBreadcrumbPagination = React.lazy(() => import('./Demo/UIElements/Basic/BreadcrumbPagination'));
+const UIBasicButton = React.lazy(() => import('./App/components/UIElements/Basic/Button'));
+const UIBasicBadges = React.lazy(() => import('./App/components/UIElements/Basic/Badges'));
+const UIBasicBreadcrumbPagination = React.lazy(() => import('./App/components/UIElements/Basic/BreadcrumbPagination'));
 
-const UIBasicCollapse = React.lazy(() => import('./Demo/UIElements/Basic/Collapse'));
-const UIBasicTabsPills = React.lazy(() => import('./Demo/UIElements/Basic/TabsPills'));
-const UIBasicBasicTypography = React.lazy(() => import('./Demo/UIElements/Basic/Typography'));
+const UIBasicCollapse = React.lazy(() => import('./App/components/UIElements/Basic/Collapse'));
+const UIBasicTabsPills = React.lazy(() => import('./App/components/UIElements/Basic/TabsPills'));
+const UIBasicBasicTypography = React.lazy(() => import('./App/components/UIElements/Basic/Typography'));
 
-const FormsElements = React.lazy(() => import('./Demo/Forms/FormsElements'));
+const FormsElements = React.lazy(() => import('./App/components/Forms/FormsElements'));
 
-const BootstrapTable = React.lazy(() => import('./Demo/Tables/BootstrapTable'));
+const BootstrapTable = React.lazy(() => import('./App/components/Tables/BootstrapTable'));
 
-const Nvd3Chart = React.lazy(() => import('./Demo/Charts/Nvd3Chart/index'));
-
-const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
-const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
+const Nvd3Chart = React.lazy(() => import('./App/components/Charts/Nvd3Chart/index'));
 
 const routes = [
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
@@ -34,9 +31,7 @@ const routes = [
     { path: '/basic/typography', exact: true, name: 'Basic Typography', component: UIBasicBasicTypography },
     { path: '/forms/form-basic', exact: true, name: 'Forms Elements', component: FormsElements },
     { path: '/tables/bootstrap', exact: true, name: 'Bootstrap Table', component: BootstrapTable },
-    { path: '/charts/nvd3', exact: true, name: 'Nvd3 Chart', component: Nvd3Chart },
-    { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
-    { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
+    { path: '/charts/nvd3', exact: true, name: 'Nvd3 Chart', component: Nvd3Chart }
 ];
 
 export default routes;

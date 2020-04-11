@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Tabs, Tab, Nav } from 'react-bootstrap';
 
-import Aux from "../../../hoc/_Aux";
+import Aux from "../../../../hoc/_Aux";
 
 class TabsPills extends React.Component {
     render() {

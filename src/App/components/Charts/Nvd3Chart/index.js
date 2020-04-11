@@ -1,7 +1,7 @@
 import React from 'react';
 import {Row, Col, Card} from 'react-bootstrap';
 
-import Aux from "../../../hoc/_Aux/index";
+import Aux from "../../../../hoc/_Aux/index";
 import LineChart from "./LineChart";
 import BarDiscreteChart from "./BarDiscreteChart";
 import MultiBarChart from "./MultiBarChart";

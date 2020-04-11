@@ -6,9 +6,9 @@ import {
     Pagination
 } from 'react-bootstrap';
 
-import Aux from "../../../hoc/_Aux";
-import Card from "../../../App/components/MainCard";
-import DEMO from "../../../store/constant";
+import Aux from "../../../../hoc/_Aux";
+import Card from "../../MainCard";
+import DEMO from "../../../../store/constant";
 
 class BreadcrumbPagination extends Component {
     render() {
