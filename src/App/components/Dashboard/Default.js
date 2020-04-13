@@ -10,6 +10,7 @@ import avatar3 from '../../../assets/images/user/avatar-3.jpg';
 
 class Dashboard extends React.Component {
     render() {
+
         const tabContent = (
             <Aux>
                 <div className="media friendlist-box align-items-center justify-content-center m-b-20">

@@ -21,6 +21,13 @@ function getCurrentUser(user) {
   };
 }
 
+function receiveLogout() {
+  return {
+    type: types.RECEIVE_LOGOUT
+  };
+}
+
+// Login
 export function login(email, password) {
   return function(dispatch) {
     dispatch(requestLogin());
@@ -35,12 +42,12 @@ export function login(email, password) {
       }
     })
       .then(response => response.json())
-      .then(json => {
-        if (json.user !== false) {
-          localStorage.setItem('authToken', json.token);
-          dispatch(getCurrentUser(json));
+      .then(data => {
+        if (data.user !== false) {
+          localStorage.setItem('authToken', data.token);
+          dispatch(getCurrentUser(data));
         }
-        dispatch(receiveLogin(json));
+        dispatch(receiveLogin(data));
       })
       .catch(() => {
         dispatch(receiveLogin(null));
@@ -48,12 +55,36 @@ export function login(email, password) {
   };
 }
 
+// Authorization
+export function authorizeUser() {
+  const authToken = localStorage.getItem('authToken');
+  if (authToken) {
+    return function(dispatch) {
+      return fetch(`${SERVER_URL}/profile`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      })
+        .then(response => response.json() )
+        .then(user => {
+          dispatch(getCurrentUser(user));
+        })
+        .catch((error) => {
+          dispatch(getCurrentUser(null));
+        });
+    };
+  }
+  return function(dispatch) {
+    dispatch(getCurrentUser(null));
+  };
+}
 
-
+// Logout
 export function logout() {
   localStorage.removeItem('authToken');
 
   return function(dispatch) {
+    dispatch(receiveLogout());
     dispatch(getCurrentUser(null));
   };
 }

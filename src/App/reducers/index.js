@@ -1,9 +1,12 @@
 import { combineReducers } from 'redux';
-import * as userState from './user';
-import * as reducer from './reducer';
+import userState from './user';
+import reducer from './reducer';
 
-const allReducers = Object.assign(userState, reducer);
+// const allReducers = Object.assign(userState, reducer);
 
-const myReducer = combineReducers(allReducers);
+const myReducer = combineReducers({
+  userState,
+  reducer
+})
 
 export default myReducer;

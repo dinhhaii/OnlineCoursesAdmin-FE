@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import {Dropdown} from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import ChatList from './ChatList';
 import Aux from "../../../../../hoc/_Aux";
 import DEMO from "../../../../helpers/demo";
+import { logout } from '../../../../actions/user';
 
 import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 
@@ -11,6 +14,11 @@ class NavRight extends Component {
     state = {
         listOpen: false
     };
+
+    handleLogout = e => {
+      this.props.logoutAction();
+      this.props.history.push('/auth/signin');
+    }
 
     render() {
 
@@ -34,10 +42,8 @@ class NavRight extends Component {
                                     </a>
                                 </div>
                                 <ul className="pro-body">
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-settings"/> Settings</a></li>
                                     <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-mail"/> My Messages</a></li>
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-lock"/> Lock Screen</a></li>
+                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item" onClick={e => this.handleLogout(e)}><i className="feather icon-lock"/> Log Out</a></li>
                                 </ul>
                             </Dropdown.Menu>
                         </Dropdown>
@@ -49,4 +55,13 @@ class NavRight extends Component {
     }
 }
 
-export default NavRight;
+const mapDispatchToProps = dispatch => {
+  return {
+    logoutAction: () => dispatch(logout())
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withRouter(NavRight));

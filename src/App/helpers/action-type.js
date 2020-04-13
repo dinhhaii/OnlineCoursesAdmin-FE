@@ -2,6 +2,11 @@
 // Login
 export const REQUEST_LOGIN = 'REQUEST_LOGIN';
 export const RECEIVE_LOGIN = 'RECEIVE_LOGIN';
+
+// Logout
+export const RECEIVE_LOGOUT = 'RECEIVE_LOGOUT';
+
+// Get Current User
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 
 // App Template
