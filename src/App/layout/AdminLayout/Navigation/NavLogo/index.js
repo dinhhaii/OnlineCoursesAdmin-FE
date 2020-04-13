@@ -1,5 +1,5 @@
 import React from 'react';
-import DEMO  from './../../../../../store/constant';
+import DEMO  from './../../../../helpers/demo';
 import Aux from "../../../../../hoc/_Aux";
 
 const navLogo = (props) => {

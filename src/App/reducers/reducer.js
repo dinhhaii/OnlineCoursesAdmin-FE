@@ -1,5 +1,5 @@
-import * as actionTypes from './actions';
-import config from './../config';
+import * as actionTypes from '../helpers/action-type';
+import config from './../../config';
 
 const initialState = {
     isOpen: [], //for active default menu

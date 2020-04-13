@@ -121,31 +121,14 @@ export default {
                     },
                     children: [
                         {
-                            id: 'signin-1',
+                            id: 'signin',
                             title: 'Sign in',
                             type: 'item',
-                            url: '/auth/signin-1',
+                            url: '/auth/signin',
                             target: true,
                             breadcrumbs: false
                         }
                     ]
-                },
-
-                {
-                    id: 'sample-page',
-                    title: 'Sample Page',
-                    type: 'item',
-                    url: '/sample-page',
-                    classes: 'nav-item',
-                    icon: 'feather icon-sidebar'
-                },
-                {
-                    id: 'docs',
-                    title: 'Documentation',
-                    type: 'item',
-                    url: '/docs',
-                    classes: 'nav-item',
-                    icon: 'feather icon-help-circle'
                 }
             ]
         }

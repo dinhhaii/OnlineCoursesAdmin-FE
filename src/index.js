@@ -1,15 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import { createLogger } from "redux-logger";
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 
 import App from './App/index';
 import * as serviceWorker from './serviceWorker';
-import reducer from './store/reducer';
+import myReducer from './App/reducers/index';
+import thunk from "redux-thunk";
 import config from './config';
 
-const store = createStore(reducer);
+const loggerMiddleware = createLogger();
+
+const store = createStore(
+  myReducer,
+  applyMiddleware(
+    thunk, // lets us dispatch() functions
+    loggerMiddleware // neat middleware that logs actions
+  )
+);
 
 const app = (
     <Provider store={store}>

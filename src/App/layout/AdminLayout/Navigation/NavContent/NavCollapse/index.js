@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import Aux from "../../../../../../hoc/_Aux";
-import DEMO from "../../../../../../store/constant";
-import * as actionTypes from "../../../../../../store/actions";
+import DEMO from "../../../../../helpers/demo";
+import * as actionTypes from "../../../../../helpers/action-type";
 import NavIcon from './../NavIcon';
 import NavBadge from './../NavBadge';
 import NavItem from "../NavItem";

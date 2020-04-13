@@ -8,7 +8,7 @@ import {
 
 import Aux from "../../../../hoc/_Aux";
 import Card from "../../MainCard";
-import DEMO from "../../../../store/constant";
+import DEMO from "../../../helpers/demo";
 
 class BreadcrumbPagination extends Component {
     render() {

@@ -10,7 +10,7 @@ import Breadcrumb from './Breadcrumb';
 import Loader from "../Loader";
 import routes from "../../../routes";
 import Aux from "../../../hoc/_Aux";
-import * as actionTypes from "../../../store/actions";
+import * as actionTypes from "../../helpers/action-type";
 
 import './app.scss';
 
