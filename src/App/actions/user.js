@@ -21,6 +21,13 @@ function getCurrentUser(user) {
   };
 }
 
+function getAllUsers(allUsers) {
+  return {
+    type: types.GET_ALL_USERS,
+    allUsers
+  }
+}
+
 function receiveLogout() {
   return {
     type: types.RECEIVE_LOGOUT
@@ -121,6 +128,31 @@ export function forgotPassword(email) {
       })
       .catch(() => {
         dispatch(resetPasswordFailed());
+      })
+  }
+}
+
+// Get All Users
+export function fetchAllUsers() {
+  return function(dispatch) {
+    dispatch(requestResetPassword());
+    return fetch(`${SERVER_URL}/user`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data !== null) {
+          dispatch(getAllUsers(data));
+        }
+        else {
+          dispatch(getAllUsers(null));
+        }
+      })
+      .catch(() => {
+        dispatch(getAllUsers(null));
       })
   }
 }

@@ -85,7 +85,7 @@ class SignIn extends React.Component {
                             <h3 className="mb-4">Login</h3>
                             <form
                               id='loginForm'
-                              onSubmit={ this.handleSubmit }
+                              onSubmit={ this.handleSubmit } noValidate
                             >
                               <div className="input-group mb-3">
                                   <input id="email" name="email" type="Email" className="form-control" placeholder="Email"/>

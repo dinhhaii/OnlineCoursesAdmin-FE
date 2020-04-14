@@ -5,6 +5,8 @@ window.jQuery = $;
 window.$ = $;
 global.jQuery = $;
 
+const UserList = React.lazy(() => import('./App/components/User/UserList'));
+
 const DashboardDefault = React.lazy(() => import('./App/components/Dashboard/Default'));
 
 const UIBasicButton = React.lazy(() => import('./App/components/UIElements/Basic/Button'));
@@ -22,6 +24,9 @@ const BootstrapTable = React.lazy(() => import('./App/components/Tables/Bootstra
 const Nvd3Chart = React.lazy(() => import('./App/components/Charts/Nvd3Chart/index'));
 
 const routes = [
+    { path: '/app-content/all-users', exact: true, name: 'Default', component: UserList },
+
+
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },

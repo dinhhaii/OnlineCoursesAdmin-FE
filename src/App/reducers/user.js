@@ -2,6 +2,7 @@ import * as types from '../helpers/action-type';
 
 const initialState = {
   isFetching: false,
+  allUsers: [],
   user: null,
   isLogin: false,
   isSendingEmail: false,
@@ -17,6 +18,8 @@ const userState = (state = initialState, action) => {
 
     case types.GET_CURRENT_USER:
       return { ...state, isFetching: false, isLogin: true, user: action.user };
+    case types.GET_ALL_USERS:
+      return { ...state, allUsers: action.allUsers };
 
     case types.RECEIVE_LOGOUT:
       return { ...state, isLogin: false };
@@ -27,7 +30,7 @@ const userState = (state = initialState, action) => {
       return { ...state, isSendingEmail: false, isPasswordReset: false };
     case types.RESET_PASSWORD_SUCCESS:
       return { ...state, isSendingEmail: false, isPasswordReset: true };
-      
+
     default:
       return state;
   }

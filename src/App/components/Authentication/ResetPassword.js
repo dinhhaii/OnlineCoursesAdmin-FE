@@ -66,7 +66,7 @@ class ResetPassword extends React.Component {
                     <div className="card">
                         <div className="card-body text-center">
                             <div className="mb-4">
-                                <i className="feather icon-refresh-cw auth-icon"/>
+                                <i className="feather icon-mail auth-icon"/>
                             </div>
                             <h3 className="mb-4">Reset Password</h3>
                             <form
