@@ -27,6 +27,24 @@ function receiveLogout() {
   };
 }
 
+function requestResetPassword() {
+  return {
+    type: types.REQUEST_RESET_PASSWORD
+  };
+}
+
+function resetPasswordSuccess() {
+  return {
+    type: types.RESET_PASSWORD_SUCCESS
+  };
+}
+
+function resetPasswordFailed() {
+  return {
+    type: types.RESET_PASSWORD_FAILED
+  };
+}
+
 // Login
 export function login(email, password) {
   return function(dispatch) {
@@ -77,6 +95,34 @@ export function authorizeUser() {
   return function(dispatch) {
     dispatch(getCurrentUser(null));
   };
+}
+
+// Forgot Password
+export function forgotPassword(email) {
+  return function(dispatch) {
+    dispatch(requestResetPassword());
+    return fetch(`${SERVER_URL}/user/forgotPassword`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message !== null) {
+          dispatch(resetPasswordSuccess());
+        }
+        else {
+          dispatch(resetPasswordFailed());
+        }
+      })
+      .catch(() => {
+        dispatch(resetPasswordFailed());
+      })
+  }
 }
 
 // Logout

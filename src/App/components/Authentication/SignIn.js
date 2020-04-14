@@ -86,7 +86,6 @@ class SignIn extends React.Component {
                             <form
                               id='loginForm'
                               onSubmit={ this.handleSubmit }
-                              noValidate
                             >
                               <div className="input-group mb-3">
                                   <input id="email" name="email" type="Email" className="form-control" placeholder="Email"/>
@@ -96,7 +95,7 @@ class SignIn extends React.Component {
                               </div>
                               <button type="submit" form="loginForm" className="btn btn-primary shadow-2 mb-4">Login</button>
 
-                              <p className="mb-2 text-muted">Forgot password? <NavLink to="/auth/reset-password-1">Reset</NavLink></p>
+                              <p className="mb-2 text-muted">Forgot password? <NavLink to="/auth/reset-password">Reset</NavLink></p>
                             </form>
                         </div>
                     </div>

@@ -43,7 +43,7 @@ class NavRight extends Component {
                                 </div>
                                 <ul className="pro-body">
                                     <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item" onClick={e => this.handleLogout(e)}><i className="feather icon-lock"/> Log Out</a></li>
+                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item" onClick={e => this.handleLogout(e)}><i className="feather icon-log-out"/> Log Out</a></li>
                                 </ul>
                             </Dropdown.Menu>
                         </Dropdown>

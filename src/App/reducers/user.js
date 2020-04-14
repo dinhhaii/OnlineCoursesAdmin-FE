@@ -3,8 +3,9 @@ import * as types from '../helpers/action-type';
 const initialState = {
   isFetching: false,
   user: null,
-  didInvalidate: false,
-  isLogin: false
+  isLogin: false,
+  isSendingEmail: false,
+  isPasswordReset: false,
 };
 
 const userState = (state = initialState, action) => {
@@ -18,8 +19,15 @@ const userState = (state = initialState, action) => {
       return { ...state, isFetching: false, isLogin: true, user: action.user };
 
     case types.RECEIVE_LOGOUT:
-      return { ...state, isLogin: false };;
+      return { ...state, isLogin: false };
 
+    case types.REQUEST_RESET_PASSWORD:
+      return { ...state, isSendingEmail: true, isPasswordReset: false };
+    case types.RESET_PASSWORD_FAILED:
+      return { ...state, isSendingEmail: false, isPasswordReset: false };
+    case types.RESET_PASSWORD_SUCCESS:
+      return { ...state, isSendingEmail: false, isPasswordReset: true };
+      
     default:
       return state;
   }

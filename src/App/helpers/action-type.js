@@ -6,6 +6,11 @@ export const RECEIVE_LOGIN = 'RECEIVE_LOGIN';
 // Logout
 export const RECEIVE_LOGOUT = 'RECEIVE_LOGOUT';
 
+// Forgot Password
+export const REQUEST_RESET_PASSWORD = 'REQUEST_RESET_PASSWORD';
+export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
+export const RESET_PASSWORD_FAILED = 'RESET_PASSWORD_FAILED';
+
 // Get Current User
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 
