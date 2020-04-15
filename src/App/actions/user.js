@@ -108,7 +108,7 @@ export function authorizeUser() {
 export function forgotPassword(email) {
   return function(dispatch) {
     dispatch(requestResetPassword());
-    return fetch(`${SERVER_URL}/user/forgotPassword`, {
+    return fetch(`${SERVER_URL}/user/forgot-password`, {
       method: 'POST',
       body: JSON.stringify({
         email
