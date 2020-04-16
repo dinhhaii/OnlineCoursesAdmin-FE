@@ -82,7 +82,7 @@ class ResetPassword extends React.Component {
                               </div>
 
                               <div  className="d-flex justify-content-center mb-3">
-                                  <span style={{ display: 'none' }} id='successMessage' className='text-success'>Email is sent to your Mailbox!</span>
+                                  <span style={{ display: 'none' }} id='successMessage' className='text-success'>Email is sent to your Mailbox! <br /> Click on the link to get a new password!</span>
                               </div>
 
                               <div  className="d-flex justify-content-center mb-3">

@@ -3,6 +3,8 @@ import * as types from '../helpers/action-type';
 const initialState = {
   isFetching: false,
   allUsers: [],
+  allLearners: [],
+  allLecturers: [],
   user: null,
   isLogin: false,
   isSendingEmail: false,
@@ -20,6 +22,10 @@ const userState = (state = initialState, action) => {
       return { ...state, isFetching: false, isLogin: true, user: action.user };
     case types.GET_ALL_USERS:
       return { ...state, allUsers: action.allUsers };
+    case types.GET_ALL_LEARNERS:
+      return { ...state, allLearners: action.allLearners };
+    case types.GET_ALL_LECTURERS:
+      return { ...state, allLecturers: action.allLecturers };
 
     case types.RECEIVE_LOGOUT:
       return { ...state, isLogin: false };

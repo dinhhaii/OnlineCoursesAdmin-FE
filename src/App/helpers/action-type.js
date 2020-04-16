@@ -14,6 +14,8 @@ export const RESET_PASSWORD_FAILED = 'RESET_PASSWORD_FAILED';
 // Get Current User
 export const GET_CURRENT_USER = 'GET_CURRENT_USER';
 export const GET_ALL_USERS = 'GET_ALL_USERS';
+export const GET_ALL_LEARNERS = 'GET_ALL_LEARNERS';
+export const GET_ALL_LECTURERS = 'GET_ALL_LECTURERS';
 
 // App Template
 export const COLLAPSE_MENU = 'COLLAPSE_MENU';

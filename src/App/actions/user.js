@@ -28,6 +28,20 @@ function getAllUsers(allUsers) {
   }
 }
 
+function getAllLearners(allLearners) {
+  return {
+    type: types.GET_ALL_LEARNERS,
+    allLearners
+  }
+}
+
+function getAllLecturers(allLecturers) {
+  return {
+    type: types.GET_ALL_LECTURERS,
+    allLecturers
+  }
+}
+
 function receiveLogout() {
   return {
     type: types.RECEIVE_LOGOUT
@@ -135,7 +149,6 @@ export function forgotPassword(email) {
 // Get All Users
 export function fetchAllUsers() {
   return function(dispatch) {
-    dispatch(requestResetPassword());
     return fetch(`${SERVER_URL}/user`, {
       method: 'GET',
       headers: {
@@ -153,6 +166,54 @@ export function fetchAllUsers() {
       })
       .catch(() => {
         dispatch(getAllUsers(null));
+      })
+  }
+}
+
+// Get All Learners
+export function fetchAllLearners() {
+  return function(dispatch) {
+    return fetch(`${SERVER_URL}/user/all-learners`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data !== null) {
+          dispatch(getAllLearners(data));
+        }
+        else {
+          dispatch(getAllLearners(null));
+        }
+      })
+      .catch(() => {
+        dispatch(getAllLearners(null));
+      })
+  }
+}
+
+// Get All Users
+export function fetchAllLecturers() {
+  return function(dispatch) {
+    return fetch(`${SERVER_URL}/user/all-lecturers`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data !== null) {
+          dispatch(getAllLecturers(data));
+        }
+        else {
+          dispatch(getAllLecturers(null));
+        }
+      })
+      .catch(() => {
+        dispatch(getAllLecturers(null));
       })
   }
 }
