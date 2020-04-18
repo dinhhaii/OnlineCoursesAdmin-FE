@@ -7,8 +7,9 @@ const initialState = {
   allLecturers: [],
   user: null,
   isLogin: false,
+
   isSendingEmail: false,
-  isPasswordReset: false,
+  isPasswordReset: false
 };
 
 const userState = (state = initialState, action) => {
@@ -20,6 +21,8 @@ const userState = (state = initialState, action) => {
 
     case types.GET_CURRENT_USER:
       return { ...state, isFetching: false, isLogin: true, user: action.user };
+    case types.GET_USER_BY_ID:
+      return { ...state, user: action.user };
     case types.GET_ALL_USERS:
       return { ...state, allUsers: action.allUsers };
     case types.GET_ALL_LEARNERS:
@@ -28,14 +31,18 @@ const userState = (state = initialState, action) => {
       return { ...state, allLecturers: action.allLecturers };
 
     case types.RECEIVE_LOGOUT:
-      return { ...state, isLogin: false };
+      return { ...state, isLogin: false, user: null };
 
     case types.REQUEST_RESET_PASSWORD:
       return { ...state, isSendingEmail: true, isPasswordReset: false };
     case types.RESET_PASSWORD_FAILED:
       return { ...state, isSendingEmail: false, isPasswordReset: false };
     case types.RESET_PASSWORD_SUCCESS:
-      return { ...state, isSendingEmail: false, isPasswordReset: true };
+      return { ...state, isSendingEmail: false, isPasswordReset: true};
+    case types.CHANGE_USER_PASSWORD_SUCCESS:
+      return { ...state, isPasswordReset: true };
+    case types.CHANGE_USER_PASSWORD_FAILED:
+      return { ...state, isPasswordReset: false };
 
     default:
       return state;

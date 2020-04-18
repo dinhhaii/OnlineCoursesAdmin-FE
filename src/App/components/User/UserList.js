@@ -1,11 +1,11 @@
 import React from 'react';
-import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown} from 'react-bootstrap';
+import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 
 import Aux from "../../../hoc/_Aux";
-import { fetchAllUsers } from './../../actions/user';
+import { fetchAllUsers, changeStatus } from './../../actions/user';
 
 class UserList extends React.Component {
 
@@ -13,7 +13,8 @@ class UserList extends React.Component {
     super(props);
 
     this.state = {
-      listUsersWillDisplay: []
+      listUsersWillDisplay: [],
+      isModalOpen: false
     };
 
     this.handleRoleFilter = this.handleRoleFilter.bind(this);
@@ -92,8 +93,24 @@ class UserList extends React.Component {
       });
     }
 
+    hideModal() {
+      this.setState({
+        isModalOpen: false
+      });
+    }
+
+    showModal() {
+      this.setState({
+        isModalOpen: true
+      });
+    }
+
+    handleChangeStatus() {
+
+    }
+
     render() {
-      const { listUsersWillDisplay } = this.state;
+      const { listUsersWillDisplay, isModalOpen } = this.state;
 
       var userCounter = 0;
 
@@ -112,6 +129,34 @@ class UserList extends React.Component {
           <Aux>
               <Row>
                   <Col>
+
+                  {/*-----------MODAL------------*/}
+                    <Modal
+                       size="lg"
+                       aria-labelledby="contained-modal-title-vcenter"
+                       centered
+                       show={isModalOpen}
+                     >
+                       <Modal.Header>
+                         <Modal.Title id="change-user-status">
+                           <h3><b>Change user status</b></h3>
+                         </Modal.Title>
+                       </Modal.Header>
+                       <Modal.Body>
+                         <h4>Are you sure to ban this user?</h4>
+                         <p>
+                           Note: Banned users won't be allowed to sign in the app.
+                         </p>
+                       </Modal.Body>
+                       <Modal.Footer>
+                         <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
+                         <Button variant="primary">Save</Button>
+                       </Modal.Footer>
+                     </Modal>
+
+
+                     {/*----------CARD-------------*/}
+
                       <Card>
                           <Card.Header>
                               <Card.Title as="h5">List of Users</Card.Title>
@@ -214,6 +259,7 @@ class UserList extends React.Component {
                                                       className={user.status === 'verified' ? 'btn-success'
                                                                 : user.status === 'unverified' ? 'btn-warning' : 'btn-danger'
                                                                 + " btn shadow-2"}
+                                                      onClick={() => this.showModal()}
                                               >
                                                 {user.status === 'verified' ? 'Verified'
                                                                 : user.status === 'unverified' ? 'Unverified' : 'Banned'}
@@ -245,7 +291,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAllUsersAction: email => dispatch(fetchAllUsers())
+    fetchAllUsersAction: email => dispatch(fetchAllUsers()),
+    changeStatusAction: (_idUser, status) => dispatch(changeStatus(_idUser, status))
   };
 };
 

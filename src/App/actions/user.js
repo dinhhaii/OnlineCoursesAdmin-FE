@@ -21,6 +21,13 @@ function getCurrentUser(user) {
   };
 }
 
+function getUserById(user) {
+  return {
+    type: types.GET_USER_BY_ID,
+    user
+  }
+}
+
 function getAllUsers(allUsers) {
   return {
     type: types.GET_ALL_USERS,
@@ -54,15 +61,40 @@ function requestResetPassword() {
   };
 }
 
-function resetPasswordSuccess() {
+function resetPasswordSuccess(resetPasswordToken) {
   return {
-    type: types.RESET_PASSWORD_SUCCESS
+    type: types.RESET_PASSWORD_SUCCESS,
+    resetPasswordToken
   };
 }
 
 function resetPasswordFailed() {
   return {
     type: types.RESET_PASSWORD_FAILED
+  };
+}
+
+function changePasswordSuccess() {
+  return {
+    type: types.CHANGE_USER_PASSWORD_SUCCESS
+  };
+}
+
+function changePasswordFailed() {
+  return {
+    type: types.CHANGE_USER_PASSWORD_SUCCESS
+  };
+}
+
+function changeStatusSuccess() {
+  return {
+    type: types.CHANGE_USER_STATUS_SUCCESS
+  };
+}
+
+function changeStatusFailed() {
+  return {
+    type: types.CHANGE_USER_STATUS_FAILED
   };
 }
 
@@ -134,7 +166,7 @@ export function forgotPassword(email) {
       .then(res => res.json())
       .then(data => {
         if (data.message !== null) {
-          dispatch(resetPasswordSuccess());
+          dispatch(resetPasswordSuccess(data.token));
         }
         else {
           dispatch(resetPasswordFailed());
@@ -145,6 +177,32 @@ export function forgotPassword(email) {
       })
   }
 }
+
+// Get User By Id
+// Get All Users
+export function fetchUserById(_idUser) {
+  return function(dispatch) {
+    return fetch(`${SERVER_URL}/user/${_idUser}`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data !== null) {
+          dispatch(getUserById(data));
+        }
+        else {
+          dispatch(getUserById(null));
+        }
+      })
+      .catch(() => {
+        dispatch(getUserById(null));
+      })
+  }
+}
+
 
 // Get All Users
 export function fetchAllUsers() {
@@ -218,12 +276,71 @@ export function fetchAllLecturers() {
   }
 }
 
+// Change Password
+export function changePassword(_idUser, password) {
+  return function(dispatch) {
+    return fetch(`${SERVER_URL}/user/update`, {
+      method: 'POST',
+      body: JSON.stringify({
+        _idUser: _idUser,
+        password: password,
+        type: 'local'
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          dispatch(changePasswordSuccess());
+        }
+        else {
+          dispatch(changePasswordFailed());
+        }
+      })
+      .catch(() => {
+        dispatch(changePasswordFailed());
+      });
+  }
+}
+
+// Change Status
+export function changeStatus(_idUser, status) {
+  return function(dispatch) {
+    return fetch(`${SERVER_URL}/user/update`, {
+      method: 'POST',
+      body: JSON.stringify({
+        _idUser: _idUser,
+        status: status
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          dispatch(changeStatusSuccess());
+        }
+        else {
+          dispatch(changeStatusFailed());
+        }
+      })
+      .catch(() => {
+        dispatch(changeStatusSuccess());
+      });
+  }
+}
+
+
 // Logout
 export function logout() {
-  localStorage.removeItem('authToken');
+  if (localStorage.getItem('authToken')) {
+    localStorage.removeItem('authToken');
+  }
 
   return function(dispatch) {
     dispatch(receiveLogout());
-    dispatch(getCurrentUser(null));
   };
 }

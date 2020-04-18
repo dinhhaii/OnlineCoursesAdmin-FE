@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from "redux-logger";
 import {Provider} from 'react-redux';
-import {BrowserRouter} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import App from './App/index';
 import * as serviceWorker from './serviceWorker';
