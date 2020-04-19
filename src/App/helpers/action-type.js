@@ -1,4 +1,5 @@
 
+// -------------------------------- USER ---------------------------------------
 // Login
 export const REQUEST_LOGIN = 'REQUEST_LOGIN';
 export const RECEIVE_LOGIN = 'RECEIVE_LOGIN';
@@ -32,3 +33,47 @@ export const FULL_SCREEN_EXIT = 'FULL_SCREEN_EXIT';
 export const CHANGE_LAYOUT = 'CHANGE_LAYOUT';
 export const NAV_CONTENT_LEAVE = 'NAV_CONTENT_LEAVE';
 export const NAV_COLLAPSE_LEAVE = 'NAV_COLLAPSE_LEAVE';
+
+
+// -------------------------------- COURSE ---------------------------------------
+
+
+
+
+
+
+
+
+// -------------------------------- LESSON ---------------------------------------
+
+
+
+
+
+
+
+
+
+// -------------------------------- INVOICE ---------------------------------------
+
+
+
+
+
+
+
+
+
+
+// -------------------------------- FEEDBACK ---------------------------------------
+
+
+
+
+
+
+
+
+
+
+// -------------------------------- COMMENT ---------------------------------------
