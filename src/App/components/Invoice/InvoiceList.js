@@ -7,7 +7,7 @@ import $ from 'jquery';
 import Aux from "../../../hoc/_Aux";
 import { fetchAllCourses, changeStatus } from './../../actions/course';
 
-class CourseList extends React.Component {
+class InvoiceList extends React.Component {
 
   constructor(props) {
     super(props);
@@ -261,4 +261,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(CourseList));
+)(withRouter(InvoiceList));

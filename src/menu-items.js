@@ -12,6 +12,20 @@ export default {
                   type: 'item',
                   url: '/app-content/all-users',
                   icon: 'feather icon-users',
+              },
+              {
+                  id: 'all-courses',
+                  title: 'All Courses',
+                  type: 'item',
+                  url: '/app-content/all-courses',
+                  icon: 'feather icon-cast',
+              },
+              {
+                  id: 'all-invoices',
+                  title: 'All Invoices',
+                  type: 'item',
+                  url: '/app-content/all-invoices',
+                  icon: 'feather icon-file-text',
               }
           ]
       },

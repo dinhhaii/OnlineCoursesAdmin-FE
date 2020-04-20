@@ -37,6 +37,14 @@ export const NAV_COLLAPSE_LEAVE = 'NAV_COLLAPSE_LEAVE';
 
 // -------------------------------- COURSE ---------------------------------------
 
+// Get All Courses
+export const FETCHING_ALL_COURSES = 'FETCHING_ALL_COURSES';
+export const GET_ALL_COURSES_FAILED = 'GET_ALL_COURSES_FAILED';
+export const GET_ALL_COURSES_SUCCESS = 'GET_ALL_COURSES_SUCCESS';
+
+// Update Course
+export const CHANGE_COURSE_STATUS_SUCCESS = 'CHANGE_COURSE_STATUS_SUCCESS';
+export const CHANGE_COURSE_STATUS_FAILED = 'CHANGE_COURSE_STATUS_FAILED';
 
 
 
@@ -45,7 +53,10 @@ export const NAV_COLLAPSE_LEAVE = 'NAV_COLLAPSE_LEAVE';
 
 
 // -------------------------------- LESSON ---------------------------------------
-
+// Get All Lessons
+export const FETCHING_ALL_LESSONS = 'FETCHING_ALL_LESSONS';
+export const GET_ALL_LESSONS_FAILED = 'GET_ALL_LESSONS_FAILED';
+export const GET_ALL_LESSONS_SUCCESS = 'GET_ALL_LESSONS_SUCCESS';
 
 
 
@@ -55,7 +66,10 @@ export const NAV_COLLAPSE_LEAVE = 'NAV_COLLAPSE_LEAVE';
 
 
 // -------------------------------- INVOICE ---------------------------------------
-
+// Get All Invoices
+export const FETCHING_ALL_INVOICES = 'FETCHING_ALL_INVOICES';
+export const GET_ALL_INVOICES_FAILED = 'GET_ALL_INVOICES_FAILED';
+export const GET_ALL_INVOICES_SUCCESS = 'GET_ALL_INVOICES_SUCCESS';
 
 
 
@@ -67,7 +81,10 @@ export const NAV_COLLAPSE_LEAVE = 'NAV_COLLAPSE_LEAVE';
 
 // -------------------------------- FEEDBACK ---------------------------------------
 
-
+// Get All Feedback
+export const FETCHING_ALL_FEEDBACK = 'FETCHING_ALL_FEEDBACK';
+export const GET_ALL_FEEDBACK_FAILED = 'GET_ALL_FEEDBACK_FAILED';
+export const GET_ALL_FEEDBACK_SUCCESS = 'GET_ALL_FEEDBACK_SUCCESS';
 
 
 
@@ -77,3 +94,8 @@ export const NAV_COLLAPSE_LEAVE = 'NAV_COLLAPSE_LEAVE';
 
 
 // -------------------------------- COMMENT ---------------------------------------
+
+// Get All Comments
+export const FETCHING_ALL_COMMENTS = 'FETCHING_ALL_COMMENTS';
+export const GET_ALL_COMMENTS_FAILED = 'GET_ALL_COMMENTS_FAILED';
+export const GET_ALL_COMMENTS_SUCCESS = 'GET_ALL_COMMENTS_SUCCESS';

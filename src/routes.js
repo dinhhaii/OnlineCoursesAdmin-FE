@@ -6,6 +6,8 @@ window.$ = $;
 global.jQuery = $;
 
 const UserList = React.lazy(() => import('./App/components/User/UserList'));
+const CourseList = React.lazy(() => import('./App/components/Course/CourseList'));
+const InvoiceList = React.lazy(() => import('./App/components/Course/InvoiceList'));
 
 const DashboardDefault = React.lazy(() => import('./App/components/Dashboard/Default'));
 
@@ -24,7 +26,9 @@ const BootstrapTable = React.lazy(() => import('./App/components/Tables/Bootstra
 const Nvd3Chart = React.lazy(() => import('./App/components/Charts/Nvd3Chart/index'));
 
 const routes = [
-    { path: '/app-content/all-users', exact: true, name: 'Default', component: UserList },
+    { path: '/app-content/all-users', exact: true, name: 'All Users', component: UserList },
+    { path: '/app-content/all-courses', exact: true, name: 'All Courses', component: CourseList },
+    { path: '/app-content/all-invoices', exact: true, name: 'All Invoices', component: InvoiceList },
 
 
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
