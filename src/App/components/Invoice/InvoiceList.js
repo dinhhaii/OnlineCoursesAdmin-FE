@@ -4,8 +4,11 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 
+
 import Aux from "../../../hoc/_Aux";
-import { fetchAllCourses, changeStatus } from './../../actions/course';
+import { fetchallInvoices } from './../../actions/invoice';
+
+const moment = require('moment');
 
 class InvoiceList extends React.Component {
 
@@ -13,9 +16,9 @@ class InvoiceList extends React.Component {
     super(props);
 
     this.state = {
-      listCoursesWillDisplay: [],
+      listInvoicesWillDisplay: [],
       isModalOpen: false,
-      selectedCourse: null
+      selectedInvoice: null
     };
 
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
@@ -24,26 +27,26 @@ class InvoiceList extends React.Component {
 
     componentWillMount() {
       Promise
-        .resolve(this.props.fetchAllCoursesAction())
+        .resolve(this.props.fetchallInvoicesAction())
         .then(() => {
           this.setState({
-            listCoursesWillDisplay: this.props.courseState.allCourses
+            listInvoicesWillDisplay: this.props.invoiceState.allInvoices
           });
         });
     }
 
     handleStatusFilter(status) {
 
-      $('#statusFilter').text(`${status === 'approved' ? 'Approved' : status === 'Denied' ? 'denied' : 'Pending'}`);
+      $('#statusFilter').text(`${status === 'success' ? 'Success' : status === 'canceled' ? 'Canceled' : 'Reported'}`);
 
       if (status !== 'resetStatus')
       {
-        const { listCoursesWillDisplay } = this.state;
+        const { listInvoicesWillDisplay } = this.state;
 
-        var filter = listCoursesWillDisplay.filter(course => course.status === status);
+        var filter = listInvoicesWillDisplay.filter(course => course.status === status);
 
         this.setState({
-          listCoursesWillDisplay: filter
+          listInvoicesWillDisplay: filter
         });
       }
     }
@@ -51,10 +54,10 @@ class InvoiceList extends React.Component {
     handleResetFilter() {
       $('#statusFilter').text('Status');
 
-      const { allCourses } = this.props.courseState;
+      const { allInvoices } = this.props.invoiceState;
 
       this.setState({
-        listCoursesWillDisplay: allCourses
+        listInvoicesWillDisplay: allInvoices
       });
     }
 
@@ -65,20 +68,20 @@ class InvoiceList extends React.Component {
     }
 
     showModal(index) {
-      const { listCoursesWillDisplay } = this.state;
+      const { listInvoicesWillDisplay } = this.state;
 
       this.setState({
         isModalOpen: true,
-        selectedCourse: listCoursesWillDisplay[index]
+        selectedInvoice: listInvoicesWillDisplay[index]
       });
     }
 
     handleChangeStatus() {
-      const { selectedCourse } = this.state;
-      let status = selectedCourse.status === 'pending' ? 'approved' : 'denied';
+      const { selectedInvoice } = this.state;
+      let status = selectedInvoice.status === 'pending' ? 'approved' : 'denied';
 
       Promise
-        .resolve(this.props.changeStatusAction(selectedCourse._id, status))
+        .resolve(this.props.changeStatusAction(selectedInvoice._id, status))
         .then(() => {
           alert('Status has been changed!');
           window.location.reload();
@@ -86,10 +89,9 @@ class InvoiceList extends React.Component {
     }
 
     render() {
-      const { listCoursesWillDisplay, isModalOpen, selectedCourse } = this.state;
+      const { listInvoicesWillDisplay, isModalOpen, selectedInvoice } = this.state;
 
-      console.log(listCoursesWillDisplay);
-      var courseCounter = 0;
+      var invoiceCounter = 0;
 
       let active = 3;
       let activeItems = [];
@@ -108,7 +110,7 @@ class InvoiceList extends React.Component {
                   <Col>
 
                   {/*-----------MODAL------------*/}
-                  {selectedCourse ?
+                  {selectedInvoice ?
                       <Modal
                          size="lg"
                          aria-labelledby="contained-modal-title-vcenter"
@@ -117,32 +119,34 @@ class InvoiceList extends React.Component {
                        >
                          <Modal.Header>
                            <Modal.Title id="change-user-status">
-                             <h3><b>Are you sure to {selectedCourse.status !== 'pending' ? 'approve' : 'deny'} this course?</b></h3>
+                             <h3>
+                               <b>
+
+                               </b>
+                             </h3>
                            </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
                            <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
                             <b>Name: </b>
                               <span>
-                                {selectedCourse.name}
+
                               </span>
                             <br /> <br />
                             <b>Subject: </b>
                               <span>
-                                {selectedCourse.subject.name}
+
                               </span>
                             <br /> <br />
                             <b>Price: </b>
                               <span>
-                                {'$' + selectedCourse.price}
+
                               </span>
                             <br /> <br />
                             <b>Coupons: </b>
-                              {selectedCourse.discount.map(discount => (
-                                <span>
-                                  {discount.code + ' | '}
-                                </span>
-                              ))}
+                            <span>
+
+                            </span>
                            </h5>
                          </Modal.Body>
                            <Modal.Footer>
@@ -161,7 +165,7 @@ class InvoiceList extends React.Component {
 
                       <Card>
                           <Card.Header>
-                              <Card.Title as="h5">List of Courses</Card.Title>
+                              <Card.Title as="h5">List of Invoices</Card.Title>
                           </Card.Header>
                           <Card.Body>
 
@@ -175,14 +179,14 @@ class InvoiceList extends React.Component {
                                   style={{maxWidth: '10%', float: 'left'}}
                                   className='mb-3 mr-3'
                               >
-                                  <Dropdown.Item eventKey="approved" onClick={() => this.handleStatusFilter('approved')}>
-                                    Approved
+                                  <Dropdown.Item eventKey="success" onClick={() => this.handleStatusFilter('success')}>
+                                    Success
                                   </Dropdown.Item>
-                                  <Dropdown.Item eventKey="denied" onClick={() => this.handleStatusFilter('denied')}>
-                                    Denied
+                                  <Dropdown.Item eventKey="canceled" onClick={() => this.handleStatusFilter('canceled')}>
+                                    Canceled
                                   </Dropdown.Item>
-                                  <Dropdown.Item eventKey="pending" onClick={() => this.handleStatusFilter('pending')}>
-                                    Pending
+                                  <Dropdown.Item eventKey="reported" onClick={() => this.handleStatusFilter('reported')}>
+                                    Reported
                                   </Dropdown.Item>
                               </DropdownButton>
 
@@ -191,40 +195,44 @@ class InvoiceList extends React.Component {
                               <Table striped responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
-                                      <th style={{width: '10%'}}>#</th>
-                                      <th style={{width: '20%'}}>Name</th>
-                                      <th style={{width: '20%'}}>Subject</th>
-                                      <th style={{width: '15%'}}>Price($)</th>
-                                      <th style={{width: '15%'}}>Coupons</th>
+                                      <th style={{width: '5%'}}>#</th>
+                                      <th style={{width: '20%'}}>ID</th>
+                                      <th style={{width: '20%'}}>Email</th>
+                                      <th style={{width: '15%'}}>Course</th>
+                                      <th style={{width: '15%'}}>Total($)</th>
+                                      <th style={{width: '15%'}}>Date</th>
                                       <th style={{width: '20%'}}>Status</th>
                                   </tr>
                                   </thead>
                                   <tbody>
-                                    {listCoursesWillDisplay.map((course, index) => {
-                                      courseCounter++;
+                                    {listInvoicesWillDisplay.map((invoice, index) => {
+                                      invoiceCounter++;
                                       return (
                                         <tr key={index.toString()}>
-                                            <th scope="row">{courseCounter}</th>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {course.name}
+                                            <th scope="row">{invoiceCounter}</th>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'normal'}}>
+                                              {invoice._id}
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {course.subject.name}
+                                              {invoice.user.email}
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {course.price}
+                                              {invoice.course.name}
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {course.discount.length}
+                                              {invoice.totalPrice}
+                                            </td>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                             {moment(invoice.payDay).format('YYYY-MM-DD')}
                                             </td>
                                             <td>
                                               <Button size='sm' style={{width: '50%'}}
-                                                      className={course.status === 'approved' ? 'btn-success'
-                                                                : course.status === 'denied' ? 'btn-danger' : 'btn-warning'
+                                                      className={invoice.status === 'success' ? 'btn-success'
+                                                                : invoice.status === 'canceled' ? 'btn-danger' : 'btn-warning'
                                                                   + " btn shadow-2"}
                                                       onClick={() => this.showModal(index)}
                                               >
-                                                {course.status === 'approved' ? 'Approved' : course.status === 'denied' ? 'Denied' : 'Pending'}
+                                                {invoice.status === 'success' ? 'Success' : invoice.status === 'canceled' ? 'Canceled' : 'Reported'}
                                               </Button>
                                             </td>
                                         </tr>
@@ -247,14 +255,13 @@ class InvoiceList extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    courseState: state.courseState
+    invoiceState: state.invoiceState
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAllCoursesAction: () => dispatch(fetchAllCourses()),
-    changeStatusAction: (_idCourse, status) => dispatch(changeStatus(_idCourse, status))
+    fetchallInvoicesAction: () => dispatch(fetchallInvoices())
   };
 };
 

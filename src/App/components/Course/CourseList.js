@@ -88,7 +88,6 @@ class CourseList extends React.Component {
     render() {
       const { listCoursesWillDisplay, isModalOpen, selectedCourse } = this.state;
 
-      console.log(listCoursesWillDisplay);
       var courseCounter = 0;
 
       let active = 3;

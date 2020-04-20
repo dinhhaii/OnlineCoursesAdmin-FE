@@ -7,7 +7,7 @@ global.jQuery = $;
 
 const UserList = React.lazy(() => import('./App/components/User/UserList'));
 const CourseList = React.lazy(() => import('./App/components/Course/CourseList'));
-const InvoiceList = React.lazy(() => import('./App/components/Course/InvoiceList'));
+const InvoiceList = React.lazy(() => import('./App/components/Invoice/InvoiceList'));
 
 const DashboardDefault = React.lazy(() => import('./App/components/Dashboard/Default'));
 
