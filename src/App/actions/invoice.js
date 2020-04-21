@@ -2,7 +2,7 @@ import fetch from 'cross-fetch';
 import * as types from '../helpers/action-type';
 import { SERVER_URL } from '../helpers/constant';
 
-function requestallInvoices() {
+function requestAllInvoices() {
   return {
     type: types.FETCHING_ALL_INVOICES
   };
@@ -23,9 +23,9 @@ function receiveAllInvoicesFailed() {
 
 
 // Get All Invoices
-export function fetchallInvoices() {
+export function fetchAllInvoices() {
   return function(dispatch) {
-    dispatch(requestallInvoices());
+    dispatch(requestAllInvoices());
     return fetch(`${SERVER_URL}/invoice`, {
       method: 'GET',
       headers: {

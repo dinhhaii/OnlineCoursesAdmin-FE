@@ -7,7 +7,10 @@ global.jQuery = $;
 
 const UserList = React.lazy(() => import('./App/components/User/UserList'));
 const CourseList = React.lazy(() => import('./App/components/Course/CourseList'));
+const LessonList = React.lazy(() => import('./App/components/Lesson/LessonList'));
 const InvoiceList = React.lazy(() => import('./App/components/Invoice/InvoiceList'));
+const FeedbackList = React.lazy(() => import('./App/components/Feedback/FeedbackList'));
+const CommentList = React.lazy(() => import('./App/components/Comment/CommentList'));
 
 const DashboardDefault = React.lazy(() => import('./App/components/Dashboard/Default'));
 
@@ -26,10 +29,12 @@ const BootstrapTable = React.lazy(() => import('./App/components/Tables/Bootstra
 const Nvd3Chart = React.lazy(() => import('./App/components/Charts/Nvd3Chart/index'));
 
 const routes = [
-    { path: '/app-content/all-users', exact: true, name: 'All Users', component: UserList },
+    { path: '/app-content/all-users', exact: true, name: 'AUsers', component: UserList },
     { path: '/app-content/all-courses', exact: true, name: 'All Courses', component: CourseList },
+    { path: '/app-content/all-lessons', exact: true, name: 'All Lessons', component: LessonList },
     { path: '/app-content/all-invoices', exact: true, name: 'All Invoices', component: InvoiceList },
-
+    { path: '/app-content/all-feedback', exact: true, name: 'All Feedback', component: FeedbackList },
+    { path: '/app-content/all-comments', exact: true, name: 'All Comments', component: CommentList },
 
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },

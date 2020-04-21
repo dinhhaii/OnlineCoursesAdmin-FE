@@ -2,30 +2,50 @@ export default {
     items: [
       {
           id: 'app-contents',
-          title: 'Users',
+          title: 'App Contents',
           type: 'group',
-          icon: 'icon-users',
           children: [
               {
                   id: 'all-users',
-                  title: 'All Users',
+                  title: 'Users',
                   type: 'item',
                   url: '/app-content/all-users',
                   icon: 'feather icon-users',
               },
               {
                   id: 'all-courses',
-                  title: 'All Courses',
+                  title: 'Courses',
                   type: 'item',
                   url: '/app-content/all-courses',
                   icon: 'feather icon-cast',
               },
               {
                   id: 'all-invoices',
-                  title: 'All Invoices',
+                  title: 'Invoices',
                   type: 'item',
                   url: '/app-content/all-invoices',
                   icon: 'feather icon-file-text',
+              },
+              {
+                  id: 'all-lessons',
+                  title: 'Lessons',
+                  type: 'item',
+                  url: '/app-content/all-lessons',
+                  icon: 'feather icon-play-circle',
+              },
+              {
+                  id: 'all-feedback',
+                  title: 'Feedback',
+                  type: 'item',
+                  url: '/app-content/all-feedback',
+                  icon: 'feather icon-edit',
+              },
+              {
+                  id: 'all-comments',
+                  title: 'Comments',
+                  type: 'item',
+                  url: '/app-content/all-comments',
+                  icon: 'feather icon-message-square',
               }
           ]
       },

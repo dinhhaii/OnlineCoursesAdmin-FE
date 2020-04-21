@@ -4,21 +4,18 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 
-
 import Aux from "../../../hoc/_Aux";
-import { fetchAllInvoices } from './../../actions/invoice';
+import { fetchAllFeedback } from './../../actions/feedback';
 
-const moment = require('moment');
-
-class InvoiceList extends React.Component {
+class FeedbackList extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      listInvoicesWillDisplay: [],
+      listFeedbackWillDisplay: [],
       isModalOpen: false,
-      selectedInvoice: null
+      selectedFeedback: null
     };
 
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
@@ -27,26 +24,26 @@ class InvoiceList extends React.Component {
 
     componentWillMount() {
       Promise
-        .resolve(this.props.fetchAllInvoicesAction())
+        .resolve(this.props.fetchAllFeedbackAction())
         .then(() => {
           this.setState({
-            listInvoicesWillDisplay: this.props.invoiceState.allInvoices
+            listFeedbackWillDisplay: this.props.feedbackState.allFeedback
           });
         });
     }
 
     handleStatusFilter(status) {
 
-      $('#statusFilter').text(`${status === 'success' ? 'Success' : status === 'canceled' ? 'Canceled' : 'Reported'}`);
+      $('#statusFilter').text('asd');
 
       if (status !== 'resetStatus')
       {
-        const { listInvoicesWillDisplay } = this.state;
+        const { listFeedbackWillDisplay } = this.state;
 
-        var filter = listInvoicesWillDisplay.filter(course => course.status === status);
+        var filter = listFeedbackWillDisplay.filter(course => course.status === status);
 
         this.setState({
-          listInvoicesWillDisplay: filter
+          listFeedbackWillDisplay: filter
         });
       }
     }
@@ -54,10 +51,10 @@ class InvoiceList extends React.Component {
     handleResetFilter() {
       $('#statusFilter').text('Status');
 
-      const { allInvoices } = this.props.invoiceState;
+      const { allFeedback } = this.props.feedbackState;
 
       this.setState({
-        listInvoicesWillDisplay: allInvoices
+        listFeedbackWillDisplay: allFeedback
       });
     }
 
@@ -68,20 +65,20 @@ class InvoiceList extends React.Component {
     }
 
     showModal(index) {
-      const { listInvoicesWillDisplay } = this.state;
+      const { listFeedbackWillDisplay } = this.state;
 
       this.setState({
         isModalOpen: true,
-        selectedInvoice: listInvoicesWillDisplay[index]
+        selectedFeedback: listFeedbackWillDisplay[index]
       });
     }
 
     handleChangeStatus() {
-      const { selectedInvoice } = this.state;
-      let status = selectedInvoice.status === 'pending' ? 'approved' : 'denied';
+      const { selectedFeedback } = this.state;
+      let status = selectedFeedback.status === 'pending' ? 'approved' : 'denied';
 
       Promise
-        .resolve(this.props.changeStatusAction(selectedInvoice._id, status))
+        .resolve(this.props.changeStatusAction(selectedFeedback._id, status))
         .then(() => {
           alert('Status has been changed!');
           window.location.reload();
@@ -89,9 +86,9 @@ class InvoiceList extends React.Component {
     }
 
     render() {
-      const { listInvoicesWillDisplay, isModalOpen, selectedInvoice } = this.state;
+      const { listFeedbackWillDisplay, isModalOpen, selectedFeedback } = this.state;
 
-      var invoiceCounter = 0;
+      var feedbackCounter = 0;
 
       let active = 3;
       let activeItems = [];
@@ -110,7 +107,7 @@ class InvoiceList extends React.Component {
                   <Col>
 
                   {/*-----------MODAL------------*/}
-                  {selectedInvoice ?
+                  {selectedFeedback ?
                       <Modal
                          size="lg"
                          aria-labelledby="contained-modal-title-vcenter"
@@ -152,7 +149,7 @@ class InvoiceList extends React.Component {
                            <Modal.Footer>
                              <p>
                                <span style={{color: 'red'}}>* </span>
-                               Note: Denied courses won't be appeared on the app.
+                               Note: Denied feedback won't be appeared on the app.
                              </p>
                              <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
                              <Button variant="primary" onClick={() => this.handleChangeStatus()}>Save</Button>
@@ -165,7 +162,7 @@ class InvoiceList extends React.Component {
 
                       <Card>
                           <Card.Header>
-                              <Card.Title as="h5">List of Invoices</Card.Title>
+                              <Card.Title as="h5">List of Feedback</Card.Title>
                           </Card.Header>
                           <Card.Body>
 
@@ -198,38 +195,27 @@ class InvoiceList extends React.Component {
                                       <th style={{width: '5%'}}>#</th>
                                       <th style={{width: '20%'}}>User</th>
                                       <th style={{width: '20%'}}>Course</th>
-                                      <th style={{width: '15%'}}>Total($)</th>
-                                      <th style={{width: '15%'}}>Date</th>
-                                      <th style={{width: '20%'}}>Status</th>
+                                      <th style={{width: '25%'}}>Content</th>
+                                      <th style={{width: '10%'}}>Rate</th>
                                   </tr>
                                   </thead>
                                   <tbody>
-                                    {listInvoicesWillDisplay.map((invoice, index) => {
-                                      invoiceCounter++;
+                                    {listFeedbackWillDisplay.map((feedback, index) => {
+                                      feedbackCounter++;
                                       return (
                                         <tr key={index.toString()}>
-                                            <th scope="row">{invoiceCounter}</th>
+                                            <th scope="row">{feedbackCounter}</th>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {invoice.user.email}
+                                              {feedback.user.email}
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {invoice.course.name}
+                                              {feedback.course.name}
+                                            </td>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'normal'}}>
+                                              {feedback.content}
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {invoice.totalPrice}
-                                            </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                             {moment(invoice.payDay).format('YYYY-MM-DD')}
-                                            </td>
-                                            <td>
-                                              <Button size='sm' style={{width: '50%'}}
-                                                      className={invoice.status === 'success' ? 'btn-success'
-                                                                : invoice.status === 'canceled' ? 'btn-danger' : 'btn-warning'
-                                                                  + " btn shadow-2"}
-                                                      onClick={() => this.showModal(index)}
-                                              >
-                                                {invoice.status === 'success' ? 'Success' : invoice.status === 'canceled' ? 'Canceled' : 'Reported'}
-                                              </Button>
+                                              {feedback.rate}
                                             </td>
                                         </tr>
                                       )
@@ -251,17 +237,17 @@ class InvoiceList extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    invoiceState: state.invoiceState
+    feedbackState: state.feedbackState
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAllInvoicesAction: () => dispatch(fetchAllInvoices())
+    fetchAllFeedbackAction: () => dispatch(fetchAllFeedback())
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(InvoiceList));
+)(withRouter(FeedbackList));
