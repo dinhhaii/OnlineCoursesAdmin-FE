@@ -46,6 +46,13 @@ export default {
                   type: 'item',
                   url: '/app-content/all-comments',
                   icon: 'feather icon-message-square',
+              },
+              {
+                  id: 'all-coupons',
+                  title: 'Coupons',
+                  type: 'item',
+                  url: '/app-content/all-coupons',
+                  icon: 'feather icon-tag',
               }
           ]
       },

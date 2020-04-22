@@ -11,6 +11,7 @@ const LessonList = React.lazy(() => import('./App/components/Lesson/LessonList')
 const InvoiceList = React.lazy(() => import('./App/components/Invoice/InvoiceList'));
 const FeedbackList = React.lazy(() => import('./App/components/Feedback/FeedbackList'));
 const CommentList = React.lazy(() => import('./App/components/Comment/CommentList'));
+const DiscountList = React.lazy(() => import('./App/components/Discount/DiscountList'));
 
 const DashboardDefault = React.lazy(() => import('./App/components/Dashboard/Default'));
 
@@ -35,6 +36,7 @@ const routes = [
     { path: '/app-content/all-invoices', exact: true, name: 'All Invoices', component: InvoiceList },
     { path: '/app-content/all-feedback', exact: true, name: 'All Feedback', component: FeedbackList },
     { path: '/app-content/all-comments', exact: true, name: 'All Comments', component: CommentList },
+    { path: '/app-content/all-coupons', exact: true, name: 'All Coupons', component: DiscountList },
 
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },

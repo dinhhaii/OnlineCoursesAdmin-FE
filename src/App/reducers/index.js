@@ -5,6 +5,7 @@ import lessonState from './lesson';
 import invoiceState from './invoice';
 import feedbackState from './feedback';
 import commentState from './comment';
+import discountState from './discount';
 import reducer from './reducer';
 
 // const allReducers = Object.assign(userState, reducer);
@@ -15,6 +16,7 @@ const myReducer = combineReducers({
   lessonState,
   feedbackState,
   commentState,
+  discountState,
   invoiceState,
   reducer
 })

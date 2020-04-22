@@ -99,3 +99,18 @@ export const GET_ALL_FEEDBACK_SUCCESS = 'GET_ALL_FEEDBACK_SUCCESS';
 export const FETCHING_ALL_COMMENTS = 'FETCHING_ALL_COMMENTS';
 export const GET_ALL_COMMENTS_FAILED = 'GET_ALL_COMMENTS_FAILED';
 export const GET_ALL_COMMENTS_SUCCESS = 'GET_ALL_COMMENTS_SUCCESS';
+
+
+
+
+
+
+
+
+
+// -------------------------------- DISCOUNT ---------------------------------------
+
+// Get All Feedback
+export const FETCHING_ALL_DISCOUNT = 'FETCHING_ALL_DISCOUNT';
+export const GET_ALL_DISCOUNT_FAILED = 'GET_ALL_DISCOUNT_FAILED';
+export const GET_ALL_DISCOUNT_SUCCESS = 'GET_ALL_DISCOUNT_SUCCESS';
