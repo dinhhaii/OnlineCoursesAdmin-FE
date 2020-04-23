@@ -26,6 +26,7 @@ class CourseList extends React.Component {
       Promise
         .resolve(this.props.fetchAllCoursesAction())
         .then(() => {
+          $('#loader').hide();
           this.setState({
             listCoursesWillDisplay: this.props.courseState.allCourses
           });
@@ -197,6 +198,13 @@ class CourseList extends React.Component {
                                       <th style={{width: '15%'}}>Coupons</th>
                                       <th style={{width: '20%'}}>Status</th>
                                   </tr>
+
+                                  <span id='loader'
+                                        className='spinner-border align-self-center mb-5 mt-5'
+                                        role='status'
+                                        style={{marginLeft: '750%'}}/>
+
+                                        
                                   </thead>
                                   <tbody>
                                     {listCoursesWillDisplay.map((course, index) => {

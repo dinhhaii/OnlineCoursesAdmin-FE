@@ -26,6 +26,7 @@ class LessonList extends React.Component {
       Promise
         .resolve(this.props.fetchAllLessonsAction())
         .then(() => {
+          $('#loader').hide();
           this.setState({
             listLessonsWillDisplay: this.props.lessonState.allLessons
           });
@@ -198,6 +199,13 @@ class LessonList extends React.Component {
                                       <th style={{width: '10%'}}>Files</th>
                                       <th style={{width: '20%'}}>Lecture URL</th>
                                   </tr>
+
+                                  <span id='loader'
+                                        className='spinner-border align-self-center mb-5 mt-5'
+                                        role='status'
+                                        style={{marginLeft: '750%'}}/>
+
+                                        
                                   </thead>
                                   <tbody>
                                     {listLessonsWillDisplay.map((lesson, index) => {

@@ -26,6 +26,7 @@ class CommentList extends React.Component {
       Promise
         .resolve(this.props.fetchAllCommentsAction())
         .then(() => {
+          $('#loader').hide();
           this.setState({
             listCommentsWillDisplay: this.props.commentState.allComments
           });
@@ -197,6 +198,13 @@ class CommentList extends React.Component {
                                       <th style={{width: '20%'}}>Lesson</th>
                                       <th style={{width: '20%'}}>Content</th>
                                   </tr>
+
+                                  <span id='loader'
+                                        className='spinner-border align-self-center mb-5 mt-5'
+                                        role='status'
+                                        style={{marginLeft: '750%'}}/>
+
+                                        
                                   </thead>
                                   <tbody>
                                     {listCommentsWillDisplay.map((comment, index) => {

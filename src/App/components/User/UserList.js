@@ -1,11 +1,13 @@
 import React from 'react';
-import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal} from 'react-bootstrap';
+import {Row, Col, Card, Table, Button, DropdownButton, Dropdown, Modal, Pagination} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 
+
 import Aux from "../../../hoc/_Aux";
 import { fetchAllUsers, changeStatus } from './../../actions/user';
+
 
 class UserList extends React.Component {
 
@@ -15,9 +17,13 @@ class UserList extends React.Component {
     this.state = {
       listUsersWillDisplay: [],
       isModalOpen: false,
-      selectedUser: null
+      selectedUser: null,
+      currentPage: 1,
+      usersPerPage: 5,
     };
 
+    this.handleChange = this.handleChange.bind(this);
+    this.handlePage = this.handlePage.bind(this);
     this.handleRoleFilter = this.handleRoleFilter.bind(this);
     this.handleTypeFilter = this.handleTypeFilter.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
@@ -28,9 +34,26 @@ class UserList extends React.Component {
       Promise
         .resolve(this.props.fetchAllUsersAction())
         .then(() => {
+          $('#loader').hide();
           this.setState({
             listUsersWillDisplay: this.props.userState.allUsers
           });
+        });
+    }
+
+    handleChange(e) {
+      let value = e.target.value;
+      let { allUsers } = this.props.userState;
+      var filter = allUsers.filter(user => user.email.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+
+      this.setState({
+        listUsersWillDisplay: filter
+      });
+    }
+
+    handlePage(e) {
+      this.setState({
+          currentPage: Number(e.target.id)
         });
     }
 
@@ -86,6 +109,7 @@ class UserList extends React.Component {
       $('#roleFilter').text('Role');
       $('#typeFilter').text('Type');
       $('#statusFilter').text('Status');
+      $('#searchBox').val('');
 
       const { allUsers } = this.props.userState;
 
@@ -122,20 +146,29 @@ class UserList extends React.Component {
     }
 
     render() {
-      const { listUsersWillDisplay, isModalOpen, selectedUser } = this.state;
+      const { listUsersWillDisplay,
+              isModalOpen,
+              selectedUser,
+              currentPage,
+              usersPerPage} = this.state;
+
+      // Logic for displaying current todos
+      const indexOfLastUser = currentPage * usersPerPage;
+      const indexOfFirstUser = indexOfLastUser - usersPerPage;
+      const currentUsers = listUsersWillDisplay.slice(indexOfFirstUser, indexOfLastUser);
+
+      // Logic for displaying page numbers
+      const pageNumbers = [];
+      const lastPage = Math.ceil(listUsersWillDisplay.length / usersPerPage);
+      for (let number = 1; number <= lastPage; number++) {
+        pageNumbers.push(
+          <Pagination.Item key={number} id={number} active={number === currentPage} onClick={this.handlePage}>
+            {number}
+          </Pagination.Item>
+      );
+      }
 
       var userCounter = 0;
-
-      let active = 3;
-      let activeItems = [];
-
-      for (let number = 1; number <= 5; number++) {
-          activeItems.push(
-              <Pagination.Item key={number} active={number === active}>
-                  {number}
-              </Pagination.Item>
-          );
-      }
 
       return (
           <Aux>
@@ -217,6 +250,13 @@ class UserList extends React.Component {
                           </Card.Header>
                           <Card.Body>
 
+                          <input id='searchBox' name='searchBox'
+                                  type="text"
+                                  placeholder="Search for email..."
+                                  className="form-control mb-3 mr-3"
+                                  style={{maxWidth: '25%', float: 'left'}}
+                                  onChange={this.handleChange}/>
+
                           {/* Role Filter */}
                               <DropdownButton
                                   id='roleFilter'
@@ -288,12 +328,20 @@ class UserList extends React.Component {
                                       <th style={{width: '15%'}}>Type</th>
                                       <th style={{width: '20%'}}>Status</th>
                                   </tr>
+
+                                  <span id='loader'
+                                        className='spinner-border align-self-center mb-5 mt-5'
+                                        role='status'
+                                        style={{marginLeft: '750%'}}/>
+
+
                                   </thead>
                                   <tbody>
-                                    {listUsersWillDisplay.map((user, index) => {
+                                    {currentUsers.map((user, index) => {
                                       userCounter++;
                                       return (
-                                        <tr key={index.toString()}>
+                                        <tr key={index.toString()}
+                                            >
                                             <th scope="row">{userCounter}</th>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
                                               {user.firstName + ' ' + user.lastName}
@@ -325,8 +373,13 @@ class UserList extends React.Component {
                                   </tbody>
                               </Table>
 
+
                               <Pagination>
-                                {activeItems}
+                                <Pagination.First />
+                                <Pagination.Prev />
+                                {pageNumbers}
+                                <Pagination.Next />
+                                <Pagination.Last />
                               </Pagination>
                           </Card.Body>
                       </Card>

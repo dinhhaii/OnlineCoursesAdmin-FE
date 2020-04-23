@@ -26,6 +26,7 @@ class FeedbackList extends React.Component {
       Promise
         .resolve(this.props.fetchAllFeedbackAction())
         .then(() => {
+          $('#loader').hide();
           this.setState({
             listFeedbackWillDisplay: this.props.feedbackState.allFeedback
           });
@@ -198,6 +199,13 @@ class FeedbackList extends React.Component {
                                       <th style={{width: '25%'}}>Content</th>
                                       <th style={{width: '10%'}}>Rate</th>
                                   </tr>
+
+                                  <span id='loader'
+                                        className='spinner-border align-self-center mb-5 mt-5'
+                                        role='status'
+                                        style={{marginLeft: '750%'}}/>
+
+                                        
                                   </thead>
                                   <tbody>
                                     {listFeedbackWillDisplay.map((feedback, index) => {

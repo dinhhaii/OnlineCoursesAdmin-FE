@@ -29,6 +29,7 @@ class InvoiceList extends React.Component {
       Promise
         .resolve(this.props.fetchAllInvoicesAction())
         .then(() => {
+          $('#loader').hide();
           this.setState({
             listInvoicesWillDisplay: this.props.invoiceState.allInvoices
           });
@@ -202,6 +203,13 @@ class InvoiceList extends React.Component {
                                       <th style={{width: '15%'}}>Date</th>
                                       <th style={{width: '20%'}}>Status</th>
                                   </tr>
+
+                                  <span id='loader'
+                                        className='spinner-border align-self-center mb-5 mt-5'
+                                        role='status'
+                                        style={{marginLeft: '750%'}}/>
+
+                                        
                                   </thead>
                                   <tbody>
                                     {listInvoicesWillDisplay.map((invoice, index) => {

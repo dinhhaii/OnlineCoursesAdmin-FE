@@ -26,6 +26,7 @@ class DiscountList extends React.Component {
       Promise
         .resolve(this.props.fetchAllDiscountAction())
         .then(() => {
+          $('#loader').hide();
           this.setState({
             listDiscountWillDisplay: this.props.discountState.allDiscount
           });
@@ -160,6 +161,7 @@ class DiscountList extends React.Component {
 
                      {/*----------CARD-------------*/}
 
+
                       <Card>
                           <Card.Header>
                               <Card.Title as="h5">List of Coupons</Card.Title>
@@ -189,15 +191,24 @@ class DiscountList extends React.Component {
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 
+
+
                               <Table striped responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
                                       <th style={{width: '5%'}}>#</th>
-                                      <th style={{width: '20%'}}>Code</th>
-                                      <th style={{width: '20%'}}>Course</th>
-                                      <th style={{width: '25%'}}>Percentage(%)</th>
-                                      <th style={{width: '10%'}}>Status</th>
+                                      <th style={{width: '15%'}}>Code</th>
+                                      <th style={{width: '25%'}}>Course</th>
+                                      <th style={{width: '15%'}}>Percentage</th>
+                                      <th style={{width: '20%'}}>Status</th>
                                   </tr>
+
+                                  <span id='loader'
+                                        className='spinner-border align-self-center mb-5 mt-5'
+                                        role='status'
+                                        style={{marginLeft: '750%'}}/>
+
+
                                   </thead>
                                   <tbody>
                                     {listDiscountWillDisplay.map((discount, index) => {
@@ -212,10 +223,17 @@ class DiscountList extends React.Component {
                                               {discount.course.name}
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'normal'}}>
-                                             {discount.percentage}
+                                             {discount.percentage + '%'}
                                             </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {discount.status}
+                                            <td>
+                                              <Button size='sm' style={{width: '50%'}}
+                                                      className={discount.status === 'available' ? 'btn-success'
+                                                                : discount.status === 'coupon' ? 'btn-info' : 'btn-danger'
+                                                                  + " btn shadow-2"}
+                                                      onClick={() => this.showModal(index)}
+                                              >
+                                                {discount.status === 'available' ? 'Available' : discount.status === 'coupon' ? 'Coupon' : 'Expired'}
+                                              </Button>
                                             </td>
                                         </tr>
                                       )
