@@ -15,9 +15,12 @@ class CommentList extends React.Component {
     this.state = {
       listCommentsWillDisplay: [],
       isModalOpen: false,
-      selectedComment: null
+      selectedComment: null,
+      currentPage: 1,
+      commentsPerPage: 5
     };
 
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
@@ -31,6 +34,16 @@ class CommentList extends React.Component {
             listCommentsWillDisplay: this.props.commentState.allComments
           });
         });
+    }
+
+    handleSearch(e) {
+      let value = e.target.value;
+      let { allComments } = this.props.commentState;
+      var filter = allComments.filter(comment => comment.lesson.name.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+
+      this.setState({
+        listCommentsWillDisplay: filter
+      });
     }
 
     handleStatusFilter(status) {
@@ -51,6 +64,7 @@ class CommentList extends React.Component {
 
     handleResetFilter() {
       $('#statusFilter').text('Status');
+      $('#searchBox').val('');
 
       const { allComments } = this.props.commentState;
 
@@ -87,20 +101,32 @@ class CommentList extends React.Component {
     }
 
     render() {
-      const { listCommentsWillDisplay, isModalOpen, selectedComment } = this.state;
+      const { listCommentsWillDisplay,
+              isModalOpen,
+              selectedComment,
+              currentPage,
+              commentsPerPage} = this.state;
 
-      var commentCounter = 0;
+      // Logic for displaying current todos
+      const indexOfLastComment = currentPage * commentsPerPage;
+      const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+      const currentComments = listCommentsWillDisplay.slice(indexOfFirstComment, indexOfLastComment);
 
-      let active = 3;
-      let activeItems = [];
-
-      for (let number = 1; number <= 5; number++) {
-          activeItems.push(
-              <Pagination.Item key={number} active={number === active}>
-                  {number}
-              </Pagination.Item>
-          );
+      // Logic for displaying page numbers
+      const pageNumbers = [];
+      const lastPage = Math.ceil(listCommentsWillDisplay.length / commentsPerPage);
+      for (let number = 1; number <= lastPage; number++) {
+        pageNumbers.push(
+          <Pagination.Item  key={number}
+                            id={number}
+                            active={number === currentPage}
+                            onClick={() => this.setState({currentPage: number})}>
+            {number}
+          </Pagination.Item>
+      );
       }
+
+      var commentCounter = indexOfFirstComment;
 
       return (
           <Aux>
@@ -167,6 +193,14 @@ class CommentList extends React.Component {
                           </Card.Header>
                           <Card.Body>
 
+                          <input id='searchBox' name='searchBox'
+                                  type="text"
+                                  placeholder="Search by lesson..."
+                                  className="form-control mb-3 mr-3"
+                                  style={{maxWidth: '25%', float: 'left'}}
+                                  onChange={this.handleSearch}/>
+
+
                           {/* Status Filter */}
 
                               <DropdownButton
@@ -204,10 +238,10 @@ class CommentList extends React.Component {
                                         role='status'
                                         style={{marginLeft: '750%'}}/>
 
-                                        
+
                                   </thead>
                                   <tbody>
-                                    {listCommentsWillDisplay.map((comment, index) => {
+                                    {currentComments.map((comment, index) => {
                                       commentCounter++;
                                       return (
                                         <tr key={index.toString()}>
@@ -228,7 +262,23 @@ class CommentList extends React.Component {
                               </Table>
 
                               <Pagination>
-                                {activeItems}
+                                <Pagination.First
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: 1})}
+                                />
+                                <Pagination.Prev
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage - 1})}
+                                />
+                                {pageNumbers}
+                                <Pagination.Next
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage + 1})}
+                                />
+                                <Pagination.Last
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: lastPage})}
+                                />
                               </Pagination>
                           </Card.Body>
                       </Card>

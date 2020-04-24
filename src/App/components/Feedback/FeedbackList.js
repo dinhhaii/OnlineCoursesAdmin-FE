@@ -15,9 +15,12 @@ class FeedbackList extends React.Component {
     this.state = {
       listFeedbackWillDisplay: [],
       isModalOpen: false,
-      selectedFeedback: null
+      selectedFeedback: null,
+      currentPage: 1,
+      feedbackPerPage: 5
     };
 
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
@@ -31,6 +34,16 @@ class FeedbackList extends React.Component {
             listFeedbackWillDisplay: this.props.feedbackState.allFeedback
           });
         });
+    }
+
+    handleSearch(e) {
+      let value = e.target.value;
+      let { allFeedback } = this.props.feedbackState;
+      var filter = allFeedback.filter(feedback => feedback.course.name.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+
+      this.setState({
+        listFeedbackWillDisplay: filter
+      });
     }
 
     handleStatusFilter(status) {
@@ -51,6 +64,7 @@ class FeedbackList extends React.Component {
 
     handleResetFilter() {
       $('#statusFilter').text('Status');
+      $('#searchBox').val('');
 
       const { allFeedback } = this.props.feedbackState;
 
@@ -87,20 +101,32 @@ class FeedbackList extends React.Component {
     }
 
     render() {
-      const { listFeedbackWillDisplay, isModalOpen, selectedFeedback } = this.state;
+      const { listFeedbackWillDisplay,
+              isModalOpen,
+              selectedFeedback,
+              currentPage,
+              feedbackPerPage} = this.state;
 
-      var feedbackCounter = 0;
+      // Logic for displaying current todos
+      const indexOfLastFeedback = currentPage * feedbackPerPage;
+      const indexOfFirstFeedback = indexOfLastFeedback - feedbackPerPage;
+      const currentFeedback = listFeedbackWillDisplay.slice(indexOfFirstFeedback, indexOfLastFeedback);
 
-      let active = 3;
-      let activeItems = [];
-
-      for (let number = 1; number <= 5; number++) {
-          activeItems.push(
-              <Pagination.Item key={number} active={number === active}>
-                  {number}
-              </Pagination.Item>
-          );
+      // Logic for displaying page numbers
+      const pageNumbers = [];
+      const lastPage = Math.ceil(listFeedbackWillDisplay.length / feedbackPerPage);
+      for (let number = 1; number <= lastPage; number++) {
+        pageNumbers.push(
+          <Pagination.Item  key={number}
+                            id={number}
+                            active={number === currentPage}
+                            onClick={() => this.setState({currentPage: number})}>
+            {number}
+          </Pagination.Item>
+      );
       }
+
+      var feedbackCounter = indexOfFirstFeedback;
 
       return (
           <Aux>
@@ -167,6 +193,13 @@ class FeedbackList extends React.Component {
                           </Card.Header>
                           <Card.Body>
 
+                          <input id='searchBox' name='searchBox'
+                                  type="text"
+                                  placeholder="Search by course..."
+                                  className="form-control mb-3 mr-3"
+                                  style={{maxWidth: '25%', float: 'left'}}
+                                  onChange={this.handleSearch}/>
+
                           {/* Status Filter */}
 
                               <DropdownButton
@@ -205,10 +238,10 @@ class FeedbackList extends React.Component {
                                         role='status'
                                         style={{marginLeft: '750%'}}/>
 
-                                        
+
                                   </thead>
                                   <tbody>
-                                    {listFeedbackWillDisplay.map((feedback, index) => {
+                                    {currentFeedback.map((feedback, index) => {
                                       feedbackCounter++;
                                       return (
                                         <tr key={index.toString()}>
@@ -232,7 +265,23 @@ class FeedbackList extends React.Component {
                               </Table>
 
                               <Pagination>
-                                {activeItems}
+                                <Pagination.First
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: 1})}
+                                />
+                                <Pagination.Prev
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage - 1})}
+                                />
+                                {pageNumbers}
+                                <Pagination.Next
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage + 1})}
+                                />
+                                <Pagination.Last
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: lastPage})}
+                                />
                               </Pagination>
                           </Card.Body>
                       </Card>

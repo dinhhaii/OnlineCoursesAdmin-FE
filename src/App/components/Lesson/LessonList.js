@@ -15,9 +15,12 @@ class LessonList extends React.Component {
     this.state = {
       listLessonsWillDisplay: [],
       isModalOpen: false,
-      selectedLesson: null
+      selectedLesson: null,
+      currentPage: 1,
+      lessonsPerPage: 5
     };
 
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
@@ -31,6 +34,16 @@ class LessonList extends React.Component {
             listLessonsWillDisplay: this.props.lessonState.allLessons
           });
         });
+    }
+
+    handleSearch(e) {
+      let value = e.target.value;
+      let { allLessons } = this.props.lessonState;
+      var filter = allLessons.filter(lesson => lesson.name.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+
+      this.setState({
+        listLessonsWillDisplay: filter
+      });
     }
 
     handleStatusFilter(status) {
@@ -51,6 +64,7 @@ class LessonList extends React.Component {
 
     handleResetFilter() {
       $('#statusFilter').text('Status');
+      $('#searchBox').val('');
 
       const { allLessons } = this.props.lessonState;
 
@@ -87,20 +101,32 @@ class LessonList extends React.Component {
     }
 
     render() {
-      const { listLessonsWillDisplay, isModalOpen, selectedLesson } = this.state;
+      const { listLessonsWillDisplay,
+              isModalOpen,
+              selectedLesson,
+              currentPage,
+              lessonsPerPage } = this.state;
 
-      var lessonCounter = 0;
+      // Logic for displaying current todos
+      const indexOfLastLesson = currentPage * lessonsPerPage;
+      const indexOfFirstLesson = indexOfLastLesson - lessonsPerPage;
+      const currentLessons = listLessonsWillDisplay.slice(indexOfFirstLesson, indexOfLastLesson);
 
-      let active = 3;
-      let activeItems = [];
-
-      for (let number = 1; number <= 5; number++) {
-          activeItems.push(
-              <Pagination.Item key={number} active={number === active}>
-                  {number}
-              </Pagination.Item>
-          );
+      // Logic for displaying page numbers
+      const pageNumbers = [];
+      const lastPage = Math.ceil(listLessonsWillDisplay.length / lessonsPerPage);
+      for (let number = 1; number <= lastPage; number++) {
+        pageNumbers.push(
+          <Pagination.Item  key={number}
+                            id={number}
+                            active={number === currentPage}
+                            onClick={() => this.setState({currentPage: number})}>
+            {number}
+          </Pagination.Item>
+      );
       }
+
+      var lessonCounter = indexOfFirstLesson;
 
       return (
           <Aux>
@@ -167,6 +193,13 @@ class LessonList extends React.Component {
                           </Card.Header>
                           <Card.Body>
 
+                          <input id='searchBox' name='searchBox'
+                                  type="text"
+                                  placeholder="Search by name..."
+                                  className="form-control mb-3 mr-3"
+                                  style={{maxWidth: '25%', float: 'left'}}
+                                  onChange={this.handleSearch}/>
+
                           {/* Status Filter */}
 
                               <DropdownButton
@@ -205,10 +238,10 @@ class LessonList extends React.Component {
                                         role='status'
                                         style={{marginLeft: '750%'}}/>
 
-                                        
+
                                   </thead>
                                   <tbody>
-                                    {listLessonsWillDisplay.map((lesson, index) => {
+                                    {currentLessons.map((lesson, index) => {
                                       lessonCounter++;
                                       return (
                                         <tr key={index.toString()}>
@@ -232,7 +265,23 @@ class LessonList extends React.Component {
                               </Table>
 
                               <Pagination>
-                                {activeItems}
+                                <Pagination.First
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: 1})}
+                                />
+                                <Pagination.Prev
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage - 1})}
+                                />
+                                {pageNumbers}
+                                <Pagination.Next
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage + 1})}
+                                />
+                                <Pagination.Last
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: lastPage})}
+                                />
                               </Pagination>
                           </Card.Body>
                       </Card>

@@ -15,9 +15,12 @@ class DiscountList extends React.Component {
     this.state = {
       listDiscountWillDisplay: [],
       isModalOpen: false,
-      selectedDiscount: null
+      selectedDiscount: null,
+      currentPage: 1,
+      discountPerPage: 5
     };
 
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
@@ -31,6 +34,16 @@ class DiscountList extends React.Component {
             listDiscountWillDisplay: this.props.discountState.allDiscount
           });
         });
+    }
+
+    handleSearch(e) {
+      let value = e.target.value;
+      let { allDiscount } = this.props.discountState;
+      var filter = allDiscount.filter(discount => discount.code.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+
+      this.setState({
+        listDiscountWillDisplay: filter
+      });
     }
 
     handleStatusFilter(status) {
@@ -51,6 +64,7 @@ class DiscountList extends React.Component {
 
     handleResetFilter() {
       $('#statusFilter').text('Status');
+      $('#searchBox').val('');
 
       const { allDiscount } = this.props.discountState;
 
@@ -87,20 +101,32 @@ class DiscountList extends React.Component {
     }
 
     render() {
-      const { listDiscountWillDisplay, isModalOpen, selectedDiscount } = this.state;
+      const { listDiscountWillDisplay,
+              isModalOpen,
+              selectedDiscount,
+              currentPage,
+              discountPerPage} = this.state;
 
-      var discountCounter = 0;
+      // Logic for displaying current todos
+      const indexOfLastDiscount = currentPage * discountPerPage;
+      const indexOfFirstDiscount = indexOfLastDiscount - discountPerPage;
+      const currentDiscount = listDiscountWillDisplay.slice(indexOfFirstDiscount, indexOfLastDiscount);
 
-      let active = 3;
-      let activeItems = [];
-
-      for (let number = 1; number <= 5; number++) {
-          activeItems.push(
-              <Pagination.Item key={number} active={number === active}>
-                  {number}
-              </Pagination.Item>
-          );
+      // Logic for displaying page numbers
+      const pageNumbers = [];
+      const lastPage = Math.ceil(listDiscountWillDisplay.length / discountPerPage);
+      for (let number = 1; number <= lastPage; number++) {
+        pageNumbers.push(
+          <Pagination.Item  key={number}
+                            id={number}
+                            active={number === currentPage}
+                            onClick={() => this.setState({currentPage: number})}>
+            {number}
+          </Pagination.Item>
+      );
       }
+
+      var discountCounter = indexOfFirstDiscount;
 
       return (
           <Aux>
@@ -168,6 +194,14 @@ class DiscountList extends React.Component {
                           </Card.Header>
                           <Card.Body>
 
+                          <input id='searchBox' name='searchBox'
+                                  type="text"
+                                  placeholder="Search by code..."
+                                  className="form-control mb-3 mr-3"
+                                  style={{maxWidth: '25%', float: 'left'}}
+                                  onChange={this.handleSearch}/>
+
+
                           {/* Status Filter */}
 
                               <DropdownButton
@@ -211,7 +245,7 @@ class DiscountList extends React.Component {
 
                                   </thead>
                                   <tbody>
-                                    {listDiscountWillDisplay.map((discount, index) => {
+                                    {currentDiscount.map((discount, index) => {
                                       discountCounter++;
                                       return (
                                         <tr key={index.toString()}>
@@ -242,7 +276,23 @@ class DiscountList extends React.Component {
                               </Table>
 
                               <Pagination>
-                                {activeItems}
+                                <Pagination.First
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: 1})}
+                                />
+                                <Pagination.Prev
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage - 1})}
+                                />
+                                {pageNumbers}
+                                <Pagination.Next
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage + 1})}
+                                />
+                                <Pagination.Last
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: lastPage})}
+                                />
                               </Pagination>
                           </Card.Body>
                       </Card>

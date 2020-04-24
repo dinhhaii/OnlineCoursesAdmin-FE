@@ -18,9 +18,12 @@ class InvoiceList extends React.Component {
     this.state = {
       listInvoicesWillDisplay: [],
       isModalOpen: false,
-      selectedInvoice: null
+      selectedInvoice: null,
+      currentPage: 1,
+      invoicesPerPage: 5
     };
 
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
@@ -34,6 +37,16 @@ class InvoiceList extends React.Component {
             listInvoicesWillDisplay: this.props.invoiceState.allInvoices
           });
         });
+    }
+
+    handleSearch(e) {
+      let value = e.target.value;
+      let { allInvoices } = this.props.invoiceState;
+      var filter = allInvoices.filter(invoice => invoice.course.name.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+
+      this.setState({
+        listInvoicesWillDisplay: filter
+      });
     }
 
     handleStatusFilter(status) {
@@ -54,6 +67,7 @@ class InvoiceList extends React.Component {
 
     handleResetFilter() {
       $('#statusFilter').text('Status');
+      $('#searchBox').val('');
 
       const { allInvoices } = this.props.invoiceState;
 
@@ -90,20 +104,32 @@ class InvoiceList extends React.Component {
     }
 
     render() {
-      const { listInvoicesWillDisplay, isModalOpen, selectedInvoice } = this.state;
+      const { listInvoicesWillDisplay,
+              isModalOpen,
+              selectedInvoice,
+              currentPage,
+              invoicesPerPage } = this.state;
 
-      var invoiceCounter = 0;
+      // Logic for displaying current todos
+      const indexOfLastInvoice = currentPage * invoicesPerPage;
+      const indexOfFirstInvoice = indexOfLastInvoice - invoicesPerPage;
+      const currentInvoices = listInvoicesWillDisplay.slice(indexOfFirstInvoice, indexOfLastInvoice);
 
-      let active = 3;
-      let activeItems = [];
-
-      for (let number = 1; number <= 5; number++) {
-          activeItems.push(
-              <Pagination.Item key={number} active={number === active}>
-                  {number}
-              </Pagination.Item>
-          );
+      // Logic for displaying page numbers
+      const pageNumbers = [];
+      const lastPage = Math.ceil(listInvoicesWillDisplay.length / invoicesPerPage);
+      for (let number = 1; number <= lastPage; number++) {
+        pageNumbers.push(
+          <Pagination.Item  key={number}
+                            id={number}
+                            active={number === currentPage}
+                            onClick={() => this.setState({currentPage: number})}>
+            {number}
+          </Pagination.Item>
+      );
       }
+
+      var invoiceCounter = indexOfFirstInvoice;
 
       return (
           <Aux>
@@ -170,6 +196,14 @@ class InvoiceList extends React.Component {
                           </Card.Header>
                           <Card.Body>
 
+
+                          <input id='searchBox' name='searchBox'
+                                  type="text"
+                                  placeholder="Search by course..."
+                                  className="form-control mb-3 mr-3"
+                                  style={{maxWidth: '25%', float: 'left'}}
+                                  onChange={this.handleSearch}/>
+
                           {/* Status Filter */}
 
                               <DropdownButton
@@ -209,10 +243,10 @@ class InvoiceList extends React.Component {
                                         role='status'
                                         style={{marginLeft: '750%'}}/>
 
-                                        
+
                                   </thead>
                                   <tbody>
-                                    {listInvoicesWillDisplay.map((invoice, index) => {
+                                    {currentInvoices.map((invoice, index) => {
                                       invoiceCounter++;
                                       return (
                                         <tr key={index.toString()}>
@@ -246,7 +280,23 @@ class InvoiceList extends React.Component {
                               </Table>
 
                               <Pagination>
-                                {activeItems}
+                                <Pagination.First
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: 1})}
+                                />
+                                <Pagination.Prev
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage - 1})}
+                                />
+                                {pageNumbers}
+                                <Pagination.Next
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage + 1})}
+                                />
+                                <Pagination.Last
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: lastPage})}
+                                />
                               </Pagination>
                           </Card.Body>
                       </Card>

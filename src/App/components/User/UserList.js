@@ -22,8 +22,7 @@ class UserList extends React.Component {
       usersPerPage: 5,
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handlePage = this.handlePage.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleRoleFilter = this.handleRoleFilter.bind(this);
     this.handleTypeFilter = this.handleTypeFilter.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
@@ -41,7 +40,7 @@ class UserList extends React.Component {
         });
     }
 
-    handleChange(e) {
+    handleSearch(e) {
       let value = e.target.value;
       let { allUsers } = this.props.userState;
       var filter = allUsers.filter(user => user.email.toLowerCase().indexOf(value.toLowerCase()) !== -1)
@@ -49,12 +48,6 @@ class UserList extends React.Component {
       this.setState({
         listUsersWillDisplay: filter
       });
-    }
-
-    handlePage(e) {
-      this.setState({
-          currentPage: Number(e.target.id)
-        });
     }
 
     handleRoleFilter(role) {
@@ -162,13 +155,16 @@ class UserList extends React.Component {
       const lastPage = Math.ceil(listUsersWillDisplay.length / usersPerPage);
       for (let number = 1; number <= lastPage; number++) {
         pageNumbers.push(
-          <Pagination.Item key={number} id={number} active={number === currentPage} onClick={this.handlePage}>
+          <Pagination.Item  key={number}
+                            id={number}
+                            active={number === currentPage}
+                            onClick={() => this.setState({currentPage: number})}>
             {number}
           </Pagination.Item>
       );
       }
 
-      var userCounter = 0;
+      var userCounter = indexOfFirstUser;
 
       return (
           <Aux>
@@ -252,10 +248,10 @@ class UserList extends React.Component {
 
                           <input id='searchBox' name='searchBox'
                                   type="text"
-                                  placeholder="Search for email..."
+                                  placeholder="Search by email..."
                                   className="form-control mb-3 mr-3"
                                   style={{maxWidth: '25%', float: 'left'}}
-                                  onChange={this.handleChange}/>
+                                  onChange={this.handleSearch}/>
 
                           {/* Role Filter */}
                               <DropdownButton
@@ -375,11 +371,23 @@ class UserList extends React.Component {
 
 
                               <Pagination>
-                                <Pagination.First />
-                                <Pagination.Prev />
+                                <Pagination.First
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: 1})}
+                                />
+                                <Pagination.Prev
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage - 1})}
+                                />
                                 {pageNumbers}
-                                <Pagination.Next />
-                                <Pagination.Last />
+                                <Pagination.Next
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage + 1})}
+                                />
+                                <Pagination.Last
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: lastPage})}
+                                />
                               </Pagination>
                           </Card.Body>
                       </Card>

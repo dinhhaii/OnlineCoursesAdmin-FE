@@ -15,9 +15,12 @@ class CourseList extends React.Component {
     this.state = {
       listCoursesWillDisplay: [],
       isModalOpen: false,
-      selectedCourse: null
+      selectedCourse: null,
+      currentPage: 1,
+      coursesPerPage: 5
     };
 
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
@@ -31,6 +34,16 @@ class CourseList extends React.Component {
             listCoursesWillDisplay: this.props.courseState.allCourses
           });
         });
+    }
+
+    handleSearch(e) {
+      let value = e.target.value;
+      let { allCourses } = this.props.courseState;
+      var filter = allCourses.filter(course => course.name.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+
+      this.setState({
+        listCoursesWillDisplay: filter
+      });
     }
 
     handleStatusFilter(status) {
@@ -51,6 +64,7 @@ class CourseList extends React.Component {
 
     handleResetFilter() {
       $('#statusFilter').text('Status');
+      $('#searchBox').val('');
 
       const { allCourses } = this.props.courseState;
 
@@ -87,20 +101,32 @@ class CourseList extends React.Component {
     }
 
     render() {
-      const { listCoursesWillDisplay, isModalOpen, selectedCourse } = this.state;
+      const { listCoursesWillDisplay,
+              isModalOpen,
+              selectedCourse,
+              currentPage,
+              coursesPerPage} = this.state;
 
-      var courseCounter = 0;
+      // Logic for displaying current todos
+      const indexOfLastCourse = currentPage * coursesPerPage;
+      const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+      const currentCourses = listCoursesWillDisplay.slice(indexOfFirstCourse, indexOfLastCourse);
 
-      let active = 3;
-      let activeItems = [];
-
-      for (let number = 1; number <= 5; number++) {
-          activeItems.push(
-              <Pagination.Item key={number} active={number === active}>
-                  {number}
-              </Pagination.Item>
-          );
+      // Logic for displaying page numbers
+      const pageNumbers = [];
+      const lastPage = Math.ceil(listCoursesWillDisplay.length / coursesPerPage);
+      for (let number = 1; number <= lastPage; number++) {
+        pageNumbers.push(
+          <Pagination.Item  key={number}
+                            id={number}
+                            active={number === currentPage}
+                            onClick={() => this.setState({currentPage: number})}>
+            {number}
+          </Pagination.Item>
+      );
       }
+
+      var courseCounter = indexOfFirstCourse;
 
       return (
           <Aux>
@@ -140,7 +166,7 @@ class CourseList extends React.Component {
                             <b>Coupons: </b>
                               {selectedCourse.discount.map(discount => (
                                 <span>
-                                  {discount.code + ' | '}
+                                  {discount.code + ' '}
                                 </span>
                               ))}
                            </h5>
@@ -164,6 +190,14 @@ class CourseList extends React.Component {
                               <Card.Title as="h5">List of Courses</Card.Title>
                           </Card.Header>
                           <Card.Body>
+
+
+                          <input id='searchBox' name='searchBox'
+                                  type="text"
+                                  placeholder="Search by name..."
+                                  className="form-control mb-3 mr-3"
+                                  style={{maxWidth: '25%', float: 'left'}}
+                                  onChange={this.handleSearch}/>
 
                           {/* Status Filter */}
 
@@ -204,10 +238,10 @@ class CourseList extends React.Component {
                                         role='status'
                                         style={{marginLeft: '750%'}}/>
 
-                                        
+
                                   </thead>
                                   <tbody>
-                                    {listCoursesWillDisplay.map((course, index) => {
+                                    {currentCourses.map((course, index) => {
                                       courseCounter++;
                                       return (
                                         <tr key={index.toString()}>
@@ -241,7 +275,23 @@ class CourseList extends React.Component {
                               </Table>
 
                               <Pagination>
-                                {activeItems}
+                                <Pagination.First
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: 1})}
+                                />
+                                <Pagination.Prev
+                                  style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage - 1})}
+                                />
+                                {pageNumbers}
+                                <Pagination.Next
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: currentPage + 1})}
+                                />
+                                <Pagination.Last
+                                  style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                  onClick={() => this.setState({currentPage: lastPage})}
+                                />
                               </Pagination>
                           </Card.Body>
                       </Card>
