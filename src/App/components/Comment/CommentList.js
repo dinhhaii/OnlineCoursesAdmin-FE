@@ -1,6 +1,6 @@
 import React from 'react';
 import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal} from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 
@@ -143,43 +143,101 @@ class CommentList extends React.Component {
                        >
                          <Modal.Header>
                            <Modal.Title id="change-user-status">
-                             <h3>
-                               <b>
-
-                               </b>
-                             </h3>
+                             <h3><b>Comment detail</b></h3>
                            </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
-                           <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                            <b>Name: </b>
-                              <span>
+                         <Row>
+                         <Col  md='6'
+                               className='d-flex justify-content-center'
+                         >
 
-                              </span>
-                            <br /> <br />
-                            <b>Subject: </b>
-                              <span>
+                         <h5 style={{whiteSpace: 'normal'}}>
+                          Lesson
+                          <hr />
+                          <b>Name: </b>
+                          <span>
+                            {selectedComment.lesson.name}
+                          </span>
 
-                              </span>
-                            <br /> <br />
-                            <b>Price: </b>
-                              <span>
+                          <br /> <br />
+                          <b>Lecture URL: </b>
+                          <Link to={selectedComment.lesson.lectureURL}>Click here</Link>
 
-                              </span>
-                            <br /> <br />
-                            <b>Coupons: </b>
-                            <span>
+                          <br /> <br />
+                          <b>Files: </b>
+                          {selectedComment.lesson.files.map(file => (
+                            <div>
+                             <Link to={file.fileURL}>{file.name}</Link>
+                             <br />
+                            </div>
+                          ))}
 
-                            </span>
-                           </h5>
+                          <br />
+                          <b>Description: </b>
+                          <span>
+                            {selectedComment.lesson.description}
+                          </span>
+                         </h5>
+
+                         </Col>
+
+                        <Col md='6'>
+                          <h5 style={{whiteSpace: 'normal'}}>
+                           Comment
+                           <hr />
+                           <b>Content: </b>
+                           <span>
+                             {selectedComment.content}
+                           </span>
+
+                           <br />
+                           <hr />
+                           User
+                           <br /><br />
+                           <b>Image:  </b>
+                           <img  alt="Avatar"
+                                 src={selectedComment.user.imageURL}
+                                 style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+
+                           <br /> <br />
+                           <b>Full Name: </b>
+                           <span>
+                             {selectedComment.user.firstName + ' ' + selectedComment.user.lastName}
+                           </span>
+
+                           <br /> <br />
+                           <b>Email: </b>
+                           <span>
+                             {selectedComment.user.name}
+                           </span>
+
+                           <br /> <br />
+                           <b>Type: </b>
+                           <span>
+                             {selectedComment.user.type === 'local' ? 'Local' : selectedComment.user.type === 'google' ? 'Google' : 'Facebook'}
+                           </span>
+
+                           <br /> <br />
+                           <b>Status: </b>
+                             <Button  size='sm' style={{width: '30%', verticalAlign: 'middle'}}
+                                     className={selectedComment.user.status === 'verified' ? 'btn-success'
+                                             : selectedComment.user.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
+                             >
+                               {selectedComment.user.status === 'verified' ? 'Verified'
+                               : selectedComment.user.status === 'unverified' ? 'Unverified' : 'Banned'}
+                             </Button>
+                             <hr />
+                          </h5>
+                        </Col>
+                        </Row>
                          </Modal.Body>
                            <Modal.Footer>
                              <p>
                                <span style={{color: 'red'}}>* </span>
-                               Note: Denied feedback won't be appeared on the app.
+                               Note: Any comments belongs to denied course won't be appeared on the app.
                              </p>
-                             <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
-                             <Button variant="primary" onClick={() => this.handleChangeStatus()}>Save</Button>
+                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
                            </Modal.Footer>
                        </Modal>
                       : null
@@ -224,7 +282,7 @@ class CommentList extends React.Component {
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 
-                              <Table striped responsive style={{tableLayout: 'fixed'}}>
+                              <Table hover responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
                                       <th style={{width: '5%'}}>#</th>
@@ -244,7 +302,9 @@ class CommentList extends React.Component {
                                     {currentComments.map((comment, index) => {
                                       commentCounter++;
                                       return (
-                                        <tr key={index.toString()}>
+                                        <tr key={index.toString()}
+                                            onClick={() => this.showModal(index)}
+                                        >
                                             <th scope="row">{commentCounter}</th>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
                                               {comment.user.email}

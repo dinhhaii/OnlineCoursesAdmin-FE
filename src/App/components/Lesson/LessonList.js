@@ -1,11 +1,13 @@
 import React from 'react';
 import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal} from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 
 import Aux from "../../../hoc/_Aux";
 import { fetchAllLessons } from './../../actions/lesson';
+
+const moment = require('moment');
 
 class LessonList extends React.Component {
 
@@ -88,18 +90,6 @@ class LessonList extends React.Component {
       });
     }
 
-    handleChangeStatus() {
-      const { selectedLesson } = this.state;
-      let status = selectedLesson.status === 'pending' ? 'approved' : 'denied';
-
-      Promise
-        .resolve(this.props.changeStatusAction(selectedLesson._id, status))
-        .then(() => {
-          alert('Status has been changed!');
-          window.location.reload();
-        })
-    }
-
     render() {
       const { listLessonsWillDisplay,
               isModalOpen,
@@ -143,43 +133,107 @@ class LessonList extends React.Component {
                        >
                          <Modal.Header>
                            <Modal.Title id="change-user-status">
-                             <h3>
-                               <b>
-
-                               </b>
-                             </h3>
+                             <h3><b>Lesson detail</b></h3>
                            </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
-                           <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                            <b>Name: </b>
+                           <Row>
+                           <Col  md='6'
+                                 className='d-flex justify-content-center'
+                           >
+                             <h5 style={{whiteSpace: 'normal'}}>
+                              Course
+                               <hr />
+                               <b>Image:  </b>
+                               <img  alt="Avatar"
+                                     src={selectedLesson.course.imageURL}
+                                     style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+
+                              <br /> <br />
+                              <b>Name: </b>
                               <span>
-
+                                {selectedLesson.course.name}
                               </span>
-                            <br /> <br />
-                            <b>Subject: </b>
+
+                              <br /> <br />
+                              <b>Start date: </b>
                               <span>
-
+                                {moment(selectedLesson.course.startDate).format('YYYY-MM-DD')}
                               </span>
-                            <br /> <br />
-                            <b>Price: </b>
+
+                              <br /> <br />
+                              <b>Duration: </b>
                               <span>
-
+                                {selectedLesson.course.duration}
                               </span>
-                            <br /> <br />
-                            <b>Coupons: </b>
-                            <span>
 
-                            </span>
-                           </h5>
+                              <br /> <br />
+                              <b>Accessible days: </b>
+                              <span>
+                                {selectedLesson.course.accessibleDays}
+                              </span>
+
+                              <br /> <br />
+                              <b>Price: </b>
+                                <span>
+                                  {'$' + selectedLesson.course.price}
+                                </span>
+
+                              <br /> <br />
+                              <b>Description: </b>
+                              <span>
+                                {selectedLesson.course.description}
+                              </span>
+
+                              <br /> <br />
+                              <b>Status: </b>
+                              <Button size='sm' style={{width: '30%'}}
+                                      className={selectedLesson.course.status === 'approved' ? 'btn-success'
+                                                : selectedLesson.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                              >
+                                {selectedLesson.course.status === 'approved' ? 'Approved' : selectedLesson.course.status === 'denied' ? 'Denied' : 'Pending'}
+                              </Button>
+                             </h5>
+
+                           </Col>
+
+                          <Col md='6'>
+                            <h5 style={{whiteSpace: 'normal'}}>
+                             Lesson
+                             <hr />
+                             <b>Name: </b>
+                             <span>
+                               {selectedLesson.name}
+                             </span>
+
+                             <br /> <br />
+                             <b>Lecture URL: </b>
+                             <Link to={selectedLesson.lectureURL}>Click here</Link>
+
+                             <br /> <br />
+                             <b>Files: </b>
+                             {selectedLesson.files.map(file => (
+                               <div>
+                                <Link to={file.fileURL}>{file.name}</Link>
+                                <br />
+                               </div>
+                             ))}
+
+                             <br />
+                             <b>Description: </b>
+                             <span>
+                               {selectedLesson.description}
+                             </span>
+                            </h5>
+                          </Col>
+                          </Row>
                          </Modal.Body>
                            <Modal.Footer>
                              <p>
                                <span style={{color: 'red'}}>* </span>
-                               Note: Denied lessons won't be appeared on the app.
+                               Note: Any lesson belongs to denied course won't be appeared on the app.
                              </p>
-                             <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
-                             <Button variant="primary" onClick={() => this.handleChangeStatus()}>Save</Button>
+                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
                            </Modal.Footer>
                        </Modal>
                       : null
@@ -223,7 +277,7 @@ class LessonList extends React.Component {
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 
-                              <Table striped responsive style={{tableLayout: 'fixed'}}>
+                              <Table hover responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
                                       <th style={{width: '5%'}}>#</th>
@@ -244,7 +298,9 @@ class LessonList extends React.Component {
                                     {currentLessons.map((lesson, index) => {
                                       lessonCounter++;
                                       return (
-                                        <tr key={index.toString()}>
+                                        <tr key={index.toString()}
+                                            onClick={() => this.showModal(index)}
+                                        >
                                             <th scope="row">{lessonCounter}</th>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
                                               {lesson.name}

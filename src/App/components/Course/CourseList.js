@@ -7,6 +7,8 @@ import $ from 'jquery';
 import Aux from "../../../hoc/_Aux";
 import { fetchAllCourses, changeStatus } from './../../actions/course';
 
+const moment = require('moment');
+
 class CourseList extends React.Component {
 
   constructor(props) {
@@ -89,15 +91,17 @@ class CourseList extends React.Component {
     }
 
     handleChangeStatus() {
-      const { selectedCourse } = this.state;
-      let status = selectedCourse.status === 'pending' ? 'approved' : 'denied';
+      if (window.confirm('Do you want to change this course status?') === true) {
+        const { selectedCourse } = this.state;
+        let status = selectedCourse.status === 'approved' ? 'denied' : 'approved';
 
-      Promise
-        .resolve(this.props.changeStatusAction(selectedCourse._id, status))
-        .then(() => {
-          alert('Status has been changed!');
-          window.location.reload();
-        })
+        Promise
+          .resolve(this.props.changeStatusAction(selectedCourse._id, status))
+          .then(() => {
+            alert('Status has been changed!');
+            window.location.reload();
+          })
+      }
     }
 
     render() {
@@ -143,41 +147,102 @@ class CourseList extends React.Component {
                        >
                          <Modal.Header>
                            <Modal.Title id="change-user-status">
-                             <h3><b>Are you sure to {selectedCourse.status !== 'pending' ? 'approve' : 'deny'} this course?</b></h3>
+                             <h3><b>Course detail</b></h3>
                            </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
-                           <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                            <b>Name: </b>
-                              <span>
-                                {selectedCourse.name}
-                              </span>
-                            <br /> <br />
-                            <b>Subject: </b>
+                         <Row>
+                            <Col  md='4'
+                                  className='d-flex justify-content-center'
+                            >
+                               <img  alt="Avatar"
+                                     src={selectedCourse.imageURL}
+                                     style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+                            </Col>
+
+                           <Col md='8'>
+                             <h5 style={{whiteSpace: 'normal'}}>
+                              <b>Name: </b>
+                                <span>
+                                  {selectedCourse.name}
+                                </span>
+
+                              <br /> <br />
+                              <b>Subject: </b>
                               <span>
                                 {selectedCourse.subject.name}
                               </span>
-                            <br /> <br />
-                            <b>Price: </b>
+
+                              <br /> <br />
+                              <b>Lessons: </b>
+                              {selectedCourse.lessons.length}
+
+                              <br /> <br />
+                              <b>Lecturer: </b>
                               <span>
-                                {'$' + selectedCourse.price}
+                                {selectedCourse.lecturer.firstName + ' ' + selectedCourse.lecturer.lastName
+                                + ' (' + selectedCourse.lecturer.email + ')'}
                               </span>
-                            <br /> <br />
-                            <b>Coupons: </b>
+
+                              <br /> <br />
+                              <b>Start date: </b>
+                              <span>
+                                {moment(selectedCourse.startDate).format('YYYY-MM-DD')}
+                              </span>
+
+                              <br /> <br />
+                              <b>Duration: </b>
+                              <span>
+                                {selectedCourse.duration}
+                              </span>
+
+                              <br /> <br />
+                              <b>Accessible days: </b>
+                              <span>
+                                {selectedCourse.accessibleDays}
+                              </span>
+
+                              <br /> <br />
+                              <b>Price: </b>
+                                <span>
+                                  {'$' + selectedCourse.price}
+                                </span>
+
+                              <br /> <br />
+                              <b>Coupons: </b>
                               {selectedCourse.discount.map(discount => (
                                 <span>
                                   {discount.code + ' '}
                                 </span>
                               ))}
-                           </h5>
+
+                              <br /> <br />
+                              <b>Description: </b>
+                              <span>
+                                {selectedCourse.description}
+                              </span>
+
+                              <br /> <br />
+                              <b>Status: </b>
+                              <Button size='sm' style={{width: '20%'}}
+                                      className={selectedCourse.status === 'approved' ? 'btn-success'
+                                                : selectedCourse.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                              >
+                                {selectedCourse.status === 'approved' ? 'Approved' : selectedCourse.status === 'denied' ? 'Denied' : 'Pending'}
+                              </Button>
+                             </h5>
+                           </Col>
+
+                         </Row>
+
                          </Modal.Body>
                            <Modal.Footer>
                              <p>
                                <span style={{color: 'red'}}>* </span>
                                Note: Denied courses won't be appeared on the app.
                              </p>
-                             <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
-                             <Button variant="primary" onClick={() => this.handleChangeStatus()}>Save</Button>
+                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <Button className='btn shadow-2' variant="primary" onClick={() => this.handleChangeStatus()}>Change status</Button>
                            </Modal.Footer>
                        </Modal>
                       : null
@@ -222,7 +287,7 @@ class CourseList extends React.Component {
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 
-                              <Table striped responsive style={{tableLayout: 'fixed'}}>
+                              <Table hover responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
                                       <th style={{width: '10%'}}>#</th>
@@ -244,7 +309,9 @@ class CourseList extends React.Component {
                                     {currentCourses.map((course, index) => {
                                       courseCounter++;
                                       return (
-                                        <tr key={index.toString()}>
+                                        <tr key={index.toString()}
+                                            onClick={() => this.showModal(index)}
+                                        >
                                             <th scope="row">{courseCounter}</th>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
                                               {course.name}
@@ -263,7 +330,6 @@ class CourseList extends React.Component {
                                                       className={course.status === 'approved' ? 'btn-success'
                                                                 : course.status === 'denied' ? 'btn-danger' : 'btn-warning'
                                                                   + " btn shadow-2"}
-                                                      onClick={() => this.showModal(index)}
                                               >
                                                 {course.status === 'approved' ? 'Approved' : course.status === 'denied' ? 'Denied' : 'Pending'}
                                               </Button>

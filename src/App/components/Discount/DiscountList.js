@@ -7,6 +7,8 @@ import $ from 'jquery';
 import Aux from "../../../hoc/_Aux";
 import { fetchAllDiscount } from './../../actions/discount';
 
+const moment = require('moment');
+
 class DiscountList extends React.Component {
 
   constructor(props) {
@@ -151,35 +153,100 @@ class DiscountList extends React.Component {
                            </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
-                           <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                            <b>Name: </b>
+                           <Row>
+                           <Col  md='6'
+                                 className='d-flex justify-content-center'
+                           >
+                             <h5 style={{whiteSpace: 'normal'}}>
+                              Course
+                               <hr />
+                               <b>Image:  </b>
+                               <img  alt="Avatar"
+                                     src={selectedDiscount.course.imageURL}
+                                     style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+
+                              <br /> <br />
+                              <b>Name: </b>
                               <span>
-
+                                {selectedDiscount.course.name}
                               </span>
-                            <br /> <br />
-                            <b>Subject: </b>
+
+                              <br /> <br />
+                              <b>Start date: </b>
                               <span>
-
+                                {moment(selectedDiscount.course.startDate).format('YYYY-MM-DD')}
                               </span>
-                            <br /> <br />
-                            <b>Price: </b>
+
+                              <br /> <br />
+                              <b>Duration: </b>
                               <span>
-
+                                {selectedDiscount.course.duration}
                               </span>
-                            <br /> <br />
-                            <b>Coupons: </b>
-                            <span>
 
-                            </span>
-                           </h5>
+                              <br /> <br />
+                              <b>Accessible days: </b>
+                              <span>
+                                {selectedDiscount.course.accessibleDays}
+                              </span>
+
+                              <br /> <br />
+                              <b>Price: </b>
+                                <span>
+                                  {'$' + selectedDiscount.course.price}
+                                </span>
+
+                              <br /> <br />
+                              <b>Description: </b>
+                              <span>
+                                {selectedDiscount.course.description}
+                              </span>
+
+                              <br /> <br />
+                              <b>Status: </b>
+                              <Button size='sm' style={{width: '30%'}}
+                                      className={selectedDiscount.course.status === 'approved' ? 'btn-success'
+                                                : selectedDiscount.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                              >
+                                {selectedDiscount.course.status === 'approved' ? 'Approved' : selectedDiscount.course.status === 'denied' ? 'Denied' : 'Pending'}
+                              </Button>
+                             </h5>
+
+                           </Col>
+
+                          <Col md='6'>
+                            <h5 style={{whiteSpace: 'normal'}}>
+                             Coupon
+                             <hr />
+                             <b>Code: </b>
+                             <span>
+                               {selectedDiscount.code}
+                             </span>
+
+                             <br /> <br />
+                             <b>Percentage: </b>
+                             <span>
+                               {selectedDiscount.percentage + '%'}
+                             </span>
+
+                             <br /> <br />
+                             <b>Status: </b>
+                             <Button size='sm' style={{width: '30%'}}
+                                     className={selectedDiscount.status === 'available' ? 'btn-success'
+                                               : selectedDiscount.status === 'coupon' ? 'btn-info' : 'btn-danger'
+                                                 + " btn shadow-2"}
+                             >
+                               {selectedDiscount.status === 'available' ? 'Available' : selectedDiscount.status === 'coupon' ? 'Coupon' : 'Expired'}
+                             </Button>
+                            </h5>
+                          </Col>
+                          </Row>
                          </Modal.Body>
                            <Modal.Footer>
                              <p>
                                <span style={{color: 'red'}}>* </span>
-                               Note: Denied feedback won't be appeared on the app.
+                               Note: Update coupon status action is unavailable at the moment.
                              </p>
-                             <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
-                             <Button variant="primary" onClick={() => this.handleChangeStatus()}>Save</Button>
+                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
                            </Modal.Footer>
                        </Modal>
                       : null
@@ -227,7 +294,7 @@ class DiscountList extends React.Component {
 
 
 
-                              <Table striped responsive style={{tableLayout: 'fixed'}}>
+                              <Table hover responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
                                       <th style={{width: '5%'}}>#</th>
@@ -248,7 +315,9 @@ class DiscountList extends React.Component {
                                     {currentDiscount.map((discount, index) => {
                                       discountCounter++;
                                       return (
-                                        <tr key={index.toString()}>
+                                        <tr key={index.toString()}
+                                            onClick={() => this.showModal(index)}
+                                        >
                                             <th scope="row">{discountCounter}</th>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
                                               {discount.code}
@@ -264,7 +333,6 @@ class DiscountList extends React.Component {
                                                       className={discount.status === 'available' ? 'btn-success'
                                                                 : discount.status === 'coupon' ? 'btn-info' : 'btn-danger'
                                                                   + " btn shadow-2"}
-                                                      onClick={() => this.showModal(index)}
                                               >
                                                 {discount.status === 'available' ? 'Available' : discount.status === 'coupon' ? 'Coupon' : 'Expired'}
                                               </Button>

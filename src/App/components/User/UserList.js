@@ -1,5 +1,13 @@
 import React from 'react';
-import {Row, Col, Card, Table, Button, DropdownButton, Dropdown, Modal, Pagination} from 'react-bootstrap';
+import {  Row,
+          Col,
+          Card,
+          Table,
+          Button,
+          DropdownButton,
+          Dropdown,
+          Modal,
+          Pagination} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
@@ -127,15 +135,17 @@ class UserList extends React.Component {
     }
 
     handleChangeStatus() {
-      const { selectedUser } = this.state;
-      let status = selectedUser.status === 'verified' ? 'banned' : 'verified';
+      if (window.confirm('Do you want to change this user status?') === true) {
+        const { selectedUser } = this.state;
+        let status = selectedUser.status === 'verified' ? 'banned' : 'verified';
 
-      Promise
-        .resolve(this.props.changeStatusAction(selectedUser._id, status))
-        .then(() => {
-          alert('Status has been changed!');
-          window.location.reload();
-        })
+        Promise
+          .resolve(this.props.changeStatusAction(selectedUser._id, status))
+          .then(() => {
+            alert('Status has been changed!');
+            window.location.reload();
+          })
+      }
     }
 
     render() {
@@ -167,6 +177,7 @@ class UserList extends React.Component {
       var userCounter = indexOfFirstUser;
 
       return (
+
           <Aux>
               <Row>
                   <Col>
@@ -180,49 +191,68 @@ class UserList extends React.Component {
                          show={isModalOpen}
                        >
                          <Modal.Header>
-                          {selectedUser.status === 'unverified' ?
-                            <Modal.Title id="change-user-status">
-                              <h3><b>This user have not been verified!</b></h3>
-                            </Modal.Title>
-                            :
-                            <Modal.Title id="change-user-status">
-                              <h3><b>Are you sure to {selectedUser.status !== 'banned' ? 'ban' : 'activate'} this user?</b></h3>
-                            </Modal.Title>
-                          }
+                           <Modal.Title id="change-user-status">
+                             <h3><b>User detail</b></h3>
+                           </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
-                         {selectedUser.status === 'unverified' ?
-                           <p>
-                             <span style={{color: 'red'}}>* </span>
-                             Note: This action is only for verified and banned users!
-                           </p>
-                           :
-                           <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                            <b>Full name: </b>
-                              <span>
-                                {selectedUser.firstName + ' ' + selectedUser.lastName}
-                              </span>
-                            <br /> <br />
-                            <b>Email: </b>
-                              <span>
-                                {selectedUser.email}
-                              </span>
-                            <br /> <br />
-                            <b>Role: </b>
-                              <span>
-                                {selectedUser.role === 'learner' ? 'Learner' : 'Lecturer'}
-                              </span>
-                            <br /> <br />
-                            <b>Type: </b>
-                              <span>
-                                {selectedUser.type === 'local' ? 'Local' : selectedUser.type === 'google' ? 'Google' : 'Facebook'}
-                              </span>
-                           </h5>
-                         }
+                         <Row>
+                          <Col md='4'
+                               className='d-flex justify-content-center'>
+                            <img  alt="Avatar"
+                                  src={selectedUser.imageURL}
+                                  style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+                          </Col>
+                          <Col md='8'>
+                            <h5 style={{whiteSpace: 'normal'}}>
+                             <b>Full name: </b>
+                               <span>
+                                 {selectedUser.firstName + ' ' + selectedUser.lastName}
+                               </span>
+                             <br /> <br />
+                             <b>Email: </b>
+                               <span>
+                                 {selectedUser.email}
+                               </span>
+                             <br /> <br />
+                             <b>Role: </b>
+                               <span>
+                                 {selectedUser.role === 'learner' ? 'Learner' : 'Lecturer'}
+                               </span>
+                             <br /> <br />
+                             <b>Type: </b>
+                               <span>
+                                 {selectedUser.type === 'local' ? 'Local' : selectedUser.type === 'google' ? 'Google' : 'Facebook'}
+                               </span>
+
+                             <br /> <br />
+                             <b>Bio: </b>
+                             <span>
+                               {selectedUser.bio}
+                             </span>
+
+                             <br /> <br />
+                             <b>Status: </b>
+                               <Button  size='sm' style={{width: '20%', verticalAlign: 'middle'}}
+                                       className={selectedUser.status === 'verified' ? 'btn-success'
+                                               : selectedUser.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
+                               >
+                                 {selectedUser.status === 'verified' ? 'Verified'
+                                 : selectedUser.status === 'unverified' ? 'Unverified' : 'Banned'}
+                               </Button>
+                            </h5>
+                          </Col>
+
+                         </Row>
                          </Modal.Body>
                          {selectedUser.status === 'unverified' ?
                            <Modal.Footer>
-                             <Button variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <p>
+                               <span style={{color: 'red'}}>* </span>
+                               Note: Only verified users can be banned.
+                             </p>
+                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <Button className='btn shadow-2' disabled variant="secondary">Change status</Button>
                            </Modal.Footer>
                            :
                            <Modal.Footer>
@@ -230,8 +260,8 @@ class UserList extends React.Component {
                                <span style={{color: 'red'}}>* </span>
                                Note: Banned users won't be allowed to sign in the app.
                              </p>
-                             <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
-                             <Button variant="primary" onClick={() => this.handleChangeStatus()}>Save</Button>
+                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <Button className='btn shadow-2' variant="primary" onClick={() => this.handleChangeStatus()}>Change status</Button>
                            </Modal.Footer>
                          }
                        </Modal>
@@ -314,7 +344,7 @@ class UserList extends React.Component {
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 
-                              <Table striped responsive style={{tableLayout: 'fixed'}}>
+                              <Table hover responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
                                       <th style={{width: '10%'}}>#</th>
@@ -337,30 +367,31 @@ class UserList extends React.Component {
                                       userCounter++;
                                       return (
                                         <tr key={index.toString()}
-                                            >
-                                            <th scope="row">{userCounter}</th>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                            onClick={() => this.showModal(index)}
+                                        >
+                                            <th style={{verticalAlign: 'middle', display: 'table-cell'}} scope="row">{userCounter}</th>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                               {user.firstName + ' ' + user.lastName}
                                             </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                               {user.email}
                                             </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                               {user.role === 'learner' ? 'Learner' : 'Lecturer'}
                                             </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                               {user.type === 'local' ? 'Local'
                                               : user.type === 'google' ? 'Google' : 'Facebook'}
                                             </td>
                                             <td>
-                                              <Button size='sm' style={{width: '50%'}}
+                                              <Button  size='sm'
+                                                      style={{width: '50%', verticalAlign: 'middle'}}
                                                       className={user.status === 'verified' ? 'btn-success'
-                                                                : user.status === 'unverified' ? 'btn-warning' : 'btn-danger'
-                                                                + " btn shadow-2"}
-                                                      onClick={() => this.showModal(index)}
+                                                              : user.status === 'unverified' ? 'btn-warning' : 'btn-danger'
+                                                              + ' btn shadow-2'}
                                               >
                                                 {user.status === 'verified' ? 'Verified'
-                                                                : user.status === 'unverified' ? 'Unverified' : 'Banned'}
+                                                : user.status === 'unverified' ? 'Unverified' : 'Banned'}
                                               </Button>
                                             </td>
                                         </tr>

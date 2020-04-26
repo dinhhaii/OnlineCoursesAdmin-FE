@@ -13,6 +13,8 @@ const FeedbackList = React.lazy(() => import('./App/components/Feedback/Feedback
 const CommentList = React.lazy(() => import('./App/components/Comment/CommentList'));
 const DiscountList = React.lazy(() => import('./App/components/Discount/DiscountList'));
 
+const UserDetail = React.lazy(() => import('./App/components/User/UserDetail'));
+
 const DashboardDefault = React.lazy(() => import('./App/components/Dashboard/Default'));
 
 const UIBasicButton = React.lazy(() => import('./App/components/UIElements/Basic/Button'));
@@ -25,8 +27,6 @@ const UIBasicBasicTypography = React.lazy(() => import('./App/components/UIEleme
 
 const FormsElements = React.lazy(() => import('./App/components/Forms/FormsElements'));
 
-const BootstrapTable = React.lazy(() => import('./App/components/Tables/BootstrapTable'));
-
 const Nvd3Chart = React.lazy(() => import('./App/components/Charts/Nvd3Chart/index'));
 
 const routes = [
@@ -38,6 +38,10 @@ const routes = [
     { path: '/app-content/all-comments', exact: true, name: 'All Comments', component: CommentList },
     { path: '/app-content/all-coupons', exact: true, name: 'All Coupons', component: DiscountList },
 
+
+    { path: '/app-content/all-users/:id', exact: true, name: 'User Detail', component: UserDetail },
+
+
     { path: '/dashboard/default', exact: true, name: 'Default', component: DashboardDefault },
     { path: '/basic/button', exact: true, name: 'Basic Button', component: UIBasicButton },
     { path: '/basic/badges', exact: true, name: 'Basic Badges', component: UIBasicBadges },
@@ -46,7 +50,6 @@ const routes = [
     { path: '/basic/tabs-pills', exact: true, name: 'Basic Tabs & Pills', component: UIBasicTabsPills },
     { path: '/basic/typography', exact: true, name: 'Basic Typography', component: UIBasicBasicTypography },
     { path: '/forms/form-basic', exact: true, name: 'Forms Elements', component: FormsElements },
-    { path: '/tables/bootstrap', exact: true, name: 'Bootstrap Table', component: BootstrapTable },
     { path: '/charts/nvd3', exact: true, name: 'Nvd3 Chart', component: Nvd3Chart }
 ];
 

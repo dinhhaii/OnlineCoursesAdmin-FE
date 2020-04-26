@@ -146,43 +146,71 @@ class InvoiceList extends React.Component {
                        >
                          <Modal.Header>
                            <Modal.Title id="change-user-status">
-                             <h3>
-                               <b>
-
-                               </b>
-                             </h3>
+                             <h3><b>Invoice detail</b></h3>
                            </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
-                           <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                            <b>Name: </b>
+                          <Row>
+                            <Col md='6'>
+                             <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'normal'}}>
+                             <b>User: </b>
+                               <span>
+                                 {selectedInvoice.user.firstName + ' ' + selectedInvoice.user.lastName
+                                 + ' (' + selectedInvoice.user.email + ')'}
+                               </span>
+
+                              <br /> <br />
+                              <b>Course: </b>
                               <span>
-
+                                {selectedInvoice.course.name}
                               </span>
-                            <br /> <br />
-                            <b>Subject: </b>
-                              <span>
 
-                              </span>
-                            <br /> <br />
-                            <b>Price: </b>
-                              <span>
+                              <br /> <br />
+                              <b>Coupon: </b>
+                                <span>
+                                  {selectedInvoice.discount.code + ' - '
+                                  + selectedInvoice.discount.percentage + '%'}
+                                </span>
+                             </h5>
+                            </Col>
 
-                              </span>
-                            <br /> <br />
-                            <b>Coupons: </b>
-                            <span>
+                            <Col md='6'>
+                              <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'normal'}}>
+                              <b>Total price: </b>
+                                <span>
+                                  {'$' + selectedInvoice.totalPrice}
+                                </span>
 
-                            </span>
-                           </h5>
+                               <br /> <br />
+                               <b>Pay day: </b>
+                               <span>
+                                 {moment(selectedInvoice.payDay).format('YYYY-MM-DD')}
+                               </span>
+
+                               <br /> <br />
+                               <b>Report message: </b>
+                               <span>
+                                 {selectedInvoice.reportMsg}
+                               </span>
+
+                               <br /> <br />
+                               <b>Status: </b>
+                               <Button size='sm' style={{width: '30%'}}
+                                       className={selectedInvoice.status === 'success' ? 'btn-success'
+                                                 : selectedInvoice.status === 'canceled' ? 'btn-danger' : 'btn-warning'}
+                               >
+                                 {selectedInvoice.status === 'success' ? 'Success' : selectedInvoice.status === 'canceled' ? 'Canceled' : 'Reported'}
+                               </Button>
+                              </h5>
+                            </Col>
+                          </Row>
                          </Modal.Body>
                            <Modal.Footer>
                              <p>
                                <span style={{color: 'red'}}>* </span>
                                Note: Denied courses won't be appeared on the app.
                              </p>
-                             <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
-                             <Button variant="primary" onClick={() => this.handleChangeStatus()}>Save</Button>
+                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
                            </Modal.Footer>
                        </Modal>
                       : null
@@ -227,7 +255,7 @@ class InvoiceList extends React.Component {
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 
-                              <Table striped responsive style={{tableLayout: 'fixed'}}>
+                              <Table hover responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
                                       <th style={{width: '5%'}}>#</th>
@@ -249,26 +277,27 @@ class InvoiceList extends React.Component {
                                     {currentInvoices.map((invoice, index) => {
                                       invoiceCounter++;
                                       return (
-                                        <tr key={index.toString()}>
+                                        <tr key={index.toString()}
+                                            onClick={() => this.showModal(index)}
+                                        >
                                             <th scope="row">{invoiceCounter}</th>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                               {invoice.user.email}
                                             </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                               {invoice.course.name}
                                             </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                               {invoice.totalPrice}
                                             </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
+                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                              {moment(invoice.payDay).format('YYYY-MM-DD')}
                                             </td>
                                             <td>
-                                              <Button size='sm' style={{width: '50%'}}
+                                              <Button size='sm' style={{width: '50%', verticalAlign: 'middle'}}
                                                       className={invoice.status === 'success' ? 'btn-success'
                                                                 : invoice.status === 'canceled' ? 'btn-danger' : 'btn-warning'
                                                                   + " btn shadow-2"}
-                                                      onClick={() => this.showModal(index)}
                                               >
                                                 {invoice.status === 'success' ? 'Success' : invoice.status === 'canceled' ? 'Canceled' : 'Reported'}
                                               </Button>

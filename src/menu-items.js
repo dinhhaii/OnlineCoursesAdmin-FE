@@ -10,7 +10,7 @@ export default {
                   title: 'Users',
                   type: 'item',
                   url: '/app-content/all-users',
-                  icon: 'feather icon-users',
+                  icon: 'feather icon-users'
               },
               {
                   id: 'all-courses',
@@ -135,13 +135,6 @@ export default {
                   type: 'item',
                   url: '/forms/form-basic',
                   icon: 'feather icon-file-text'
-              },
-              {
-                  id: 'bootstrap',
-                  title: 'Table',
-                  type: 'item',
-                  icon: 'feather icon-server',
-                  url: '/tables/bootstrap'
               }
           ]
       },

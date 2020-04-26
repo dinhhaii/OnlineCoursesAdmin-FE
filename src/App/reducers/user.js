@@ -6,8 +6,8 @@ const initialState = {
   allLearners: [],
   allLecturers: [],
   user: null,
+  fetchedUser: null,
   isLogin: false,
-
   isSendingEmail: false,
   isPasswordReset: false
 };
@@ -22,7 +22,7 @@ const userState = (state = initialState, action) => {
     case types.GET_CURRENT_USER:
       return { ...state, isFetching: false, isLogin: true, user: action.user };
     case types.GET_USER_BY_ID:
-      return { ...state, user: action.user };
+      return { ...state, fetchedUser: action.user };
     case types.GET_ALL_USERS:
       return { ...state, allUsers: action.allUsers };
     case types.GET_ALL_LEARNERS:

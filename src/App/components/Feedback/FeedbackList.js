@@ -7,6 +7,8 @@ import $ from 'jquery';
 import Aux from "../../../hoc/_Aux";
 import { fetchAllFeedback } from './../../actions/feedback';
 
+const moment = require('moment');
+
 class FeedbackList extends React.Component {
 
   constructor(props) {
@@ -143,43 +145,132 @@ class FeedbackList extends React.Component {
                        >
                          <Modal.Header>
                            <Modal.Title id="change-user-status">
-                             <h3>
-                               <b>
-
-                               </b>
-                             </h3>
+                             <h3><b>Feedback detail</b></h3>
                            </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
-                           <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                            <b>Name: </b>
+                         <Row>
+                           <Col  md='6'
+                                 className='d-flex justify-content-center'
+                           >
+                             <h5 style={{whiteSpace: 'normal'}}>
+                              Course
+                               <hr />
+                               <b>Image:  </b>
+                               <img  alt="Avatar"
+                                     src={selectedFeedback.course.imageURL}
+                                     style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+
+                              <br /> <br />
+                              <b>Name: </b>
                               <span>
-
+                                {selectedFeedback.course.name}
                               </span>
-                            <br /> <br />
-                            <b>Subject: </b>
+
+                              <br /> <br />
+                              <b>Start date: </b>
                               <span>
-
+                                {moment(selectedFeedback.course.startDate).format('YYYY-MM-DD')}
                               </span>
-                            <br /> <br />
-                            <b>Price: </b>
+
+                              <br /> <br />
+                              <b>Duration: </b>
                               <span>
-
+                                {selectedFeedback.course.duration}
                               </span>
-                            <br /> <br />
-                            <b>Coupons: </b>
-                            <span>
 
-                            </span>
-                           </h5>
+                              <br /> <br />
+                              <b>Accessible days: </b>
+                              <span>
+                                {selectedFeedback.course.accessibleDays}
+                              </span>
+
+                              <br /> <br />
+                              <b>Price: </b>
+                                <span>
+                                  {'$' + selectedFeedback.course.price}
+                                </span>
+
+                              <br /> <br />
+                              <b>Description: </b>
+                              <span>
+                                {selectedFeedback.course.description}
+                              </span>
+
+                              <br /> <br />
+                              <b>Status: </b>
+                              <Button size='sm' style={{width: '30%'}}
+                                      className={selectedFeedback.course.status === 'approved' ? 'btn-success'
+                                                : selectedFeedback.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                              >
+                                {selectedFeedback.course.status === 'approved' ? 'Approved' : selectedFeedback.course.status === 'denied' ? 'Denied' : 'Pending'}
+                              </Button>
+                             </h5>
+
+                           </Col>
+
+                          <Col md='6'>
+                            <h5 style={{whiteSpace: 'normal'}}>
+                             Feedback
+                             <hr />
+                             <b>Content: </b>
+                             <span>
+                               {selectedFeedback.content}
+                             </span>
+
+                             <br /> <br />
+                             <b>Rate: </b>
+                             <span>
+                               {selectedFeedback.rate}
+                             </span>
+
+                             <br />
+                             <hr />
+                             User
+                             <br /><br />
+                             <b>Image:  </b>
+                             <img  alt="Avatar"
+                                   src={selectedFeedback.user.imageURL}
+                                   style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+
+                             <br /> <br />
+                             <b>Full Name: </b>
+                             <span>
+                               {selectedFeedback.user.firstName + ' ' + selectedFeedback.user.lastName}
+                             </span>
+
+                             <br /> <br />
+                             <b>Email: </b>
+                             <span>
+                               {selectedFeedback.user.name}
+                             </span>
+
+                             <br /> <br />
+                             <b>Type: </b>
+                             <span>
+                               {selectedFeedback.user.type === 'local' ? 'Local' : selectedFeedback.user.type === 'google' ? 'Google' : 'Facebook'}
+                             </span>
+
+                             <br /> <br />
+                             <b>Status: </b>
+                               <Button  size='sm' style={{width: '30%', verticalAlign: 'middle'}}
+                                       className={selectedFeedback.user.status === 'verified' ? 'btn-success'
+                                               : selectedFeedback.user.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
+                               >
+                                 {selectedFeedback.user.status === 'verified' ? 'Verified'
+                                 : selectedFeedback.user.status === 'unverified' ? 'Unverified' : 'Banned'}
+                               </Button>
+                               <hr />
+                            </h5>
+                          </Col>
+                         </Row>
                          </Modal.Body>
                            <Modal.Footer>
                              <p>
                                <span style={{color: 'red'}}>* </span>
-                               Note: Denied feedback won't be appeared on the app.
+                               Note: Any feedback belongs to denied course won't be appeared on the app.
                              </p>
-                             <Button variant="danger" onClick={() => this.hideModal()}>Cancel</Button>
-                             <Button variant="primary" onClick={() => this.handleChangeStatus()}>Save</Button>
+                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
                            </Modal.Footer>
                        </Modal>
                       : null
@@ -223,7 +314,7 @@ class FeedbackList extends React.Component {
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 
-                              <Table striped responsive style={{tableLayout: 'fixed'}}>
+                              <Table hover responsive style={{tableLayout: 'fixed'}}>
                                   <thead>
                                   <tr>
                                       <th style={{width: '5%'}}>#</th>
@@ -244,7 +335,9 @@ class FeedbackList extends React.Component {
                                     {currentFeedback.map((feedback, index) => {
                                       feedbackCounter++;
                                       return (
-                                        <tr key={index.toString()}>
+                                        <tr key={index.toString()}
+                                            onClick={() => this.showModal(index)}
+                                        >
                                             <th scope="row">{feedbackCounter}</th>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
                                               {feedback.user.email}

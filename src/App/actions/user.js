@@ -179,7 +179,6 @@ export function forgotPassword(email) {
 }
 
 // Get User By Id
-// Get All Users
 export function fetchUserById(_idUser) {
   return function(dispatch) {
     return fetch(`${SERVER_URL}/user/${_idUser}`, {
