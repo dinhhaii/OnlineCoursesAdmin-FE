@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal} from 'react-bootstrap';
+import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal, Collapse} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
@@ -18,6 +18,7 @@ class InvoiceList extends React.Component {
     this.state = {
       listInvoicesWillDisplay: [],
       isModalOpen: false,
+      isCollapsed: false,
       selectedInvoice: null,
       currentPage: 1,
       invoicesPerPage: 5
@@ -78,7 +79,8 @@ class InvoiceList extends React.Component {
 
     hideModal() {
       this.setState({
-        isModalOpen: false
+        isModalOpen: false,
+        isCollapsed: false
       });
     }
 
@@ -107,6 +109,7 @@ class InvoiceList extends React.Component {
       const { listInvoicesWillDisplay,
               isModalOpen,
               selectedInvoice,
+              isCollapsed,
               currentPage,
               invoicesPerPage } = this.state;
 
@@ -139,7 +142,7 @@ class InvoiceList extends React.Component {
                   {/*-----------MODAL------------*/}
                   {selectedInvoice ?
                       <Modal
-                         size="lg"
+                         size="xl"
                          aria-labelledby="contained-modal-title-vcenter"
                          centered
                          show={isModalOpen}
@@ -152,55 +155,88 @@ class InvoiceList extends React.Component {
                          <Modal.Body>
                           <Row>
                             <Col md='6'>
-                             <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'normal'}}>
-                             <b>User: </b>
-                               <span>
-                                 {selectedInvoice.user.firstName + ' ' + selectedInvoice.user.lastName
-                                 + ' (' + selectedInvoice.user.email + ')'}
-                               </span>
-
-                              <br /> <br />
-                              <b>Course: </b>
-                              <span>
-                                {selectedInvoice.course.name}
-                              </span>
-
-                              <br /> <br />
-                              <b>Coupon: </b>
-                                <span>
-                                  {selectedInvoice.discount.code + ' - '
-                                  + selectedInvoice.discount.percentage + '%'}
-                                </span>
+                             <h5 style={{whiteSpace: 'normal'}}>
+                               <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                   <tbody>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>User: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedInvoice.user.firstName + ' ' + selectedInvoice.user.lastName
+                                     + ' (' + selectedInvoice.user.email + ')'}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Course: </b>
+                                   </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedInvoice.course.name}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Coupon: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedInvoice.discount.code + ' - '
+                                     + selectedInvoice.discount.percentage + '%'}</td>
+                                   </tr>
+                                   </tbody>
+                               </Table>
                              </h5>
                             </Col>
 
                             <Col md='6'>
-                              <h5 style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'normal'}}>
-                              <b>Total price: </b>
-                                <span>
-                                  {'$' + selectedInvoice.totalPrice}
-                                </span>
+                              <h5 style={{whiteSpace: 'normal'}}>
+                                <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                    <tbody>
+                                    <tr>
+                                      <td style={{width: '30%', whiteSpace: 'normal'}}
+                                      >
+                                        <b>Total price: </b>
+                                      </td>
+                                      <td style={{whiteSpace: 'normal'}}
+                                      >{'$' + selectedInvoice.totalPrice}</td>
+                                    </tr>
+                                    <tr>
+                                      <td style={{width: '30%', whiteSpace: 'normal'}}
+                                    >
+                                      <b>Pay day: </b>
+                                    </td>
+                                      <td style={{whiteSpace: 'normal'}}
+                                      >{moment(selectedInvoice.payDay).format('YYYY-MM-DD')}</td>
+                                    </tr>
+                                    <tr>
+                                      <td style={{width: '30%', whiteSpace: 'normal'}}
+                                      >
+                                        <b>Status: </b>
+                                      </td>
+                                      <td style={{whiteSpace: 'normal'}}
+                                      >
+                                        <Button  onClick={() => {if (selectedInvoice.status === 'reported') {this.setState({ isCollapsed: !isCollapsed })}}}
+                                                 size='sm' style={{width: '30%'}}
+                                                 className={selectedInvoice.status === 'success' ? 'btn-success'
+                                                          : selectedInvoice.status === 'canceled' ? 'btn-danger' : 'btn-warning'}
+                                        >
+                                         {selectedInvoice.status === 'success' ? 'Success' : selectedInvoice.status === 'canceled' ? 'Canceled' : 'Reported'}
+                                       </Button>
+                                        <Collapse in={this.state.isCollapsed}>
+                                            <div id="basic-collapse">
+                                                <Card.Body>
+                                                    <Card.Text>
+                                                    <b>Report message: </b>{selectedInvoice.reportMsg}
+                                                    </Card.Text>
+                                                </Card.Body>
+                                            </div>
+                                        </Collapse>
+                                      </td>
+                                    </tr>
+                                    </tbody>
+                                </Table>
 
-                               <br /> <br />
-                               <b>Pay day: </b>
-                               <span>
-                                 {moment(selectedInvoice.payDay).format('YYYY-MM-DD')}
-                               </span>
-
-                               <br /> <br />
-                               <b>Report message: </b>
-                               <span>
-                                 {selectedInvoice.reportMsg}
-                               </span>
-
-                               <br /> <br />
-                               <b>Status: </b>
-                               <Button size='sm' style={{width: '30%'}}
-                                       className={selectedInvoice.status === 'success' ? 'btn-success'
-                                                 : selectedInvoice.status === 'canceled' ? 'btn-danger' : 'btn-warning'}
-                               >
-                                 {selectedInvoice.status === 'success' ? 'Success' : selectedInvoice.status === 'canceled' ? 'Canceled' : 'Reported'}
-                               </Button>
                               </h5>
                             </Col>
                           </Row>

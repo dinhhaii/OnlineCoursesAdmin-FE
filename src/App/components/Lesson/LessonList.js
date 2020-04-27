@@ -126,7 +126,7 @@ class LessonList extends React.Component {
                   {/*-----------MODAL------------*/}
                   {selectedLesson ?
                       <Modal
-                         size="lg"
+                         size="xl"
                          aria-labelledby="contained-modal-title-vcenter"
                          centered
                          show={isModalOpen}
@@ -142,88 +142,133 @@ class LessonList extends React.Component {
                                  className='d-flex justify-content-center'
                            >
                              <h5 style={{whiteSpace: 'normal'}}>
-                              Course
-                               <hr />
-                               <b>Image:  </b>
-                               <img  alt="Avatar"
-                                     src={selectedLesson.course.imageURL}
-                                     style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
-
-                              <br /> <br />
-                              <b>Name: </b>
-                              <span>
-                                {selectedLesson.course.name}
-                              </span>
-
-                              <br /> <br />
-                              <b>Start date: </b>
-                              <span>
-                                {moment(selectedLesson.course.startDate).format('YYYY-MM-DD')}
-                              </span>
-
-                              <br /> <br />
-                              <b>Duration: </b>
-                              <span>
-                                {selectedLesson.course.duration}
-                              </span>
-
-                              <br /> <br />
-                              <b>Accessible days: </b>
-                              <span>
-                                {selectedLesson.course.accessibleDays}
-                              </span>
-
-                              <br /> <br />
-                              <b>Price: </b>
-                                <span>
-                                  {'$' + selectedLesson.course.price}
-                                </span>
-
-                              <br /> <br />
-                              <b>Description: </b>
-                              <span>
-                                {selectedLesson.course.description}
-                              </span>
-
-                              <br /> <br />
-                              <b>Status: </b>
-                              <Button size='sm' style={{width: '30%'}}
-                                      className={selectedLesson.course.status === 'approved' ? 'btn-success'
-                                                : selectedLesson.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
-                              >
-                                {selectedLesson.course.status === 'approved' ? 'Approved' : selectedLesson.course.status === 'denied' ? 'Denied' : 'Pending'}
-                              </Button>
+                              <b>COURSE</b>
+                              <br />
+                               <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                   <tbody>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Image: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >
+                                       <img  alt="Avatar"
+                                             src={selectedLesson.course.imageURL}
+                                             style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
+                                     </td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Name: </b>
+                                   </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedLesson.course.name}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Start date: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{moment(selectedLesson.course.startDate).format('YYYY-MM-DD')}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Duration: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedLesson.course.duration}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Accessible days: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedLesson.course.accessibleDays}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Price: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{'$' + selectedLesson.course.price}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Status: </b>
+                                     </td>
+                                     <td>
+                                       <Button size='sm' style={{width: '30%'}}
+                                               className={selectedLesson.course.status === 'approved' ? 'btn-success'
+                                                         : selectedLesson.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                                       >
+                                         {selectedLesson.course.status === 'approved' ? 'Approved' : selectedLesson.course.status === 'denied' ? 'Denied' : 'Pending'}
+                                       </Button>
+                                     </td>
+                                   </tr>
+                                   </tbody>
+                               </Table>
                              </h5>
 
                            </Col>
 
                           <Col md='6'>
                             <h5 style={{whiteSpace: 'normal'}}>
-                             Lesson
-                             <hr />
-                             <b>Name: </b>
-                             <span>
-                               {selectedLesson.name}
-                             </span>
-
-                             <br /> <br />
-                             <b>Lecture URL: </b>
-                             <Link to={selectedLesson.lectureURL}>Click here</Link>
-
-                             <br /> <br />
-                             <b>Files: </b>
-                             {selectedLesson.files.map(file => (
-                               <div>
-                                <Link to={file.fileURL}>{file.name}</Link>
-                                <br />
-                               </div>
-                             ))}
-
+                             <b>LESSON</b>
                              <br />
-                             <b>Description: </b>
-                             <span>
-                               {selectedLesson.description}
-                             </span>
+                             <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                 <tbody>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Name: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedLesson.name}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                 >
+                                   <b>Lecture URL: </b>
+                                 </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   ><Link to={selectedLesson.lectureURL}>Click here</Link></td>
+                                 </tr>
+                                 {selectedLesson.files.length === 0 ?
+                                   null
+                                   :
+                                   <tr>
+                                     <td style={{width: '30%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Files: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >
+                                       {selectedLesson.files.map(file => (
+                                         <div>
+                                          <Link to={file.fileURL}>{file.name}</Link>
+                                          <br />
+                                         </div>
+                                       ))}
+                                     </td>
+                                   </tr>
+                                 }
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Description: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedLesson.description}</td>
+                                 </tr>
+                                 </tbody>
+                             </Table>
                             </h5>
                           </Col>
                           </Row>

@@ -136,7 +136,7 @@ class CommentList extends React.Component {
                   {/*-----------MODAL------------*/}
                   {selectedComment ?
                       <Modal
-                         size="lg"
+                         size="xl"
                          aria-labelledby="contained-modal-title-vcenter"
                          centered
                          show={isModalOpen}
@@ -149,85 +149,135 @@ class CommentList extends React.Component {
                          <Modal.Body>
                          <Row>
                          <Col  md='6'
-                               className='d-flex justify-content-center'
                          >
 
                          <h5 style={{whiteSpace: 'normal'}}>
-                          Lesson
-                          <hr />
-                          <b>Name: </b>
-                          <span>
-                            {selectedComment.lesson.name}
-                          </span>
+                           <b>COMMENT</b>
+                           <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                               <tbody>
+                               <tr>
+                                 <td style={{width: '30%', whiteSpace: 'normal'}}
+                                 >
+                                   <b>Content: </b>
+                                 </td>
+                                 <td style={{whiteSpace: 'normal'}}
+                                 >{selectedComment.content}</td>
+                               </tr>
+                               </tbody>
+                           </Table>
+                           <b>LESSON</b>
+                           <br />
+                           <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                               <tbody>
+                               <tr>
+                                 <td style={{width: '30%', whiteSpace: 'normal'}}
+                                 >
+                                   <b>Name: </b>
+                                 </td>
+                                 <td style={{whiteSpace: 'normal'}}
+                                 >{selectedComment.lesson.name}</td>
+                               </tr>
+                               <tr>
+                                 <td style={{width: '30%', whiteSpace: 'normal'}}
+                               >
+                                 <b>Lecture URL: </b>
+                               </td>
+                                 <td style={{whiteSpace: 'normal'}}
+                                 ><Link to={selectedComment.lesson.lectureURL}>Click here</Link></td>
+                               </tr>
+                               {selectedComment.lesson.files.length === 0 ?
+                                 null
+                                 :
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Files: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >
+                                     {selectedComment.lesson.files.map(file => (
+                                       <div>
+                                        <Link to={file.fileURL}>{file.name}</Link>
+                                        <br />
+                                       </div>
+                                     ))}
+                                   </td>
+                                 </tr>
+                               }
+                               <tr>
+                                 <td style={{width: '30%', whiteSpace: 'normal'}}
+                                 >
+                                   <b>Description: </b>
+                                 </td>
+                                 <td style={{whiteSpace: 'normal'}}
+                                 >{selectedComment.lesson.description}</td>
+                               </tr>
+                               </tbody>
+                           </Table>
 
-                          <br /> <br />
-                          <b>Lecture URL: </b>
-                          <Link to={selectedComment.lesson.lectureURL}>Click here</Link>
-
-                          <br /> <br />
-                          <b>Files: </b>
-                          {selectedComment.lesson.files.map(file => (
-                            <div>
-                             <Link to={file.fileURL}>{file.name}</Link>
-                             <br />
-                            </div>
-                          ))}
-
-                          <br />
-                          <b>Description: </b>
-                          <span>
-                            {selectedComment.lesson.description}
-                          </span>
                          </h5>
 
                          </Col>
 
                         <Col md='6'>
                           <h5 style={{whiteSpace: 'normal'}}>
-                           Comment
-                           <hr />
-                           <b>Content: </b>
-                           <span>
-                             {selectedComment.content}
-                           </span>
-
-                           <br />
-                           <hr />
-                           User
-                           <br /><br />
-                           <b>Image:  </b>
-                           <img  alt="Avatar"
-                                 src={selectedComment.user.imageURL}
-                                 style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
-
-                           <br /> <br />
-                           <b>Full Name: </b>
-                           <span>
-                             {selectedComment.user.firstName + ' ' + selectedComment.user.lastName}
-                           </span>
-
-                           <br /> <br />
-                           <b>Email: </b>
-                           <span>
-                             {selectedComment.user.name}
-                           </span>
-
-                           <br /> <br />
-                           <b>Type: </b>
-                           <span>
-                             {selectedComment.user.type === 'local' ? 'Local' : selectedComment.user.type === 'google' ? 'Google' : 'Facebook'}
-                           </span>
-
-                           <br /> <br />
-                           <b>Status: </b>
-                             <Button  size='sm' style={{width: '30%', verticalAlign: 'middle'}}
-                                     className={selectedComment.user.status === 'verified' ? 'btn-success'
-                                             : selectedComment.user.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
-                             >
-                               {selectedComment.user.status === 'verified' ? 'Verified'
-                               : selectedComment.user.status === 'unverified' ? 'Unverified' : 'Banned'}
-                             </Button>
-                             <hr />
+                            <b>USER</b>
+                            <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                <tbody>
+                                <tr>
+                                  <td style={{width: '30%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Image: </b>
+                                  </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >
+                                    <img  alt="Avatar"
+                                          src={selectedComment.user.imageURL}
+                                          style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '30%', whiteSpace: 'normal'}}
+                                >
+                                  <b>Full name: </b>
+                                </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >{selectedComment.user.firstName + ' ' + selectedComment.user.lastName}</td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '30%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Email: </b>
+                                  </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >{selectedComment.user.email}</td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '30%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Type: </b>
+                                  </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >{selectedComment.user.type === 'local' ? 'Local' : selectedComment.user.type === 'google' ? 'Google' : 'Facebook'}</td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '30%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Status: </b>
+                                  </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >
+                                    <Button  size='sm' style={{width: '30%', verticalAlign: 'middle'}}
+                                            className={selectedComment.user.status === 'verified' ? 'btn-success'
+                                                    : selectedComment.user.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
+                                    >
+                                      {selectedComment.user.status === 'verified' ? 'Verified'
+                                      : selectedComment.user.status === 'unverified' ? 'Unverified' : 'Banned'}
+                                    </Button>
+                                  </td>
+                                </tr>
+                                </tbody>
+                            </Table>
                           </h5>
                         </Col>
                         </Row>

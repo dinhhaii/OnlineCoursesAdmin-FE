@@ -7,7 +7,6 @@ import $ from 'jquery';
 import Aux from "../../../hoc/_Aux";
 import { fetchAllDiscount } from './../../actions/discount';
 
-const moment = require('moment');
 
 class DiscountList extends React.Component {
 
@@ -138,7 +137,7 @@ class DiscountList extends React.Component {
                   {/*-----------MODAL------------*/}
                   {selectedDiscount ?
                       <Modal
-                         size="lg"
+                         size="xl"
                          aria-labelledby="contained-modal-title-vcenter"
                          centered
                          show={isModalOpen}
@@ -146,97 +145,132 @@ class DiscountList extends React.Component {
                          <Modal.Header>
                            <Modal.Title id="change-user-status">
                              <h3>
-                               <b>
-
+                               <b> Coupon detail
                                </b>
                              </h3>
                            </Modal.Title>
                          </Modal.Header>
                          <Modal.Body>
                            <Row>
-                           <Col  md='6'
+                           <Col  md='4'
                                  className='d-flex justify-content-center'
                            >
                              <h5 style={{whiteSpace: 'normal'}}>
-                              Course
-                               <hr />
-                               <b>Image:  </b>
-                               <img  alt="Avatar"
-                                     src={selectedDiscount.course.imageURL}
-                                     style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
-
-                              <br /> <br />
-                              <b>Name: </b>
-                              <span>
-                                {selectedDiscount.course.name}
-                              </span>
-
-                              <br /> <br />
-                              <b>Start date: </b>
-                              <span>
-                                {moment(selectedDiscount.course.startDate).format('YYYY-MM-DD')}
-                              </span>
-
-                              <br /> <br />
-                              <b>Duration: </b>
-                              <span>
-                                {selectedDiscount.course.duration}
-                              </span>
-
-                              <br /> <br />
-                              <b>Accessible days: </b>
-                              <span>
-                                {selectedDiscount.course.accessibleDays}
-                              </span>
-
-                              <br /> <br />
-                              <b>Price: </b>
-                                <span>
-                                  {'$' + selectedDiscount.course.price}
-                                </span>
-
-                              <br /> <br />
-                              <b>Description: </b>
-                              <span>
-                                {selectedDiscount.course.description}
-                              </span>
-
-                              <br /> <br />
-                              <b>Status: </b>
-                              <Button size='sm' style={{width: '30%'}}
-                                      className={selectedDiscount.course.status === 'approved' ? 'btn-success'
-                                                : selectedDiscount.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
-                              >
-                                {selectedDiscount.course.status === 'approved' ? 'Approved' : selectedDiscount.course.status === 'denied' ? 'Denied' : 'Pending'}
-                              </Button>
+                              <b>COUPON</b>
+                              <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                  <tbody>
+                                  <tr>
+                                    <td style={{width: '30%', whiteSpace: 'normal'}}
+                                    >
+                                      <b>Code: </b>
+                                    </td>
+                                    <td style={{whiteSpace: 'normal'}}
+                                    >{selectedDiscount.code}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={{width: '30%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Percentage: </b>
+                                  </td>
+                                    <td style={{whiteSpace: 'normal'}}
+                                    >{selectedDiscount.percentage + '%'}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={{width: '30%', whiteSpace: 'normal'}}
+                                    >
+                                      <b>Status: </b>
+                                    </td>
+                                    <td style={{whiteSpace: 'normal'}}
+                                    >
+                                      <Button size='sm' style={{width: '40%'}}
+                                              className={selectedDiscount.status === 'available' ? 'btn-success'
+                                                        : selectedDiscount.status === 'coupon' ? 'btn-info' : 'btn-danger'
+                                                          + " btn shadow-2"}
+                                      >
+                                        {selectedDiscount.status === 'available' ? 'Available' : selectedDiscount.status === 'coupon' ? 'Coupon' : 'Expired'}
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                  </tbody>
+                              </Table>
                              </h5>
 
                            </Col>
 
-                          <Col md='6'>
+                          <Col md='8'>
                             <h5 style={{whiteSpace: 'normal'}}>
-                             Coupon
-                             <hr />
-                             <b>Code: </b>
-                             <span>
-                               {selectedDiscount.code}
-                             </span>
 
-                             <br /> <br />
-                             <b>Percentage: </b>
-                             <span>
-                               {selectedDiscount.percentage + '%'}
-                             </span>
-
-                             <br /> <br />
-                             <b>Status: </b>
-                             <Button size='sm' style={{width: '30%'}}
-                                     className={selectedDiscount.status === 'available' ? 'btn-success'
-                                               : selectedDiscount.status === 'coupon' ? 'btn-info' : 'btn-danger'
-                                                 + " btn shadow-2"}
-                             >
-                               {selectedDiscount.status === 'available' ? 'Available' : selectedDiscount.status === 'coupon' ? 'Coupon' : 'Expired'}
-                             </Button>
+                             <b>COURSE</b>
+                             <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                 <tbody>
+                                 <tr>
+                                   <td style={{width: '20%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Image: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >
+                                     <img  alt="Avatar"
+                                           src={selectedDiscount.course.imageURL}
+                                           style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
+                                   </td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '20%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Name: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedDiscount.course.name}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '20%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Duration: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedDiscount.course.duration}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '20%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Accessible Days: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedDiscount.course.accessibleDays}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '20%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Price: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{'$' + selectedDiscount.course.price}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '20%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Description: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedDiscount.course.description}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '20%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Status: </b>
+                                   </td>
+                                   <td>
+                                     <Button size='sm' style={{width: '20%'}}
+                                             className={selectedDiscount.course.status === 'approved' ? 'btn-success'
+                                                       : selectedDiscount.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                                     >
+                                       {selectedDiscount.course.status === 'approved' ? 'Approved' : selectedDiscount.course.status === 'denied' ? 'Denied' : 'Pending'}
+                                     </Button>
+                                   </td>
+                                 </tr>
+                                 </tbody>
+                             </Table>
                             </h5>
                           </Col>
                           </Row>

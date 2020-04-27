@@ -50,6 +50,7 @@ class BasicCollapse extends Component {
                     <Col sm={12}>
                         <h5>Basic Collapse</h5>
                         <hr/>
+                        
                         <Card>
                             <Card.Header>
                                 <Button href={DEMO.BLANK_LINK} onClick={() => this.setState({ isBasic: !isBasic })} aria-controls="basic-collapse" aria-expanded={isBasic}>Collapse Link</Button>

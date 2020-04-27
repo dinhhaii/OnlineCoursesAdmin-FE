@@ -185,7 +185,7 @@ class UserList extends React.Component {
                   {/*-----------MODAL------------*/}
                   {selectedUser ?
                       <Modal
-                         size="lg"
+                         size="xl"
                          aria-labelledby="contained-modal-title-vcenter"
                          centered
                          show={isModalOpen}
@@ -197,49 +197,73 @@ class UserList extends React.Component {
                          </Modal.Header>
                          <Modal.Body>
                          <Row>
-                          <Col md='4'
+                          <Col md='2'
                                className='d-flex justify-content-center'>
                             <img  alt="Avatar"
                                   src={selectedUser.imageURL}
                                   style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
                           </Col>
-                          <Col md='8'>
+                          <Col md='10'>
                             <h5 style={{whiteSpace: 'normal'}}>
-                             <b>Full name: </b>
-                               <span>
-                                 {selectedUser.firstName + ' ' + selectedUser.lastName}
-                               </span>
-                             <br /> <br />
-                             <b>Email: </b>
-                               <span>
-                                 {selectedUser.email}
-                               </span>
-                             <br /> <br />
-                             <b>Role: </b>
-                               <span>
-                                 {selectedUser.role === 'learner' ? 'Learner' : 'Lecturer'}
-                               </span>
-                             <br /> <br />
-                             <b>Type: </b>
-                               <span>
-                                 {selectedUser.type === 'local' ? 'Local' : selectedUser.type === 'google' ? 'Google' : 'Facebook'}
-                               </span>
-
-                             <br /> <br />
-                             <b>Bio: </b>
-                             <span>
-                               {selectedUser.bio}
-                             </span>
-
-                             <br /> <br />
-                             <b>Status: </b>
-                               <Button  size='sm' style={{width: '20%', verticalAlign: 'middle'}}
-                                       className={selectedUser.status === 'verified' ? 'btn-success'
-                                               : selectedUser.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
-                               >
-                                 {selectedUser.status === 'verified' ? 'Verified'
-                                 : selectedUser.status === 'unverified' ? 'Unverified' : 'Banned'}
-                               </Button>
+                            <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                <tbody>
+                                <tr>
+                                  <td style={{width: '20%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Full name: </b>
+                                  </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >{selectedUser.firstName + ' ' + selectedUser.lastName}</td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '20%', whiteSpace: 'normal'}}
+                                >
+                                  <b>Email: </b>
+                                </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >{selectedUser.email}</td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '20%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Role: </b>
+                                  </td>
+                                  <td style={{whiteSpace: 'normal', verticalAlign: 'middle'}}
+                                  >{selectedUser.role === 'learner' ? 'Learner' : 'Lecturer'}</td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '20%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Type: </b>
+                                  </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >{selectedUser.type === 'local' ? 'Local' : selectedUser.type === 'google' ? 'Google' : 'Facebook'}</td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '20%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Bio: </b>
+                                  </td>
+                                  <td style={{whiteSpace: 'normal'}}
+                                  >{selectedUser.bio}</td>
+                                </tr>
+                                <tr>
+                                  <td style={{width: '20%', whiteSpace: 'normal'}}
+                                  >
+                                    <b>Status: </b>
+                                  </td>
+                                  <td>
+                                    <Button  size='sm' style={{width: '20%', verticalAlign: 'middle'}}
+                                            className={selectedUser.status === 'verified' ? 'btn-success'
+                                                    : selectedUser.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
+                                    >
+                                      {selectedUser.status === 'verified' ? 'Verified'
+                                      : selectedUser.status === 'unverified' ? 'Unverified' : 'Banned'}
+                                    </Button>
+                                  </td>
+                                </tr>
+                                </tbody>
+                            </Table>
                             </h5>
                           </Col>
 

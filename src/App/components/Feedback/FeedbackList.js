@@ -138,7 +138,7 @@ class FeedbackList extends React.Component {
                   {/*-----------MODAL------------*/}
                   {selectedFeedback ?
                       <Modal
-                         size="lg"
+                         size="xl"
                          aria-labelledby="contained-modal-title-vcenter"
                          centered
                          show={isModalOpen}
@@ -154,113 +154,162 @@ class FeedbackList extends React.Component {
                                  className='d-flex justify-content-center'
                            >
                              <h5 style={{whiteSpace: 'normal'}}>
-                              Course
-                               <hr />
-                               <b>Image:  </b>
-                               <img  alt="Avatar"
-                                     src={selectedFeedback.course.imageURL}
-                                     style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+                             <b>FEEDBACK</b>
+                             <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                 <tbody>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Content: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedFeedback.content}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                 >
+                                   <b>Rate: </b>
+                                 </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedFeedback.rate}</td>
+                                 </tr>
+                                 </tbody>
+                             </Table>
 
-                              <br /> <br />
-                              <b>Name: </b>
-                              <span>
-                                {selectedFeedback.course.name}
-                              </span>
-
-                              <br /> <br />
-                              <b>Start date: </b>
-                              <span>
-                                {moment(selectedFeedback.course.startDate).format('YYYY-MM-DD')}
-                              </span>
-
-                              <br /> <br />
-                              <b>Duration: </b>
-                              <span>
-                                {selectedFeedback.course.duration}
-                              </span>
-
-                              <br /> <br />
-                              <b>Accessible days: </b>
-                              <span>
-                                {selectedFeedback.course.accessibleDays}
-                              </span>
-
-                              <br /> <br />
-                              <b>Price: </b>
-                                <span>
-                                  {'$' + selectedFeedback.course.price}
-                                </span>
-
-                              <br /> <br />
-                              <b>Description: </b>
-                              <span>
-                                {selectedFeedback.course.description}
-                              </span>
-
-                              <br /> <br />
-                              <b>Status: </b>
-                              <Button size='sm' style={{width: '30%'}}
-                                      className={selectedFeedback.course.status === 'approved' ? 'btn-success'
-                                                : selectedFeedback.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
-                              >
-                                {selectedFeedback.course.status === 'approved' ? 'Approved' : selectedFeedback.course.status === 'denied' ? 'Denied' : 'Pending'}
-                              </Button>
+                             <b>USER</b>
+                             <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                 <tbody>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Image: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >
+                                     <img  alt="Avatar"
+                                           src={selectedFeedback.user.imageURL}
+                                           style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
+                                   </td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                 >
+                                   <b>Full name: </b>
+                                 </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedFeedback.user.firstName + ' ' + selectedFeedback.user.lastName}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Email: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedFeedback.user.email}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Type: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedFeedback.user.type === 'local' ? 'Local' : selectedFeedback.user.type === 'google' ? 'Google' : 'Facebook'}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Status: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >
+                                     <Button  size='sm' style={{width: '30%', verticalAlign: 'middle'}}
+                                             className={selectedFeedback.user.status === 'verified' ? 'btn-success'
+                                                     : selectedFeedback.user.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
+                                     >
+                                       {selectedFeedback.user.status === 'verified' ? 'Verified'
+                                       : selectedFeedback.user.status === 'unverified' ? 'Unverified' : 'Banned'}
+                                     </Button>
+                                   </td>
+                                 </tr>
+                                 </tbody>
+                             </Table>
                              </h5>
 
                            </Col>
 
                           <Col md='6'>
                             <h5 style={{whiteSpace: 'normal'}}>
-                             Feedback
-                             <hr />
-                             <b>Content: </b>
-                             <span>
-                               {selectedFeedback.content}
-                             </span>
-
-                             <br /> <br />
-                             <b>Rate: </b>
-                             <span>
-                               {selectedFeedback.rate}
-                             </span>
-
-                             <br />
-                             <hr />
-                             User
-                             <br /><br />
-                             <b>Image:  </b>
-                             <img  alt="Avatar"
-                                   src={selectedFeedback.user.imageURL}
-                                   style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
-
-                             <br /> <br />
-                             <b>Full Name: </b>
-                             <span>
-                               {selectedFeedback.user.firstName + ' ' + selectedFeedback.user.lastName}
-                             </span>
-
-                             <br /> <br />
-                             <b>Email: </b>
-                             <span>
-                               {selectedFeedback.user.name}
-                             </span>
-
-                             <br /> <br />
-                             <b>Type: </b>
-                             <span>
-                               {selectedFeedback.user.type === 'local' ? 'Local' : selectedFeedback.user.type === 'google' ? 'Google' : 'Facebook'}
-                             </span>
-
-                             <br /> <br />
-                             <b>Status: </b>
-                               <Button  size='sm' style={{width: '30%', verticalAlign: 'middle'}}
-                                       className={selectedFeedback.user.status === 'verified' ? 'btn-success'
-                                               : selectedFeedback.user.status === 'unverified' ? 'btn-warning' : 'btn-danger'}
-                               >
-                                 {selectedFeedback.user.status === 'verified' ? 'Verified'
-                                 : selectedFeedback.user.status === 'unverified' ? 'Unverified' : 'Banned'}
-                               </Button>
-                               <hr />
+                             <b>COURSE</b>
+                             <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                 <tbody>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Image: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >
+                                     <img  alt="Avatar"
+                                           src={selectedFeedback.course.imageURL}
+                                           style={{width: '100px', height: '100px', borderRadius: '50%'}}/>
+                                   </td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                 >
+                                   <b>Name: </b>
+                                 </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedFeedback.course.name}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Start date: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{moment(selectedFeedback.course.startDate).format('YYYY-MM-DD')}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Duration: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedFeedback.course.duration}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Accessible days: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{selectedFeedback.course.accessibleDays}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Price: </b>
+                                   </td>
+                                   <td style={{whiteSpace: 'normal'}}
+                                   >{'$' + selectedFeedback.course.price}</td>
+                                 </tr>
+                                 <tr>
+                                   <td style={{width: '30%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Status: </b>
+                                   </td>
+                                   <td>
+                                     <Button size='sm' style={{width: '30%'}}
+                                             className={selectedFeedback.course.status === 'approved' ? 'btn-success'
+                                                       : selectedFeedback.course.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                                     >
+                                       {selectedFeedback.course.status === 'approved' ? 'Approved' : selectedFeedback.course.status === 'denied' ? 'Denied' : 'Pending'}
+                                     </Button>
+                                   </td>
+                                 </tr>
+                                 </tbody>
+                             </Table>
                             </h5>
                           </Col>
                          </Row>

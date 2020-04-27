@@ -140,7 +140,7 @@ class CourseList extends React.Component {
                   {/*-----------MODAL------------*/}
                   {selectedCourse ?
                       <Modal
-                         size="lg"
+                         size="xl"
                          aria-labelledby="contained-modal-title-vcenter"
                          centered
                          show={isModalOpen}
@@ -152,7 +152,7 @@ class CourseList extends React.Component {
                          </Modal.Header>
                          <Modal.Body>
                          <Row>
-                            <Col  md='4'
+                            <Col  md='2'
                                   className='d-flex justify-content-center'
                             >
                                <img  alt="Avatar"
@@ -160,76 +160,104 @@ class CourseList extends React.Component {
                                      style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
                             </Col>
 
-                           <Col md='8'>
+                           <Col md='10'>
                              <h5 style={{whiteSpace: 'normal'}}>
-                              <b>Name: </b>
-                                <span>
-                                  {selectedCourse.name}
-                                </span>
-
-                              <br /> <br />
-                              <b>Subject: </b>
-                              <span>
-                                {selectedCourse.subject.name}
-                              </span>
-
-                              <br /> <br />
-                              <b>Lessons: </b>
-                              {selectedCourse.lessons.length}
-
-                              <br /> <br />
-                              <b>Lecturer: </b>
-                              <span>
-                                {selectedCourse.lecturer.firstName + ' ' + selectedCourse.lecturer.lastName
-                                + ' (' + selectedCourse.lecturer.email + ')'}
-                              </span>
-
-                              <br /> <br />
-                              <b>Start date: </b>
-                              <span>
-                                {moment(selectedCourse.startDate).format('YYYY-MM-DD')}
-                              </span>
-
-                              <br /> <br />
-                              <b>Duration: </b>
-                              <span>
-                                {selectedCourse.duration}
-                              </span>
-
-                              <br /> <br />
-                              <b>Accessible days: </b>
-                              <span>
-                                {selectedCourse.accessibleDays}
-                              </span>
-
-                              <br /> <br />
-                              <b>Price: </b>
-                                <span>
-                                  {'$' + selectedCourse.price}
-                                </span>
-
-                              <br /> <br />
-                              <b>Coupons: </b>
-                              {selectedCourse.discount.map(discount => (
-                                <span>
-                                  {discount.code + ' '}
-                                </span>
-                              ))}
-
-                              <br /> <br />
-                              <b>Description: </b>
-                              <span>
-                                {selectedCourse.description}
-                              </span>
-
-                              <br /> <br />
-                              <b>Status: </b>
-                              <Button size='sm' style={{width: '20%'}}
-                                      className={selectedCourse.status === 'approved' ? 'btn-success'
-                                                : selectedCourse.status === 'denied' ? 'btn-danger' : 'btn-warning'}
-                              >
-                                {selectedCourse.status === 'approved' ? 'Approved' : selectedCourse.status === 'denied' ? 'Denied' : 'Pending'}
-                              </Button>
+                               <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                                   <tbody>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Name: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedCourse.name}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                   >
+                                     <b>Subject: </b>
+                                   </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedCourse.subject.name}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Lessons: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal', verticalAlign: 'middle'}}
+                                     >{selectedCourse.lessons.length}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Lecturer: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{moment(selectedCourse.startDate).format('YYYY-MM-DD')}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Duration: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedCourse.duration}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Accessible Days: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedCourse.accessibleDays}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Price: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{'$' + selectedCourse.price}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Coupons: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >
+                                       {selectedCourse.discount.map(discount => (
+                                         <span>
+                                           {discount.code + ' '}
+                                         </span>
+                                       ))}
+                                     </td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Description: </b>
+                                     </td>
+                                     <td style={{whiteSpace: 'normal'}}
+                                     >{selectedCourse.description}</td>
+                                   </tr>
+                                   <tr>
+                                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                                     >
+                                       <b>Status: </b>
+                                     </td>
+                                     <td>
+                                       <Button size='sm' style={{width: '20%'}}
+                                               className={selectedCourse.status === 'approved' ? 'btn-success'
+                                                         : selectedCourse.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                                       >
+                                         {selectedCourse.status === 'approved' ? 'Approved' : selectedCourse.status === 'denied' ? 'Denied' : 'Pending'}
+                                       </Button>
+                                     </td>
+                                   </tr>
+                                   </tbody>
+                               </Table>
                              </h5>
                            </Col>
 
