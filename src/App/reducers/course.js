@@ -3,6 +3,7 @@ import * as types from '../helpers/action-type';
 const initialState = {
   isFetching: false,
   allCourses: [],
+  pendingCourses: []
 };
 
 const courseState = (state = initialState, action) => {
@@ -13,6 +14,11 @@ const courseState = (state = initialState, action) => {
       return { ...state, isFetching: false }
     case types.GET_ALL_COURSES_SUCCESS:
       return { ...state, isFetching: false, allCourses: action.allCourses }
+
+    case types.GET_PENDING_COURSES_FAILED:
+      return { ...state, isFetching: false }
+    case types.GET_PENDING_COURSES_SUCCESS:
+      return { ...state, isFetching: false, pendingCourses: action.pendingCourses }
 
     case types.CHANGE_COURSE_STATUS_SUCCESS:
       return state;

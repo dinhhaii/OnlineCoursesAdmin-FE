@@ -1,412 +1,499 @@
 import React from 'react';
-import {Row, Col, Card, Table, Tabs, Tab} from 'react-bootstrap';
+import {  Row,
+          Col,
+          Card,
+          Table,
+          Modal,
+          Button,
+          Pagination } from 'react-bootstrap';
+import $ from 'jquery';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchAllUsers } from './../../actions/user';
+import { fetchAllCourses, fetchPendingCourses } from './../../actions/course';
+import { fetchAllLessons } from './../../actions/lesson';
+import { fetchAllFeedback } from './../../actions/feedback';
+import { fetchAllInvoices } from './../../actions/invoice';
 
 import Aux from "../../../hoc/_Aux";
-import DEMO from "../../helpers/demo";
+import RevenueLineChart from "./RevenueLineChart";
+import UserLineChart from "./UserLineChart";
 
-import avatar1 from '../../../assets/images/user/avatar-1.jpg';
-import avatar2 from '../../../assets/images/user/avatar-2.jpg';
-import avatar3 from '../../../assets/images/user/avatar-3.jpg';
+const moment = require('moment');
 
 class Dashboard extends React.Component {
-    render() {
 
-        const tabContent = (
-            <Aux>
-                <div className="media friendlist-box align-items-center justify-content-center m-b-20">
-                    <div className="m-r-10 photo-table">
-                        <a href={DEMO.BLANK_LINK}><img className="rounded-circle" style={{width: '40px'}} src={avatar1} alt="activity-user"/></a>
-                    </div>
-                    <div className="media-body">
-                        <h6 className="m-0 d-inline">Silje Larsen</h6>
-                        <span className="float-right d-flex  align-items-center"><i className="fa fa-caret-up f-22 m-r-10 text-c-green"/>3784</span>
-                    </div>
-                </div>
-                <div className="media friendlist-box align-items-center justify-content-center m-b-20">
-                    <div className="m-r-10 photo-table">
-                        <a href={DEMO.BLANK_LINK}><img className="rounded-circle" style={{width: '40px'}} src={avatar2} alt="activity-user"/></a>
-                    </div>
-                    <div className="media-body">
-                        <h6 className="m-0 d-inline">Julie Vad</h6>
-                        <span className="float-right d-flex  align-items-center"><i className="fa fa-caret-up f-22 m-r-10 text-c-green"/>3544</span>
-                    </div>
-                </div>
-                <div className="media friendlist-box align-items-center justify-content-center m-b-20">
-                    <div className="m-r-10 photo-table">
-                        <a href={DEMO.BLANK_LINK}><img className="rounded-circle" style={{width: '40px'}} src={avatar3} alt="activity-user"/></a>
-                    </div>
-                    <div className="media-body">
-                        <h6 className="m-0 d-inline">Storm Hanse</h6>
-                        <span className="float-right d-flex  align-items-center"><i className="fa fa-caret-down f-22 m-r-10 text-c-red"/>2739</span>
-                    </div>
-                </div>
-                <div className="media friendlist-box align-items-center justify-content-center m-b-20">
-                    <div className="m-r-10 photo-table">
-                        <a href={DEMO.BLANK_LINK}><img className="rounded-circle" style={{width: '40px'}} src={avatar1} alt="activity-user"/></a>
-                    </div>
-                    <div className="media-body">
-                        <h6 className="m-0 d-inline">Frida Thomse</h6>
-                        <span className="float-right d-flex  align-items-center"><i className="fa fa-caret-down f-22 m-r-10 text-c-red"/>1032</span>
-                    </div>
-                </div>
-                <div className="media friendlist-box align-items-center justify-content-center m-b-20">
-                    <div className="m-r-10 photo-table">
-                        <a href={DEMO.BLANK_LINK}><img className="rounded-circle" style={{width: '40px'}} src={avatar2} alt="activity-user"/></a>
-                    </div>
-                    <div className="media-body">
-                        <h6 className="m-0 d-inline">Silje Larsen</h6>
-                        <span className="float-right d-flex  align-items-center"><i className="fa fa-caret-up f-22 m-r-10 text-c-green"/>8750</span>
-                    </div>
-                </div>
-                <div className="media friendlist-box align-items-center justify-content-center">
-                    <div className="m-r-10 photo-table">
-                        <a href={DEMO.BLANK_LINK}><img className="rounded-circle" style={{width: '40px'}} src={avatar3} alt="activity-user"/></a>
-                    </div>
-                    <div className="media-body">
-                        <h6 className="m-0 d-inline">Storm Hanse</h6>
-                        <span className="float-right d-flex  align-items-center"><i className="fa fa-caret-down f-22 m-r-10 text-c-red"/>8750</span>
-                    </div>
-                </div>
-            </Aux>
-        );
+  constructor(props) {
+    super(props);
 
-        return (
-            <Aux>
-                <Row>
-                    <Col md={6} xl={4}>
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Daily Sales</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-9">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0"><i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> $249.95</h3>
-                                    </div>
+    this.state = {
+      facebookUsers: 0,
+      googleUsers: 0,
+      localUsers: 0,
 
-                                    <div className="col-3 text-right">
-                                        <p className="m-b-0">50%</p>
-                                    </div>
-                                </div>
-                                <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '50%'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={4}>
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Monthly Sales</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-9">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0"><i className="feather icon-arrow-down text-c-red f-30 m-r-5"/> $2.942.32</h3>
-                                    </div>
+      localTarget: 10,
+      facebookTarget: 0,
+      googleTarget: 0,
+      isTargetOpen: false,
+      targetType: '',
 
-                                    <div className="col-3 text-right">
-                                        <p className="m-b-0">36%</p>
-                                    </div>
-                                </div>
-                                <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme2" role="progressbar" style={{width: '35%'}} aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"/>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col xl={4}>
-                        <Card>
-                            <Card.Body>
-                                <h6 className='mb-4'>Yearly Sales</h6>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-9">
-                                        <h3 className="f-w-300 d-flex align-items-center m-b-0"><i className="feather icon-arrow-up text-c-green f-30 m-r-5"/> $8.638.32</h3>
-                                    </div>
+      pendingCourses: [],
+      selectedCourse: null,
+      currentPage: 1,
+      coursesPerPage: 4,
+    };
+  }
 
-                                    <div className="col-3 text-right">
-                                        <p className="m-b-0">70%</p>
-                                    </div>
-                                </div>
-                                <div className="progress m-t-30" style={{height: '7px'}}>
-                                    <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={8}>
-                        <Card className='Recent-Users'>
-                            <Card.Header>
-                                <Card.Title as='h5'>Recent Users</Card.Title>
-                            </Card.Header>
-                            <Card.Body className='px-0 py-2'>
-                                <Table responsive hover>
-                                    <tbody>
-                                    <tr className="unread">
-                                        <td><img className="rounded-circle" style={{width: '40px'}} src={avatar1} alt="activity-user"/></td>
-                                        <td>
-                                            <h6 className="mb-1">Isabella Christensen</h6>
-                                            <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                                        </td>
-                                        <td>
-                                            <h6 className="text-muted"><i className="fa fa-circle text-c-green f-10 m-r-15"/>11 MAY 12:56</h6>
-                                        </td>
-                                        <td><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12">Reject</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12">Approve</a></td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td><img className="rounded-circle" style={{width: '40px'}} src={avatar2} alt="activity-user"/></td>
-                                        <td>
-                                            <h6 className="mb-1">Mathilde Andersen</h6>
-                                            <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                                        </td>
-                                        <td>
-                                            <h6 className="text-muted"><i className="fa fa-circle text-c-red f-10 m-r-15"/>11 MAY 10:35</h6>
-                                        </td>
-                                        <td><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12">Reject</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12">Approve</a></td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td><img className="rounded-circle" style={{width: '40px'}} src={avatar3} alt="activity-user"/></td>
-                                        <td>
-                                            <h6 className="mb-1">Karla Sorensen</h6>
-                                            <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                                        </td>
-                                        <td>
-                                            <h6 className="text-muted"><i className="fa fa-circle text-c-green f-10 m-r-15"/>9 MAY 17:38</h6>
-                                        </td>
-                                        <td><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12">Reject</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12">Approve</a></td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td><img className="rounded-circle" style={{width: '40px'}} src={avatar1} alt="activity-user"/></td>
-                                        <td>
-                                            <h6 className="mb-1">Ida Jorgensen</h6>
-                                            <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                                        </td>
-                                        <td>
-                                            <h6 className="text-muted f-w-300"><i className="fa fa-circle text-c-red f-10 m-r-15"/>19 MAY 12:56</h6>
-                                        </td>
-                                        <td><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12">Reject</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12">Approve</a></td>
-                                    </tr>
-                                    <tr className="unread">
-                                        <td><img className="rounded-circle" style={{width: '40px'}} src={avatar2} alt="activity-user"/></td>
-                                        <td>
-                                            <h6 className="mb-1">Albert Andersen</h6>
-                                            <p className="m-0">Lorem Ipsum is simply dummy text of…</p>
-                                        </td>
-                                        <td>
-                                            <h6 className="text-muted"><i className="fa fa-circle text-c-green f-10 m-r-15"/>21 July 12:56</h6>
-                                        </td>
-                                        <td><a href={DEMO.BLANK_LINK} className="label theme-bg2 text-white f-12">Reject</a><a href={DEMO.BLANK_LINK} className="label theme-bg text-white f-12">Approve</a></td>
-                                    </tr>
-                                    </tbody>
-                                </Table>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={4}>
-                        <Card className='card-event'>
-                            <Card.Body>
-                                <div className="row align-items-center justify-content-center">
-                                    <div className="col">
-                                        <h5 className="m-0">Upcoming Event</h5>
-                                    </div>
-                                    <div className="col-auto">
-                                        <label className="label theme-bg2 text-white f-14 f-w-400 float-right">34%</label>
-                                    </div>
-                                </div>
-                                <h2 className="mt-2 f-w-300">45<sub className="text-muted f-14">Competitors</sub></h2>
-                                <h6 className="text-muted mt-3 mb-0">You can participate in event </h6>
-                                <i className="fa fa-angellist text-c-purple f-50"/>
-                            </Card.Body>
-                        </Card>
-                        <Card>
-                            <Card.Body className='border-bottom'>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-auto">
-                                        <i className="feather icon-zap f-30 text-c-green"/>
-                                    </div>
-                                    <div className="col">
-                                        <h3 className="f-w-300">235</h3>
-                                        <span className="d-block text-uppercase">total ideas</span>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                            <Card.Body>
-                                <div className="row d-flex align-items-center">
-                                    <div className="col-auto">
-                                        <i className="feather icon-map-pin f-30 text-c-blue"/>
-                                    </div>
-                                    <div className="col">
-                                        <h3 className="f-w-300">26</h3>
-                                        <span className="d-block text-uppercase">total locations</span>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={4}>
-                        <Card className='card-social'>
-                            <Card.Body className='border-bottom'>
-                                <div className="row align-items-center justify-content-center">
-                                    <div className="col-auto">
-                                        <i className="fa fa-facebook text-primary f-36"/>
-                                    </div>
-                                    <div className="col text-right">
-                                        <h3>12,281</h3>
-                                        <h5 className="text-c-green mb-0">+7.2% <span className="text-muted">Total Likes</span></h5>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                            <Card.Body>
-                                <div className="row align-items-center justify-content-center card-active">
-                                    <div className="col-6">
-                                        <h6 className="text-center m-b-10"><span className="text-muted m-r-5">Target:</span>35,098</h6>
-                                        <div className="progress">
-                                            <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '60%', height: '6px'}} aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <h6 className="text-center  m-b-10"><span className="text-muted m-r-5">Duration:</span>350</h6>
-                                        <div className="progress">
-                                            <div className="progress-bar progress-c-theme2" role="progressbar" style={{width: '45%', height: '6px'}} aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={4}>
-                        <Card className='card-social'>
-                            <Card.Body className='border-bottom'>
-                                <div className="row align-items-center justify-content-center">
-                                    <div className="col-auto">
-                                        <i className="fa fa-twitter text-c-blue f-36"/>
-                                    </div>
-                                    <div className="col text-right">
-                                        <h3>11,200</h3>
-                                        <h5 className="text-c-purple mb-0">+6.2% <span className="text-muted">Total Likes</span></h5>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                            <Card.Body>
-                                <div className="row align-items-center justify-content-center card-active">
-                                    <div className="col-6">
-                                        <h6 className="text-center m-b-10"><span className="text-muted m-r-5">Target:</span>34,185</h6>
-                                        <div className="progress">
-                                            <div className="progress-bar progress-c-green" role="progressbar" style={{width: '40%', height: '6px'}} aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <h6 className="text-center  m-b-10"><span className="text-muted m-r-5">Duration:</span>800</h6>
-                                        <div className="progress">
-                                            <div className="progress-bar progress-c-blue" role="progressbar" style={{width: '70%', height: '6px'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col xl={4}>
-                        <Card className='card-social'>
-                            <Card.Body className='border-bottom'>
-                                <div className="row align-items-center justify-content-center">
-                                    <div className="col-auto">
-                                        <i className="fa fa-google-plus text-c-red f-36"/>
-                                    </div>
-                                    <div className="col text-right">
-                                        <h3>10,500</h3>
-                                        <h5 className="text-c-blue mb-0">+5.9% <span className="text-muted">Total Likes</span></h5>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                            <Card.Body>
-                                <div className="row align-items-center justify-content-center card-active">
-                                    <div className="col-6">
-                                        <h6 className="text-center m-b-10"><span className="text-muted m-r-5">Target:</span>25,998</h6>
-                                        <div className="progress">
-                                            <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '80%', height: '6px'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <h6 className="text-center  m-b-10"><span className="text-muted m-r-5">Duration:</span>900</h6>
-                                        <div className="progress">
-                                            <div className="progress-bar progress-c-theme2" role="progressbar" style={{width: '50%', height: '6px'}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={4}>
-                        <Card>
-                            <Card.Header>
-                                <Card.Title as='h5'>Rating</Card.Title>
-                            </Card.Header>
-                            <Card.Body>
-                                <div className="row align-items-center justify-content-center m-b-20">
-                                    <div className="col-6">
-                                        <h2 className="f-w-300 d-flex align-items-center float-left m-0">4.7 <i className="fa fa-star f-10 m-l-10 text-c-yellow"/></h2>
-                                    </div>
-                                    <div className="col-6">
-                                        <h6 className="d-flex  align-items-center float-right m-0">0.4 <i className="fa fa-caret-up text-c-green f-22 m-l-10"/></h6>
-                                    </div>
-                                </div>
+  componentWillMount() {
 
-                                <div className="row">
-                                    <div className="col-xl-12">
-                                        <h6 className="align-items-center float-left"><i className="fa fa-star f-10 m-r-10 text-c-yellow"/>5</h6>
-                                        <h6 className="align-items-center float-right">384</h6>
-                                        <div className="progress m-t-30 m-b-20" style={{height: '6px'}}>
-                                            <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '70%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
+    Promise
+      .resolve(this.props.fetchAllUsersAction())
+      .then(() => {
+        const { allUsers } = this.props.userState;
 
-                                    <div className="col-xl-12">
-                                        <h6 className="align-items-center float-left"><i className="fa fa-star f-10 m-r-10 text-c-yellow"/>4</h6>
-                                        <h6 className="align-items-center float-right">145</h6>
-                                        <div className="progress m-t-30  m-b-20" style={{height: '6px'}}>
-                                            <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '35%'}} aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
+        const fbFilter = allUsers.filter(user => user.type === 'facebook');
+        const ggFilter = allUsers.filter(user => user.type === 'google');
+        const localFilter = allUsers.filter(user => user.type === 'local' && user.role !== 'admin');
 
-                                    <div className="col-xl-12">
-                                        <h6 className="align-items-center float-left"><i className="fa fa-star f-10 m-r-10 text-c-yellow"/>3</h6>
-                                        <h6 className="align-items-center float-right">24</h6>
-                                        <div className="progress m-t-30  m-b-20" style={{height: '6px'}}>
-                                            <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '25%'}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
+        this.setState({
+          facebookUsers: fbFilter,
+          googleUsers: ggFilter,
+          localUsers: localFilter
+        })
+      })
+      .catch(err => console.log(err));
 
-                                    <div className="col-xl-12">
-                                        <h6 className="align-items-center float-left"><i className="fa fa-star f-10 m-r-10 text-c-yellow"/>2</h6>
-                                        <h6 className="align-items-center float-right">1</h6>
-                                        <div className="progress m-t-30  m-b-20" style={{height: '6px'}}>
-                                            <div className="progress-bar progress-c-theme" role="progressbar" style={{width: '10%'}} aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
-                                    <div className="col-xl-12">
-                                        <h6 className="align-items-center float-left"><i className="fa fa-star f-10 m-r-10 text-c-yellow"/>1</h6>
-                                        <h6 className="align-items-center float-right">0</h6>
-                                        <div className="progress m-t-30  m-b-5" style={{height: '6px'}}>
-                                            <div className="progress-bar" role="progressbar" style={{width: '0%'}} aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col md={6} xl={8} className='m-b-30'>
-                        <Tabs defaultActiveKey="today" id="uncontrolled-tab-example">
-                            <Tab eventKey="today" title="Today">
-                                {tabContent}
-                            </Tab>
-                            <Tab eventKey="week" title="This Week">
-                                {tabContent}
-                            </Tab>
-                            <Tab eventKey="all" title="All">
-                                {tabContent}
-                            </Tab>
-                        </Tabs>
-                    </Col>
-                </Row>
-            </Aux>
-        );
+      Promise
+        .resolve(this.props.fetchPendingCoursesAction())
+        .then(() => {
+          const { pendingCourses } = this.props.courseState;
+
+          this.setState({
+            pendingCourses: pendingCourses
+          })
+        })
+        .catch(err => console.log(err));
+
+      this.props.fetchAllCoursesAction();
+      this.props.fetchAllLessonsAction();
+      this.props.fetchAllFeedbackAction();
+      this.props.fetchAllInvoicesAction();
+  }
+
+  hideModal() {
+    this.setState({
+      isTargetOpen: false
+    });
+  }
+
+  handleChangeTarget() {
+    const { targetType } = this.state;
+
+    $('#failedMessage').hide();
+    $('#successMessage').hide();
+
+    const newTarget = $('#targetBox').val();
+
+    if (/^\d+$/.test(newTarget))
+    {
+      switch (targetType) {
+        case 'local':
+          this.setState({
+            localTarget: newTarget
+          });
+          break;
+        case 'google':
+          this.setState({
+            googleTarget: newTarget
+          });
+          break;
+        case 'facebook':
+          this.setState({
+            facebookTarget: newTarget
+          });
+          break;
+        default:
+          console.log('Wrong target type!');
+          break;
+      }
+      $('#successMessage').show();
     }
+    else {
+      $('#failedMessage').show();
+    }
+  }
+
+
+  render() {
+
+    const { facebookUsers,
+            googleUsers,
+            localUsers,
+
+            localTarget,
+            facebookTarget,
+            googleTarget,
+            isTargetOpen,
+
+            pendingCourses,
+            selectedCourse,
+            currentPage,
+            coursesPerPage } = this.state;
+
+    const { allUsers } = this.props.userState;
+    const { allCourses } = this.props.courseState;
+    const { allLessons } = this.props.lessonState;
+    const { allFeedback } = this.props.feedbackState;
+    const { allInvoices } = this.props.invoiceState;
+
+    // Logic for displaying current todos
+    const indexOfLastCourse = currentPage * coursesPerPage;
+    const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+    const currentCourses = pendingCourses.slice(indexOfFirstCourse, indexOfLastCourse);
+
+    // Logic for displaying page numbers
+    const pageNumbers = [];
+    const lastPage = Math.ceil(pendingCourses.length / coursesPerPage);
+    for (let number = 1; number <= lastPage; number++) {
+      pageNumbers.push(
+        <Pagination.Item  key={number}
+                          id={number}
+                          active={number === currentPage}
+                          onClick={() => this.setState({currentPage: number})}>
+          {number}
+        </Pagination.Item>
+    );
+    }
+
+
+    const targetModal = (
+      <Aux>
+      <Modal
+         size="sm"
+         aria-labelledby="contained-modal-title-vcenter"
+         centered
+         show={isTargetOpen}
+       >
+         <Modal.Header>
+           <Modal.Title id="change-user-status">
+             <h3><b>New Target?</b></h3>
+           </Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+           <input id='targetBox' name='targetBox'
+                   type="text"
+                   placeholder="New target"
+                   className="form-control"/>
+           <div  className='mt-2'>
+               <span style={{ display: 'none' }} id='failedMessage' className='text-danger'>Please type only numbers!</span>
+           </div>
+           <div  className="mt-2">
+               <span style={{ display: 'none' }} id='successMessage' className='text-success'>Change target success!</span>
+           </div>
+         </Modal.Body>
+         <Modal.Footer>
+           <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+           <Button className='btn shadow-2' variant="primary" onClick={() => this.handleChangeTarget()}>Save</Button>
+         </Modal.Footer>
+       </Modal>
+      </Aux>
+    );
+
+    return (
+        <Aux>
+
+            {/*-----MODAL TARGET---------*/}
+            {targetModal}
+
+            {/*--------------------------*/}
+            <Row>
+                <Col md={6} xl={6}>
+                    <Card>
+                        <Card.Body>
+                            <RevenueLineChart allInvoices={allInvoices}/>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col xl={6}>
+                    <Card>
+                        <Card.Body>
+                        <UserLineChart allUsers={allUsers}/>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+
+
+                {/*--------------PENDING COURSES-----------------------*/}
+                <Col md={6} xl={8}>
+                    <Card className='Recent-Users'>
+                        <Card.Header>
+                            <Card.Title as='h5'>Pending Courses</Card.Title>
+                        </Card.Header>
+                        <Card.Body className='px-0 py-2'>
+                            <Table responsive hover>
+                                <tbody>
+                                {currentCourses.map((course, index) => {
+                                  return (
+                                    <tr className="unread">
+                                      <td>
+                                        <img
+                                          className="rounded-circle"
+                                          style={{ width: "50px", height: '50px' }}
+                                          src={course.imageURL}
+                                          alt="activity-user"
+                                        />
+                                      </td>
+                                      <td>
+                                        <h6 className="mb-1">{course.name}</h6>
+                                        <p className="m-0">Subject: {course.subject.name}</p>
+                                      </td>
+                                      <td>
+                                        <h6 className="text-muted">
+                                          {moment(course.createdAt).format('YYYY-MM-DD')}
+                                        </h6>
+                                      </td>
+                                      <td>
+                                        <button className="btn label theme-bg2 text-white f-12">Reject</button>
+                                        <button className="btn label theme-bg text-white f-12">
+                                          Approve
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  )
+                                })}
+                                </tbody>
+                            </Table>
+
+                            <Pagination className='ml-3'>
+                              <Pagination.First
+                                style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                onClick={() => this.setState({currentPage: 1})}
+                              />
+                              <Pagination.Prev
+                                style={{display: `${currentPage === 1 ? 'none' : 'initial'}`}}
+                                onClick={() => this.setState({currentPage: currentPage - 1})}
+                              />
+                              {pageNumbers}
+                              <Pagination.Next
+                                style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                onClick={() => this.setState({currentPage: currentPage + 1})}
+                              />
+                              <Pagination.Last
+                                style={{display: `${currentPage === lastPage ? 'none' : 'initial'}`}}
+                                onClick={() => this.setState({currentPage: lastPage})}
+                              />
+                            </Pagination>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+
+                {/*----------------------------*/}
+
+
+
+                <Col md={6} xl={4}>
+                    <Card>
+                        <Card.Body className='border-bottom'>
+                            <div className="row d-flex align-items-center">
+                                <div className="col-auto">
+                                    <i className="feather icon-users f-30 text-c-purple"/>
+                                </div>
+                                <div className="col">
+                                    <h3 className="f-w-300">{allUsers.length}</h3>
+                                    <span className="d-block text-uppercase">Total users</span>
+                                </div>
+                            </div>
+                        </Card.Body>
+                        <Card.Body className='border-bottom'>
+                            <div className="row d-flex align-items-center">
+                                <div className="col-auto">
+                                    <i className="feather icon-cast f-30 text-c-red"/>
+                                </div>
+                                <div className="col">
+                                    <h3 className="f-w-300">{allCourses.length}</h3>
+                                    <span className="d-block text-uppercase">Total courses</span>
+                                </div>
+                            </div>
+                        </Card.Body>
+                        <Card.Body className='border-bottom'>
+                            <div className="row d-flex align-items-center">
+                                <div className="col-auto">
+                                    <i className="feather icon-play-circle f-30 text-c-green"/>
+                                </div>
+                                <div className="col">
+                                    <h3 className="f-w-300">{allLessons.length}</h3>
+                                    <span className="d-block text-uppercase">Total lessons</span>
+                                </div>
+                            </div>
+                        </Card.Body>
+                        <Card.Body>
+                            <div className="row d-flex align-items-center">
+                                <div className="col-auto">
+                                    <i className="feather icon-edit f-30 text-c-blue"/>
+                                </div>
+                                <div className="col">
+                                    <h3 className="f-w-300">{allFeedback.length}</h3>
+                                    <span className="d-block text-uppercase">Total feedback</span>
+                                </div>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+
+                {/*---------------USER TYPE ------------------------------*/}
+                <Col md={6} xl={4}>
+                    <Card className='card-social'>
+                        <Card.Body className='border-bottom'>
+                            <div className="row align-items-center justify-content-center">
+                                <div className="col-auto">
+                                    <i className="feather icon-users text-c-purple f-36"/>
+                                </div>
+                                <div className="col text-right">
+                                    <h3>{localUsers.length}</h3>
+                                    <h5 className="text-c-purple mb-0">Local <span className="text-muted">Users</span></h5>
+                                </div>
+                            </div>
+                        </Card.Body>
+                        <Card.Body>
+                            <div className="row align-items-center justify-content-center card-active">
+                            <div className="col-8">
+                              <h6 className="text-center m-b-10">
+                                <span className="text-muted m-r-5">Target:</span>
+                                {localTarget}
+                              </h6>
+                              <div className="progress">
+                                <div
+                                  className="progress-bar progress-c-green"
+                                  role="progressbar"
+                                  style={{
+                                    width: `${(localUsers.length / localTarget) * 100}%`,
+                                    height: "6px"
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-4">
+                              <button className="btn label theme-bg text-white f-12"
+                                      onClick={() => this.setState({isTargetOpen: !isTargetOpen, targetType: 'local'})}
+                              >
+                                Target
+                              </button>
+                            </div>
+                          </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md={6} xl={4}>
+                    <Card className='card-social'>
+                        <Card.Body className='border-bottom'>
+                            <div className="row align-items-center justify-content-center">
+                                <div className="col-auto">
+                                    <i className="fa fa-google-plus text-c-red f-36"/>
+                                </div>
+                                <div className="col text-right">
+                                    <h3>{googleUsers.length}</h3>
+                                    <h5 className="text-c-red mb-0">Google <span className="text-muted">Users</span></h5>
+                                </div>
+                            </div>
+                        </Card.Body>
+                        <Card.Body>
+                            <div className="row align-items-center justify-content-center card-active">
+                            <div className="col-8">
+                              <h6 className="text-center m-b-10">
+                                <span className="text-muted m-r-5">Target:</span>
+                                {googleTarget}
+                              </h6>
+                              <div className="progress">
+                                <div
+                                  className="progress-bar progress-c-theme"
+                                  role="progressbar"
+                                  style={{ width: `${(googleUsers.length / googleTarget) * 100}%`, height: "6px" }}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-4">
+                              <button className="btn label theme-bg text-white f-12"
+                                      onClick={() => this.setState({isTargetOpen: !isTargetOpen, targetType: 'google'})}
+                              >
+                                Target
+                              </button>
+                            </div>
+                          </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col xl={4}>
+                    <Card className='card-social'>
+                        <Card.Body className='border-bottom'>
+                            <div className="row align-items-center justify-content-center">
+                                <div className="col-auto">
+                                    <i className="fa fa-facebook text-primary f-36"/>
+                                </div>
+                                <div className="col text-right">
+                                    <h3>{facebookUsers.length}</h3>
+                                    <h5 className="text-c-blue mb-0">Facebook <span className="text-muted">Users</span></h5>
+                                </div>
+                            </div>
+                        </Card.Body>
+                        <Card.Body>
+                            <div className="row align-items-center justify-content-center card-active">
+                            <div className="col-8">
+                              <h6 className="text-center m-b-10">
+                                <span className="text-muted m-r-5">Target:</span>{facebookTarget}
+                              </h6>
+                              <div className="progress">
+                                <div
+                                  className="progress-bar progress-c-theme"
+                                  role="progressbar"
+                                  style={{ width: `${(facebookUsers.length / facebookTarget) * 100}%`, height: "6px" }}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-4">
+                              <button className="btn label theme-bg text-white f-12"
+                                      onClick={() => this.setState({isTargetOpen: !isTargetOpen, targetType: 'facebook'})}
+                              >
+                                Target
+                              </button>
+                            </div>
+                          </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+                {/*----------------------------------------*/}
+
+            </Row>
+        </Aux>
+    );
+  }
 }
 
-export default Dashboard;
+const mapStateToProps = state => {
+  return {
+    userState: state.userState,
+    courseState: state.courseState,
+    lessonState: state.lessonState,
+    feedbackState: state.feedbackState,
+    invoiceState: state.invoiceState
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchAllUsersAction: () => dispatch(fetchAllUsers()),
+    fetchAllCoursesAction: () => dispatch(fetchAllCourses()),
+    fetchAllLessonsAction: () => dispatch(fetchAllLessons()),
+    fetchAllFeedbackAction: () => dispatch(fetchAllFeedback()),
+    fetchAllInvoicesAction: () => dispatch(fetchAllInvoices()),
+    fetchPendingCoursesAction: () => dispatch(fetchPendingCourses())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Dashboard));

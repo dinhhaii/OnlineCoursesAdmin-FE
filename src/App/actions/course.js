@@ -21,6 +21,19 @@ function receiveAllCoursesFailed() {
   };
 }
 
+function receivePendingCoursesSuccess(pendingCourses) {
+  return {
+    type: types.GET_PENDING_COURSES_SUCCESS,
+    pendingCourses
+  };
+}
+
+function receivePendingCoursesFailed() {
+  return {
+    type: types.GET_PENDING_COURSES_FAILED
+  };
+}
+
 function changeStatusSuccess() {
   return {
     type: types.CHANGE_COURSE_STATUS_SUCCESS
@@ -57,8 +70,29 @@ export function fetchAllCourses() {
   };
 }
 
+// Get All Courses
+export function fetchPendingCourses() {
+  return function(dispatch) {
+    return fetch(`${SERVER_URL}/course/pending`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data) {
+          dispatch(receivePendingCoursesSuccess(data));
+        }
+        dispatch(receivePendingCoursesFailed());
+      })
+      .catch(() => {
+        dispatch(receivePendingCoursesFailed());
+      });
+  };
+}
+
 // Change Status Course
-// Change Status
 export function changeStatus(_idCourse, status) {
   return function(dispatch) {
     return fetch(`${SERVER_URL}/course/update`, {

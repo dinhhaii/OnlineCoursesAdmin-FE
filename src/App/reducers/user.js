@@ -24,7 +24,8 @@ const userState = (state = initialState, action) => {
     case types.GET_USER_BY_ID:
       return { ...state, fetchedUser: action.user };
     case types.GET_ALL_USERS:
-      return { ...state, allUsers: action.allUsers };
+      const adminfilter = action.allUsers.filter(user => user.role !== 'admin');
+      return { ...state, allUsers: adminfilter };
     case types.GET_ALL_LEARNERS:
       return { ...state, allLearners: action.allLearners };
     case types.GET_ALL_LECTURERS:
