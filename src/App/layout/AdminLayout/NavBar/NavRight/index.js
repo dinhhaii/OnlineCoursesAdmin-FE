@@ -40,9 +40,6 @@ class NavRight extends Component {
       return (
           <Aux>
               <ul className="navbar-nav ml-auto">
-                  <li className={this.props.rtlLayout ? 'm-r-15' : 'm-l-15'}>
-                      <a href={DEMO.BLANK_LINK} className="displayChatbox" onClick={() => {this.setState({listOpen: true});}}><i className="icon feather icon-mail"/></a>
-                  </li>
                   <li>
                       <Dropdown alignRight={!this.props.rtlLayout} className="drp-user">
                           <Dropdown.Toggle variant={'link'} id="dropdown-basic">
@@ -54,7 +51,6 @@ class NavRight extends Component {
                                   <span id='fullName'/>
                               </div>
                               <ul className="pro-body">
-                                  <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
                                   <li><a href={DEMO.BLANK_LINK} className="dropdown-item" onClick={e => this.handleLogout(e)}><i className="feather icon-log-out"/> Log Out</a></li>
                               </ul>
                           </Dropdown.Menu>

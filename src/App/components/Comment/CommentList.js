@@ -26,6 +26,12 @@ class CommentList extends React.Component {
   }
 
     componentWillMount() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        const { history } = this.props;
+        history.push('/auth/signin');
+      }
+      
       Promise
         .resolve(this.props.fetchAllCommentsAction())
         .then(() => {
@@ -80,7 +86,9 @@ class CommentList extends React.Component {
     }
 
     showModal(index) {
-      const { listCommentsWillDisplay } = this.state;
+      const { listCommentsWillDisplay, currentPage, commentsPerPage } = this.state;
+
+      index = (currentPage - 1) * commentsPerPage + (index);
 
       this.setState({
         isModalOpen: true,
@@ -287,7 +295,7 @@ class CommentList extends React.Component {
                                <span style={{color: 'red'}}>* </span>
                                Note: Any comments belongs to denied course won't be appeared on the app.
                              </p>
-                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModal()}>Close</Button>
                            </Modal.Footer>
                        </Modal>
                       : null

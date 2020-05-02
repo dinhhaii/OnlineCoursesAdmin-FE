@@ -47,7 +47,7 @@ class UserLineChart extends React.Component {
 
       yAxis: {
         title: {
-          text: 'Money ($)'
+          text: 'Users'
         }
       },
 

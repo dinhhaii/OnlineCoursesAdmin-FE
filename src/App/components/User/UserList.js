@@ -38,6 +38,12 @@ class UserList extends React.Component {
   }
 
     componentWillMount() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        const { history } = this.props;
+        history.push('/auth/signin');
+      }
+      
       Promise
         .resolve(this.props.fetchAllUsersAction())
         .then(() => {
@@ -126,7 +132,9 @@ class UserList extends React.Component {
     }
 
     showModal(index) {
-      const { listUsersWillDisplay } = this.state;
+      const { listUsersWillDisplay, currentPage, usersPerPage } = this.state;
+
+      index = (currentPage - 1) * usersPerPage + (index);
 
       this.setState({
         isModalOpen: true,
@@ -275,7 +283,7 @@ class UserList extends React.Component {
                                <span style={{color: 'red'}}>* </span>
                                Note: Only verified users can be banned.
                              </p>
-                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModal()}>Close</Button>
                              <Button className='btn shadow-2' disabled variant="secondary">Change status</Button>
                            </Modal.Footer>
                            :
@@ -284,7 +292,7 @@ class UserList extends React.Component {
                                <span style={{color: 'red'}}>* </span>
                                Note: Banned users won't be allowed to sign in the app.
                              </p>
-                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModal()}>Close</Button>
                              <Button className='btn shadow-2' variant="primary" onClick={() => this.handleChangeStatus()}>Change status</Button>
                            </Modal.Footer>
                          }

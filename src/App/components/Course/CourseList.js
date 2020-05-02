@@ -28,6 +28,12 @@ class CourseList extends React.Component {
   }
 
     componentWillMount() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        const { history } = this.props;
+        history.push('/auth/signin');
+      }
+      
       Promise
         .resolve(this.props.fetchAllCoursesAction())
         .then(() => {
@@ -82,7 +88,9 @@ class CourseList extends React.Component {
     }
 
     showModal(index) {
-      const { listCoursesWillDisplay } = this.state;
+      const { listCoursesWillDisplay, currentPage, coursesPerPage } = this.state;
+
+      index = (currentPage - 1) * coursesPerPage + (index);
 
       this.setState({
         isModalOpen: true,
@@ -99,6 +107,34 @@ class CourseList extends React.Component {
           .resolve(this.props.changeStatusAction(selectedCourse._id, status))
           .then(() => {
             alert('Status has been changed!');
+            window.location.reload();
+          })
+      }
+    }
+
+    handleApproveCourse() {
+      const { selectedCourse } = this.state;
+      let status = selectedCourse.status === 'approved' ? 'denied' : 'approved';
+
+      if (window.confirm(`Do you want to ${status === 'approved' ? 'reject' : 'approve'} this course?`) === true) {
+
+        Promise
+          .resolve(this.props.changeStatusAction(selectedCourse._id, 'approved'))
+          .then(() => {
+            alert('Course has been approved!');
+            window.location.reload();
+          })
+      }
+    }
+
+    handleRejectCourse() {
+      if (window.confirm('Do you want to reject this course?') === true) {
+        const { selectedCourse } = this.state;
+
+        Promise
+          .resolve(this.props.changeStatusAction(selectedCourse._id, 'denied'))
+          .then(() => {
+            alert('Course has been denied!');
             window.location.reload();
           })
       }
@@ -269,8 +305,15 @@ class CourseList extends React.Component {
                                <span style={{color: 'red'}}>* </span>
                                Note: Denied courses won't be appeared on the app.
                              </p>
-                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
-                             <Button className='btn shadow-2' variant="primary" onClick={() => this.handleChangeStatus()}>Change status</Button>
+                             <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModal()}>Close</Button>
+                              {(selectedCourse.status === 'pending' || selectedCourse.status === 'approved') ?
+                                <Button className='btn shadow-2' variant="danger" onClick={() => this.handleRejectCourse()}>Reject</Button>
+                              : null}
+                              {selectedCourse.status === 'approved' ?
+                              null :
+                              <Button className='btn shadow-2' variant="primary" onClick={() => this.handleApproveCourse()}>Approve</Button>
+                              }
+
                            </Modal.Footer>
                        </Modal>
                       : null

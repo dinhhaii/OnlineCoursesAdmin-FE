@@ -10,7 +10,7 @@ import $ from 'jquery';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchAllUsers } from './../../actions/user';
-import { fetchAllCourses, fetchPendingCourses } from './../../actions/course';
+import { fetchAllCourses, fetchPendingCourses, changeStatus } from './../../actions/course';
 import { fetchAllLessons } from './../../actions/lesson';
 import { fetchAllFeedback } from './../../actions/feedback';
 import { fetchAllInvoices } from './../../actions/invoice';
@@ -41,10 +41,16 @@ class Dashboard extends React.Component {
       selectedCourse: null,
       currentPage: 1,
       coursesPerPage: 4,
+      isCourseOpen: false,
     };
   }
 
   componentWillMount() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      const { history } = this.props;
+      history.push('/auth/signin');
+    }
 
     Promise
       .resolve(this.props.fetchAllUsersAction())
@@ -80,9 +86,21 @@ class Dashboard extends React.Component {
       this.props.fetchAllInvoicesAction();
   }
 
-  hideModal() {
+  showCourseModal(index) {
+    const { pendingCourses, currentPage, coursesPerPage } = this.state;
+
+    index = (currentPage - 1) * coursesPerPage + (index);
+
     this.setState({
-      isTargetOpen: false
+      isCourseOpen: true,
+      selectedCourse: pendingCourses[index]
+    });
+  }
+
+  hideModals() {
+    this.setState({
+      isTargetOpen: false,
+      isCourseOpen: false
     });
   }
 
@@ -123,6 +141,30 @@ class Dashboard extends React.Component {
     }
   }
 
+  handleApproveCourse(course) {
+    if (window.confirm('Do you want to approve this course?') === true) {
+
+      Promise
+        .resolve(this.props.changeStatusAction(course._id, 'approved'))
+        .then(() => {
+          alert('Course has been approved!');
+          window.location.reload();
+        })
+    }
+  }
+
+  handleRejectCourse(course) {
+    if (window.confirm('Do you want to reject this course?') === true) {
+
+      Promise
+        .resolve(this.props.changeStatusAction(course._id, 'denied'))
+        .then(() => {
+          alert('Course has been denied!');
+          window.location.reload();
+        })
+    }
+  }
+
 
   render() {
 
@@ -136,6 +178,7 @@ class Dashboard extends React.Component {
             isTargetOpen,
 
             pendingCourses,
+            isCourseOpen,
             selectedCourse,
             currentPage,
             coursesPerPage } = this.state;
@@ -165,6 +208,147 @@ class Dashboard extends React.Component {
     );
     }
 
+    const courseModal = (
+      selectedCourse ?
+      <Aux>
+      <Modal
+         size="xl"
+         aria-labelledby="contained-modal-title-vcenter"
+         centered
+         show={isCourseOpen}
+       >
+         <Modal.Header>
+           <Modal.Title id="change-user-status">
+             <h3><b>Course detail</b></h3>
+           </Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+         <Row>
+            <Col  md='2'
+                  className='d-flex justify-content-center'
+            >
+               <img  alt="Avatar"
+                     src={selectedCourse.imageURL}
+                     style={{width: '150px', height: '150px', borderRadius: '50%'}}/>
+            </Col>
+
+           <Col md='10'>
+             <h5 style={{whiteSpace: 'normal'}}>
+               <Table responsive style={{tableLayout: 'fixed', borderBottom: 'none', color: 'black'}}>
+                   <tbody>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Name: </b>
+                     </td>
+                     <td style={{whiteSpace: 'normal'}}
+                     >{selectedCourse.name}</td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                   >
+                     <b>Subject: </b>
+                   </td>
+                     <td style={{whiteSpace: 'normal'}}
+                     >{selectedCourse.subject.name}</td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Lessons: </b>
+                     </td>
+                     <td style={{whiteSpace: 'normal', verticalAlign: 'middle'}}
+                     >{selectedCourse.lessons.length}</td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Lecturer: </b>
+                     </td>
+                     <td style={{whiteSpace: 'normal'}}
+                     >{moment(selectedCourse.startDate).format('YYYY-MM-DD')}</td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Duration: </b>
+                     </td>
+                     <td style={{whiteSpace: 'normal'}}
+                     >{selectedCourse.duration}</td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Accessible Days: </b>
+                     </td>
+                     <td style={{whiteSpace: 'normal'}}
+                     >{selectedCourse.accessibleDays}</td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Price: </b>
+                     </td>
+                     <td style={{whiteSpace: 'normal'}}
+                     >{'$' + selectedCourse.price}</td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Coupons: </b>
+                     </td>
+                     <td style={{whiteSpace: 'normal'}}
+                     >
+                       {selectedCourse.discount.map(discount => (
+                         <span>
+                           {discount.code + ' '}
+                         </span>
+                       ))}
+                     </td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Description: </b>
+                     </td>
+                     <td style={{whiteSpace: 'normal'}}
+                     >{selectedCourse.description}</td>
+                   </tr>
+                   <tr>
+                     <td style={{width: '20%', whiteSpace: 'normal'}}
+                     >
+                       <b>Status: </b>
+                     </td>
+                     <td>
+                       <Button size='sm' style={{width: '20%'}}
+                               className={selectedCourse.status === 'approved' ? 'btn-success'
+                                         : selectedCourse.status === 'denied' ? 'btn-danger' : 'btn-warning'}
+                       >
+                         {selectedCourse.status === 'approved' ? 'Approved' : selectedCourse.status === 'denied' ? 'Denied' : 'Pending'}
+                       </Button>
+                     </td>
+                   </tr>
+                   </tbody>
+               </Table>
+             </h5>
+           </Col>
+
+         </Row>
+
+         </Modal.Body>
+           <Modal.Footer>
+             <p>
+               <span style={{color: 'red'}}>* </span>
+               Note: Denied courses won't be appeared on the app.
+             </p>
+             <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModals()}>Close</Button>
+             <Button className='btn shadow-2' variant="danger" onClick={() => this.handleRejectCourse(selectedCourse)}>Reject</Button>
+             <Button className='btn shadow-2' variant="primary" onClick={() => this.handleApproveCourse(selectedCourse)}>Approve</Button>
+           </Modal.Footer>
+       </Modal>
+      </Aux>
+      : null
+    );
 
     const targetModal = (
       <Aux>
@@ -192,7 +376,7 @@ class Dashboard extends React.Component {
            </div>
          </Modal.Body>
          <Modal.Footer>
-           <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+           <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModals()}>Close</Button>
            <Button className='btn shadow-2' variant="primary" onClick={() => this.handleChangeTarget()}>Save</Button>
          </Modal.Footer>
        </Modal>
@@ -201,6 +385,11 @@ class Dashboard extends React.Component {
 
     return (
         <Aux>
+
+            {/*-------MODAL COURSE-----------*/}
+            {courseModal}
+
+            {/*--------------------*/}
 
             {/*-----MODAL TARGET---------*/}
             {targetModal}
@@ -235,7 +424,9 @@ class Dashboard extends React.Component {
                                 <tbody>
                                 {currentCourses.map((course, index) => {
                                   return (
-                                    <tr className="unread">
+                                    <tr className="unread"
+                                        onClick={() => this.showCourseModal(index)}
+                                    >
                                       <td>
                                         <img
                                           className="rounded-circle"
@@ -254,8 +445,14 @@ class Dashboard extends React.Component {
                                         </h6>
                                       </td>
                                       <td>
-                                        <button className="btn label theme-bg2 text-white f-12">Reject</button>
-                                        <button className="btn label theme-bg text-white f-12">
+                                        <button className="btn label theme-bg2 text-white f-12"
+                                                onClick={() => this.handleRejectCourse(course)}
+                                        >
+                                          Reject
+                                        </button>
+                                        <button className="btn label theme-bg text-white f-12"
+                                                onClick={() => this.handleApproveCourse(course)}
+                                        >
                                           Approve
                                         </button>
                                       </td>
@@ -489,7 +686,8 @@ const mapDispatchToProps = dispatch => {
     fetchAllLessonsAction: () => dispatch(fetchAllLessons()),
     fetchAllFeedbackAction: () => dispatch(fetchAllFeedback()),
     fetchAllInvoicesAction: () => dispatch(fetchAllInvoices()),
-    fetchPendingCoursesAction: () => dispatch(fetchPendingCourses())
+    fetchPendingCoursesAction: () => dispatch(fetchPendingCourses()),
+    changeStatusAction: (_idCourse, status) => dispatch(changeStatus(_idCourse, status))
   };
 };
 

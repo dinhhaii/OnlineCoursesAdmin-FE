@@ -28,6 +28,12 @@ class LessonList extends React.Component {
   }
 
     componentWillMount() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        const { history } = this.props;
+        history.push('/auth/signin');
+      }
+      
       Promise
         .resolve(this.props.fetchAllLessonsAction())
         .then(() => {
@@ -82,7 +88,9 @@ class LessonList extends React.Component {
     }
 
     showModal(index) {
-      const { listLessonsWillDisplay } = this.state;
+      const { listLessonsWillDisplay, currentPage, lessonsPerPage } = this.state;
+
+      index = (currentPage - 1) * lessonsPerPage + (index);
 
       this.setState({
         isModalOpen: true,
@@ -278,7 +286,7 @@ class LessonList extends React.Component {
                                <span style={{color: 'red'}}>* </span>
                                Note: Any lesson belongs to denied course won't be appeared on the app.
                              </p>
-                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModal()}>Close</Button>
                            </Modal.Footer>
                        </Modal>
                       : null

@@ -27,6 +27,12 @@ class DiscountList extends React.Component {
   }
 
     componentWillMount() {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        const { history } = this.props;
+        history.push('/auth/signin');
+      }
+      
       Promise
         .resolve(this.props.fetchAllDiscountAction())
         .then(() => {
@@ -81,7 +87,9 @@ class DiscountList extends React.Component {
     }
 
     showModal(index) {
-      const { listDiscountWillDisplay } = this.state;
+      const { listDiscountWillDisplay, currentPage, discountPerPage } = this.state;
+
+      index = (currentPage - 1) * discountPerPage + (index);
 
       this.setState({
         isModalOpen: true,
@@ -280,7 +288,7 @@ class DiscountList extends React.Component {
                                <span style={{color: 'red'}}>* </span>
                                Note: Update coupon status action is unavailable at the moment.
                              </p>
-                             <Button className='btn shadow-2' variant="danger" onClick={() => this.hideModal()}>Close</Button>
+                             <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModal()}>Close</Button>
                            </Modal.Footer>
                        </Modal>
                       : null
