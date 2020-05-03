@@ -7,8 +7,7 @@ import './../../../assets/scss/style.scss';
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "./../../layout/AdminLayout/Breadcrumb";
 import { fetchUserById, changePassword } from './../../actions/user';
-
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
 
 
 class ChangePassword extends React.Component {
