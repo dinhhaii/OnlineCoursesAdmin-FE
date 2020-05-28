@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal} from 'react-bootstrap';
+import {Row, Col, Card, Table, Button, Pagination, Modal} from 'react-bootstrap';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
@@ -21,7 +21,6 @@ class CommentList extends React.Component {
     };
 
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
 
@@ -31,7 +30,7 @@ class CommentList extends React.Component {
         const { history } = this.props;
         history.push('/auth/signin');
       }
-      
+
       Promise
         .resolve(this.props.fetchAllCommentsAction())
         .then(() => {
@@ -52,24 +51,7 @@ class CommentList extends React.Component {
       });
     }
 
-    handleStatusFilter(status) {
-
-      $('#statusFilter').text('asd');
-
-      if (status !== 'resetStatus')
-      {
-        const { listCommentsWillDisplay } = this.state;
-
-        var filter = listCommentsWillDisplay.filter(course => course.status === status);
-
-        this.setState({
-          listCommentsWillDisplay: filter
-        });
-      }
-    }
-
     handleResetFilter() {
-      $('#statusFilter').text('Status');
       $('#searchBox').val('');
 
       const { allComments } = this.props.commentState;
@@ -94,18 +76,6 @@ class CommentList extends React.Component {
         isModalOpen: true,
         selectedComment: listCommentsWillDisplay[index]
       });
-    }
-
-    handleChangeStatus() {
-      const { selectedComment } = this.state;
-      let status = selectedComment.status === 'pending' ? 'approved' : 'denied';
-
-      Promise
-        .resolve(this.props.changeStatusAction(selectedComment._id, status))
-        .then(() => {
-          alert('Status has been changed!');
-          window.location.reload();
-        })
     }
 
     render() {
@@ -316,27 +286,6 @@ class CommentList extends React.Component {
                                   style={{maxWidth: '25%', float: 'left'}}
                                   onChange={this.handleSearch}/>
 
-
-                          {/* Status Filter */}
-
-                              <DropdownButton
-                                  title='Status'
-                                  variant='secondary'
-                                  id='statusFilter'
-                                  key='statusFilter'
-                                  style={{maxWidth: '10%', float: 'left'}}
-                                  className='mb-3 mr-3'
-                              >
-                                  <Dropdown.Item eventKey="success" onClick={() => this.handleStatusFilter('success')}>
-                                    Success
-                                  </Dropdown.Item>
-                                  <Dropdown.Item eventKey="canceled" onClick={() => this.handleStatusFilter('canceled')}>
-                                    Canceled
-                                  </Dropdown.Item>
-                                  <Dropdown.Item eventKey="reported" onClick={() => this.handleStatusFilter('reported')}>
-                                    Reported
-                                  </Dropdown.Item>
-                              </DropdownButton>
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 

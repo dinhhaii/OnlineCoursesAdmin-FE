@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal} from 'react-bootstrap';
+import {Row, Col, Card, Table, Button, Pagination, Modal} from 'react-bootstrap';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
@@ -23,7 +23,6 @@ class LessonList extends React.Component {
     };
 
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
 
@@ -33,7 +32,7 @@ class LessonList extends React.Component {
         const { history } = this.props;
         history.push('/auth/signin');
       }
-      
+
       Promise
         .resolve(this.props.fetchAllLessonsAction())
         .then(() => {
@@ -46,32 +45,16 @@ class LessonList extends React.Component {
 
     handleSearch(e) {
       let value = e.target.value;
+
       let { allLessons } = this.props.lessonState;
-      var filter = allLessons.filter(lesson => lesson.name.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+      var filter = allLessons.filter(lesson => lesson.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
 
       this.setState({
         listLessonsWillDisplay: filter
       });
     }
 
-    handleStatusFilter(status) {
-
-      $('#statusFilter').text('asd');
-
-      if (status !== 'resetStatus')
-      {
-        const { listLessonsWillDisplay } = this.state;
-
-        var filter = listLessonsWillDisplay.filter(course => course.status === status);
-
-        this.setState({
-          listLessonsWillDisplay: filter
-        });
-      }
-    }
-
     handleResetFilter() {
-      $('#statusFilter').text('Status');
       $('#searchBox').val('');
 
       const { allLessons } = this.props.lessonState;
@@ -306,27 +289,6 @@ class LessonList extends React.Component {
                                   className="form-control mb-3 mr-3"
                                   style={{maxWidth: '25%', float: 'left'}}
                                   onChange={this.handleSearch}/>
-
-                          {/* Status Filter */}
-
-                              <DropdownButton
-                                  title='Status'
-                                  variant='secondary'
-                                  id='statusFilter'
-                                  key='statusFilter'
-                                  style={{maxWidth: '10%', float: 'left'}}
-                                  className='mb-3 mr-3'
-                              >
-                                  <Dropdown.Item eventKey="success" onClick={() => this.handleStatusFilter('success')}>
-                                    Success
-                                  </Dropdown.Item>
-                                  <Dropdown.Item eventKey="canceled" onClick={() => this.handleStatusFilter('canceled')}>
-                                    Canceled
-                                  </Dropdown.Item>
-                                  <Dropdown.Item eventKey="reported" onClick={() => this.handleStatusFilter('reported')}>
-                                    Reported
-                                  </Dropdown.Item>
-                              </DropdownButton>
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 

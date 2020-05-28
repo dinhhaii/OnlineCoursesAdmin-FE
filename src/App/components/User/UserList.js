@@ -43,7 +43,7 @@ class UserList extends React.Component {
         const { history } = this.props;
         history.push('/auth/signin');
       }
-      
+
       Promise
         .resolve(this.props.fetchAllUsersAction())
         .then(() => {
@@ -68,48 +68,73 @@ class UserList extends React.Component {
 
       $('#roleFilter').text(`${role === 'learner' ? 'Learner' : 'Lecturer'}`);
 
-      if (role !== 'resetRole')
-      {
-        const { listUsersWillDisplay } = this.state;
+      const status = $('#statusFilter').text();
+      const type = $('#typeFilter').text();
+      var filter;
 
-        var filter = listUsersWillDisplay.filter(user => user.role === role);
+      const { allUsers } = this.props.userState;
+      filter = allUsers.filter(user => user.role === role);
 
-        this.setState({
-          listUsersWillDisplay: filter
-        });
+      if (status !== 'Status') {
+        filter = filter.filter(user => user.status === status.toLowerCase());
       }
+
+      if (type !== 'Type') {
+        filter = filter.filter(user => user.type === type.toLowerCase());
+      }
+
+      this.setState({
+        listUsersWillDisplay: filter
+      });
     }
 
     handleTypeFilter(type) {
 
       $('#typeFilter').text(`${type === 'local' ? 'Local' : type === 'google' ? 'Google' : 'Facebook'}`);
 
-      if (type !== 'resetType')
-      {
-        const { listUsersWillDisplay } = this.state;
+      const status = $('#statusFilter').text();
+      const role = $('#roleFilter').text();
 
-        var filter = listUsersWillDisplay.filter(user => user.type === type);
+      var filter;
 
-        this.setState({
-          listUsersWillDisplay: filter
-        });
+      const { allUsers } = this.props.userState;
+      filter = allUsers.filter(user => user.type === type);
+
+      if (status !== 'Status') {
+        filter = filter.filter(user => user.status === status.toLowerCase());
       }
+
+      if (role !== 'Role') {
+        filter = filter.filter(user => user.role === role.toLowerCase());
+      }
+
+      this.setState({
+        listUsersWillDisplay: filter
+      });
     }
 
     handleStatusFilter(status) {
 
       $('#statusFilter').text(`${status === 'verified' ? 'Verified' : status === 'unverified' ? 'Unverified' : 'Banned'}`);
 
-      if (status !== 'resetStatus')
-      {
-        const { listUsersWillDisplay } = this.state;
+      const role = $('#roleFilter').text();
+      const type = $('#typeFilter').text();
+      var filter;
 
-        var filter = listUsersWillDisplay.filter(user => user.status === status);
+      const { allUsers } = this.props.userState;
+      filter = allUsers.filter(user => user.status === status);
 
-        this.setState({
-          listUsersWillDisplay: filter
-        });
+      if (role !== 'Role') {
+        filter = filter.filter(user => user.role === role.toLowerCase());
       }
+
+      if (type !== 'Type') {
+        filter = filter.filter(user => user.type === type.toLowerCase());
+      }
+
+      this.setState({
+        listUsersWillDisplay: filter
+      });
     }
 
     handleResetFilter() {
