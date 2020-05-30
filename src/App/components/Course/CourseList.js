@@ -33,7 +33,7 @@ class CourseList extends React.Component {
         const { history } = this.props;
         history.push('/auth/signin');
       }
-      
+
       Promise
         .resolve(this.props.fetchAllCoursesAction())
         .then(() => {
@@ -46,8 +46,14 @@ class CourseList extends React.Component {
 
     handleSearch(e) {
       let value = e.target.value;
+      const status = $('#statusFilter').text();
+
       let { allCourses } = this.props.courseState;
-      var filter = allCourses.filter(course => course.name.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+      var filter = allCourses.filter(course => course.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+
+      if (status !== 'Status') {
+        filter = filter.filter(course => course.status === status.toLowerCase());
+      }
 
       this.setState({
         listCoursesWillDisplay: filter
@@ -58,16 +64,19 @@ class CourseList extends React.Component {
 
       $('#statusFilter').text(`${status === 'approved' ? 'Approved' : status === 'Denied' ? 'denied' : 'Pending'}`);
 
-      if (status !== 'resetStatus')
-      {
-        const { listCoursesWillDisplay } = this.state;
+      const search = $('#searchBox').val();
 
-        var filter = listCoursesWillDisplay.filter(course => course.status === status);
+      let { allCourses } = this.props.courseState;
 
-        this.setState({
-          listCoursesWillDisplay: filter
-        });
+      var filter = allCourses.filter(course => course.status === status);
+
+      if (search !== '') {
+        filter = filter.filter(course => course.name.toLowerCase().indexOf(search.toLowerCase()) !== -1);
       }
+
+      this.setState({
+        listCoursesWillDisplay: filter
+      });
     }
 
     handleResetFilter() {
@@ -155,15 +164,17 @@ class CourseList extends React.Component {
       // Logic for displaying page numbers
       const pageNumbers = [];
       const lastPage = Math.ceil(listCoursesWillDisplay.length / coursesPerPage);
-      for (let number = 1; number <= lastPage; number++) {
-        pageNumbers.push(
-          <Pagination.Item  key={number}
-                            id={number}
-                            active={number === currentPage}
-                            onClick={() => this.setState({currentPage: number})}>
-            {number}
-          </Pagination.Item>
-      );
+      for (let number = -3; number <= 3; number++) {
+        if (currentPage + number > 0 && currentPage + number <= lastPage) {
+          pageNumbers.push(
+            <Pagination.Item  key={currentPage + number}
+                              id={currentPage + number}
+                              active={currentPage + number === currentPage}
+                              onClick={() => this.setState({currentPage: currentPage + number})}>
+              {currentPage + number}
+            </Pagination.Item>
+          );
+        }
       }
 
       var courseCounter = indexOfFirstCourse;

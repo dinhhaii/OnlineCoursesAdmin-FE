@@ -43,7 +43,7 @@ class UserList extends React.Component {
         const { history } = this.props;
         history.push('/auth/signin');
       }
-      
+
       Promise
         .resolve(this.props.fetchAllUsersAction())
         .then(() => {
@@ -56,8 +56,24 @@ class UserList extends React.Component {
 
     handleSearch(e) {
       let value = e.target.value;
+      const status = $('#statusFilter').text();
+      const type = $('#typeFilter').text();
+      const role = $('#roleFilter').text();
+
       let { allUsers } = this.props.userState;
-      var filter = allUsers.filter(user => user.email.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+      var filter = allUsers.filter(user => user.email.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+
+      if (status !== 'Status') {
+        filter = filter.filter(user => user.status === status.toLowerCase());
+      }
+
+      if (type !== 'Type') {
+        filter = filter.filter(user => user.type === type.toLowerCase());
+      }
+
+      if (role !== 'Role') {
+        filter = filter.filter(user => user.role === role.toLowerCase());
+      }
 
       this.setState({
         listUsersWillDisplay: filter
@@ -68,48 +84,73 @@ class UserList extends React.Component {
 
       $('#roleFilter').text(`${role === 'learner' ? 'Learner' : 'Lecturer'}`);
 
-      if (role !== 'resetRole')
-      {
-        const { listUsersWillDisplay } = this.state;
+      const status = $('#statusFilter').text();
+      const type = $('#typeFilter').text();
+      var filter;
 
-        var filter = listUsersWillDisplay.filter(user => user.role === role);
+      const { allUsers } = this.props.userState;
+      filter = allUsers.filter(user => user.role === role);
 
-        this.setState({
-          listUsersWillDisplay: filter
-        });
+      if (status !== 'Status') {
+        filter = filter.filter(user => user.status === status.toLowerCase());
       }
+
+      if (type !== 'Type') {
+        filter = filter.filter(user => user.type === type.toLowerCase());
+      }
+
+      this.setState({
+        listUsersWillDisplay: filter
+      });
     }
 
     handleTypeFilter(type) {
 
       $('#typeFilter').text(`${type === 'local' ? 'Local' : type === 'google' ? 'Google' : 'Facebook'}`);
 
-      if (type !== 'resetType')
-      {
-        const { listUsersWillDisplay } = this.state;
+      const status = $('#statusFilter').text();
+      const role = $('#roleFilter').text();
 
-        var filter = listUsersWillDisplay.filter(user => user.type === type);
+      var filter;
 
-        this.setState({
-          listUsersWillDisplay: filter
-        });
+      const { allUsers } = this.props.userState;
+      filter = allUsers.filter(user => user.type === type);
+
+      if (status !== 'Status') {
+        filter = filter.filter(user => user.status === status.toLowerCase());
       }
+
+      if (role !== 'Role') {
+        filter = filter.filter(user => user.role === role.toLowerCase());
+      }
+
+      this.setState({
+        listUsersWillDisplay: filter
+      });
     }
 
     handleStatusFilter(status) {
 
       $('#statusFilter').text(`${status === 'verified' ? 'Verified' : status === 'unverified' ? 'Unverified' : 'Banned'}`);
 
-      if (status !== 'resetStatus')
-      {
-        const { listUsersWillDisplay } = this.state;
+      const role = $('#roleFilter').text();
+      const type = $('#typeFilter').text();
+      var filter;
 
-        var filter = listUsersWillDisplay.filter(user => user.status === status);
+      const { allUsers } = this.props.userState;
+      filter = allUsers.filter(user => user.status === status);
 
-        this.setState({
-          listUsersWillDisplay: filter
-        });
+      if (role !== 'Role') {
+        filter = filter.filter(user => user.role === role.toLowerCase());
       }
+
+      if (type !== 'Type') {
+        filter = filter.filter(user => user.type === type.toLowerCase());
+      }
+
+      this.setState({
+        listUsersWillDisplay: filter
+      });
     }
 
     handleResetFilter() {
@@ -171,15 +212,17 @@ class UserList extends React.Component {
       // Logic for displaying page numbers
       const pageNumbers = [];
       const lastPage = Math.ceil(listUsersWillDisplay.length / usersPerPage);
-      for (let number = 1; number <= lastPage; number++) {
-        pageNumbers.push(
-          <Pagination.Item  key={number}
-                            id={number}
-                            active={number === currentPage}
-                            onClick={() => this.setState({currentPage: number})}>
-            {number}
-          </Pagination.Item>
-      );
+      for (let number = -3; number <= 3; number++) {
+        if (currentPage + number > 0 && currentPage + number <= lastPage) {
+          pageNumbers.push(
+            <Pagination.Item  key={currentPage + number}
+                              id={currentPage + number}
+                              active={currentPage + number === currentPage}
+                              onClick={() => this.setState({currentPage: currentPage + number})}>
+              {currentPage + number}
+            </Pagination.Item>
+          );
+        }
       }
 
       var userCounter = indexOfFirstUser;

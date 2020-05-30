@@ -35,7 +35,7 @@ class InvoiceList extends React.Component {
         const { history } = this.props;
         history.push('/auth/signin');
       }
-      
+
       Promise
         .resolve(this.props.fetchAllInvoicesAction())
         .then(() => {
@@ -48,8 +48,14 @@ class InvoiceList extends React.Component {
 
     handleSearch(e) {
       let value = e.target.value;
+      const status = $('#statusFilter').text();
+
       let { allInvoices } = this.props.invoiceState;
-      var filter = allInvoices.filter(invoice => invoice.course.name.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+      var filter = allInvoices.filter(invoice => invoice.course.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+
+      if (status !== 'Status') {
+        filter = filter.filter(invoice => invoice.status === status.toLowerCase());
+      }
 
       this.setState({
         listInvoicesWillDisplay: filter
@@ -60,16 +66,19 @@ class InvoiceList extends React.Component {
 
       $('#statusFilter').text(`${status === 'success' ? 'Success' : status === 'canceled' ? 'Canceled' : 'Reported'}`);
 
-      if (status !== 'resetStatus')
-      {
-        const { listInvoicesWillDisplay } = this.state;
+      const search = $('#searchBox').val();
 
-        var filter = listInvoicesWillDisplay.filter(course => course.status === status);
+      let { allInvoices } = this.props.invoiceState;
 
-        this.setState({
-          listInvoicesWillDisplay: filter
-        });
+      var filter = allInvoices.filter(invoice => invoice.status === status);
+
+      if (search !== '') {
+        filter = filter.filter(invoice => invoice.course.name.toLowerCase().indexOf(search.toLowerCase()) !== -1);
       }
+
+      this.setState({
+        listInvoicesWillDisplay: filter
+      });
     }
 
     handleResetFilter() {
@@ -129,15 +138,17 @@ class InvoiceList extends React.Component {
       // Logic for displaying page numbers
       const pageNumbers = [];
       const lastPage = Math.ceil(listInvoicesWillDisplay.length / invoicesPerPage);
-      for (let number = 1; number <= lastPage; number++) {
-        pageNumbers.push(
-          <Pagination.Item  key={number}
-                            id={number}
-                            active={number === currentPage}
-                            onClick={() => this.setState({currentPage: number})}>
-            {number}
-          </Pagination.Item>
-      );
+      for (let number = -3; number <= 3; number++) {
+        if (currentPage + number > 0 && currentPage + number <= lastPage) {
+          pageNumbers.push(
+            <Pagination.Item  key={currentPage + number}
+                              id={currentPage + number}
+                              active={currentPage + number === currentPage}
+                              onClick={() => this.setState({currentPage: currentPage + number})}>
+              {currentPage + number}
+            </Pagination.Item>
+          );
+        }
       }
 
       var invoiceCounter = indexOfFirstInvoice;

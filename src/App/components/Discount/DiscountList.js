@@ -32,7 +32,7 @@ class DiscountList extends React.Component {
         const { history } = this.props;
         history.push('/auth/signin');
       }
-      
+
       Promise
         .resolve(this.props.fetchAllDiscountAction())
         .then(() => {
@@ -45,8 +45,14 @@ class DiscountList extends React.Component {
 
     handleSearch(e) {
       let value = e.target.value;
+      const status = $('#statusFilter').text();
+
       let { allDiscount } = this.props.discountState;
-      var filter = allDiscount.filter(discount => discount.code.toLowerCase().indexOf(value.toLowerCase()) !== -1)
+      var filter = allDiscount.filter(discount => discount.code.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+
+      if (status !== 'Status') {
+        filter = filter.filter(discount => discount.status === status.toLowerCase());
+      }
 
       this.setState({
         listDiscountWillDisplay: filter
@@ -55,18 +61,21 @@ class DiscountList extends React.Component {
 
     handleStatusFilter(status) {
 
-      $('#statusFilter').text('asd');
+      $('#statusFilter').text(`${status === 'available' ? 'Available' : status === 'expired' ? 'Expired' : 'Coupon'}`);
 
-      if (status !== 'resetStatus')
-      {
-        const { listDiscountWillDisplay } = this.state;
+      const search = $('#searchBox').val();
 
-        var filter = listDiscountWillDisplay.filter(course => course.status === status);
+      let { allDiscount } = this.props.discountState;
 
-        this.setState({
-          listDiscountWillDisplay: filter
-        });
+      var filter = allDiscount.filter(discount => discount.status === status);
+
+      if (search !== '') {
+        filter = filter.filter(discount => discount.code.toLowerCase().indexOf(search.toLowerCase()) !== -1);
       }
+
+      this.setState({
+        listDiscountWillDisplay: filter
+      });
     }
 
     handleResetFilter() {
@@ -97,18 +106,6 @@ class DiscountList extends React.Component {
       });
     }
 
-    handleChangeStatus() {
-      const { selectedDiscount } = this.state;
-      let status = selectedDiscount.status === 'pending' ? 'approved' : 'denied';
-
-      Promise
-        .resolve(this.props.changeStatusAction(selectedDiscount._id, status))
-        .then(() => {
-          alert('Status has been changed!');
-          window.location.reload();
-        })
-    }
-
     render() {
       const { listDiscountWillDisplay,
               isModalOpen,
@@ -124,15 +121,17 @@ class DiscountList extends React.Component {
       // Logic for displaying page numbers
       const pageNumbers = [];
       const lastPage = Math.ceil(listDiscountWillDisplay.length / discountPerPage);
-      for (let number = 1; number <= lastPage; number++) {
-        pageNumbers.push(
-          <Pagination.Item  key={number}
-                            id={number}
-                            active={number === currentPage}
-                            onClick={() => this.setState({currentPage: number})}>
-            {number}
-          </Pagination.Item>
-      );
+      for (let number = -3; number <= 3; number++) {
+        if (currentPage + number > 0 && currentPage + number <= lastPage) {
+          pageNumbers.push(
+            <Pagination.Item  key={currentPage + number}
+                              id={currentPage + number}
+                              active={currentPage + number === currentPage}
+                              onClick={() => this.setState({currentPage: currentPage + number})}>
+              {currentPage + number}
+            </Pagination.Item>
+          );
+        }
       }
 
       var discountCounter = indexOfFirstDiscount;
@@ -321,14 +320,14 @@ class DiscountList extends React.Component {
                                   style={{maxWidth: '10%', float: 'left'}}
                                   className='mb-3 mr-3'
                               >
-                                  <Dropdown.Item eventKey="success" onClick={() => this.handleStatusFilter('success')}>
-                                    Success
+                                  <Dropdown.Item eventKey="success" onClick={() => this.handleStatusFilter('available')}>
+                                    Available
                                   </Dropdown.Item>
-                                  <Dropdown.Item eventKey="canceled" onClick={() => this.handleStatusFilter('canceled')}>
-                                    Canceled
+                                  <Dropdown.Item eventKey="canceled" onClick={() => this.handleStatusFilter('coupon')}>
+                                    Coupon
                                   </Dropdown.Item>
-                                  <Dropdown.Item eventKey="reported" onClick={() => this.handleStatusFilter('reported')}>
-                                    Reported
+                                  <Dropdown.Item eventKey="reported" onClick={() => this.handleStatusFilter('expired')}>
+                                    Expired
                                   </Dropdown.Item>
                               </DropdownButton>
 

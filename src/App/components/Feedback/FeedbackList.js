@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Card, Table, Button, Pagination, DropdownButton, Dropdown, Modal} from 'react-bootstrap';
+import {Row, Col, Card, Table, Button, Pagination, Modal} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
@@ -23,7 +23,6 @@ class FeedbackList extends React.Component {
     };
 
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
 
@@ -33,7 +32,7 @@ class FeedbackList extends React.Component {
         const { history } = this.props;
         history.push('/auth/signin');
       }
-      
+
       Promise
         .resolve(this.props.fetchAllFeedbackAction())
         .then(() => {
@@ -54,24 +53,7 @@ class FeedbackList extends React.Component {
       });
     }
 
-    handleStatusFilter(status) {
-
-      $('#statusFilter').text('asd');
-
-      if (status !== 'resetStatus')
-      {
-        const { listFeedbackWillDisplay } = this.state;
-
-        var filter = listFeedbackWillDisplay.filter(course => course.status === status);
-
-        this.setState({
-          listFeedbackWillDisplay: filter
-        });
-      }
-    }
-
     handleResetFilter() {
-      $('#statusFilter').text('Status');
       $('#searchBox').val('');
 
       const { allFeedback } = this.props.feedbackState;
@@ -98,18 +80,6 @@ class FeedbackList extends React.Component {
       });
     }
 
-    handleChangeStatus() {
-      const { selectedFeedback } = this.state;
-      let status = selectedFeedback.status === 'pending' ? 'approved' : 'denied';
-
-      Promise
-        .resolve(this.props.changeStatusAction(selectedFeedback._id, status))
-        .then(() => {
-          alert('Status has been changed!');
-          window.location.reload();
-        })
-    }
-
     render() {
       const { listFeedbackWillDisplay,
               isModalOpen,
@@ -125,15 +95,17 @@ class FeedbackList extends React.Component {
       // Logic for displaying page numbers
       const pageNumbers = [];
       const lastPage = Math.ceil(listFeedbackWillDisplay.length / feedbackPerPage);
-      for (let number = 1; number <= lastPage; number++) {
-        pageNumbers.push(
-          <Pagination.Item  key={number}
-                            id={number}
-                            active={number === currentPage}
-                            onClick={() => this.setState({currentPage: number})}>
-            {number}
-          </Pagination.Item>
-      );
+      for (let number = -3; number <= 3; number++) {
+        if (currentPage + number > 0 && currentPage + number <= lastPage) {
+          pageNumbers.push(
+            <Pagination.Item  key={currentPage + number}
+                              id={currentPage + number}
+                              active={currentPage + number === currentPage}
+                              onClick={() => this.setState({currentPage: currentPage + number})}>
+              {currentPage + number}
+            </Pagination.Item>
+          );
+        }
       }
 
       var feedbackCounter = indexOfFirstFeedback;
@@ -348,26 +320,6 @@ class FeedbackList extends React.Component {
                                   style={{maxWidth: '25%', float: 'left'}}
                                   onChange={this.handleSearch}/>
 
-                          {/* Status Filter */}
-
-                              <DropdownButton
-                                  title='Status'
-                                  variant='secondary'
-                                  id='statusFilter'
-                                  key='statusFilter'
-                                  style={{maxWidth: '10%', float: 'left'}}
-                                  className='mb-3 mr-3'
-                              >
-                                  <Dropdown.Item eventKey="success" onClick={() => this.handleStatusFilter('success')}>
-                                    Success
-                                  </Dropdown.Item>
-                                  <Dropdown.Item eventKey="canceled" onClick={() => this.handleStatusFilter('canceled')}>
-                                    Canceled
-                                  </Dropdown.Item>
-                                  <Dropdown.Item eventKey="reported" onClick={() => this.handleStatusFilter('reported')}>
-                                    Reported
-                                  </Dropdown.Item>
-                              </DropdownButton>
 
                               <Button className="btn btn-danger" onClick={() => this.handleResetFilter()}>Reset Filters</Button>
 
