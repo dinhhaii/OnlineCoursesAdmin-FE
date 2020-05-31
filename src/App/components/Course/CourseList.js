@@ -241,7 +241,7 @@ class CourseList extends React.Component {
                                        <b>Lecturer: </b>
                                      </td>
                                      <td style={{whiteSpace: 'normal'}}
-                                     >{moment(selectedCourse.startDate).format('YYYY-MM-DD')}</td>
+                                     >{moment(selectedCourse.startDate).format('ll')}</td>
                                    </tr>
                                    <tr>
                                      <td style={{width: '20%', whiteSpace: 'normal'}}
@@ -276,7 +276,7 @@ class CourseList extends React.Component {
                                      >
                                        {selectedCourse.discount.map(discount => (
                                          <span>
-                                           {discount.code + ' '}
+                                           {discount.code + '|'}
                                          </span>
                                        ))}
                                      </td>

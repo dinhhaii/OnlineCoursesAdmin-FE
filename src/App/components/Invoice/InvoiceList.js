@@ -123,6 +123,7 @@ class InvoiceList extends React.Component {
     }
 
     render() {
+
       const { listInvoicesWillDisplay,
               isModalOpen,
               selectedInvoice,
@@ -199,10 +200,19 @@ class InvoiceList extends React.Component {
                                      >
                                        <b>Coupon: </b>
                                      </td>
-                                     <td style={{whiteSpace: 'normal'}}
-                                     >{selectedInvoice.discount.code + ' - '
-                                     + selectedInvoice.discount.percentage + '%'}</td>
+                                     {selectedInvoice.discount ?
+                                       <td style={{whiteSpace: 'normal'}}>
+                                         {selectedInvoice.discount.code + ' - '
+                                         + selectedInvoice.discount.percentage + '%'}
+                                       </td>
+                                       :
+                                       <td style={{whiteSpace: 'normal'}}>
+                                         NO COUPONS APPLIED
+                                       </td>
+                                     }
+
                                    </tr>
+
                                    </tbody>
                                </Table>
                              </h5>
@@ -226,7 +236,7 @@ class InvoiceList extends React.Component {
                                       <b>Pay day: </b>
                                     </td>
                                       <td style={{whiteSpace: 'normal'}}
-                                      >{moment(selectedInvoice.payDay).format('YYYY-MM-DD')}</td>
+                                      >{moment(selectedInvoice.payDay).format('ll')}</td>
                                     </tr>
                                     <tr>
                                       <td style={{width: '30%', whiteSpace: 'normal'}}
@@ -346,7 +356,7 @@ class InvoiceList extends React.Component {
                                               {invoice.totalPrice}
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
-                                             {moment(invoice.payDay).format('YYYY-MM-DD')}
+                                             {moment(invoice.payDay).format('ll')}
                                             </td>
                                             <td>
                                               <Button size='sm' style={{width: '50%', verticalAlign: 'middle'}}

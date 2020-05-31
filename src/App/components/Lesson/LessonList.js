@@ -165,7 +165,7 @@ class LessonList extends React.Component {
                                        <b>Start date: </b>
                                      </td>
                                      <td style={{whiteSpace: 'normal'}}
-                                     >{moment(selectedLesson.course.startDate).format('YYYY-MM-DD')}</td>
+                                     >{moment(selectedLesson.course.startDate).format('ll')}</td>
                                    </tr>
                                    <tr>
                                      <td style={{width: '30%', whiteSpace: 'normal'}}
@@ -231,7 +231,7 @@ class LessonList extends React.Component {
                                    <b>Lecture URL: </b>
                                  </td>
                                    <td style={{whiteSpace: 'normal'}}
-                                   ><Link to={selectedLesson.lectureURL}>Click here</Link></td>
+                                   ><a href={selectedLesson.lectureURL} rel='noopener noreferrer' target="_blank">{selectedLesson.lectureURL}</a></td>
                                  </tr>
                                  {selectedLesson.files.length === 0 ?
                                    null

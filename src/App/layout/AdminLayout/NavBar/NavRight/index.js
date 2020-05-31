@@ -16,7 +16,7 @@ class NavRight extends Component {
         listOpen: false
     };
 
-    componentWillMount() {
+    componentDidMount() {
       this.props.authorizeUserAction();
     }
 

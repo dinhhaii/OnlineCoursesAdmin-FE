@@ -6,7 +6,6 @@ import {  Row,
           Modal,
           Button,
           Pagination } from 'react-bootstrap';
-import $ from 'jquery';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchAllUsers } from './../../actions/user';
@@ -30,12 +29,6 @@ class Dashboard extends React.Component {
       facebookUsers: 0,
       googleUsers: 0,
       localUsers: 0,
-
-      localTarget: 10,
-      facebookTarget: 0,
-      googleTarget: 0,
-      isTargetOpen: false,
-      targetType: '',
 
       pendingCourses: [],
       selectedCourse: null,
@@ -99,47 +92,10 @@ class Dashboard extends React.Component {
 
   hideModals() {
     this.setState({
-      isTargetOpen: false,
       isCourseOpen: false
     });
   }
 
-  handleChangeTarget() {
-    const { targetType } = this.state;
-
-    $('#failedMessage').hide();
-    $('#successMessage').hide();
-
-    const newTarget = $('#targetBox').val();
-
-    if (/^\d+$/.test(newTarget))
-    {
-      switch (targetType) {
-        case 'local':
-          this.setState({
-            localTarget: newTarget
-          });
-          break;
-        case 'google':
-          this.setState({
-            googleTarget: newTarget
-          });
-          break;
-        case 'facebook':
-          this.setState({
-            facebookTarget: newTarget
-          });
-          break;
-        default:
-          console.log('Wrong target type!');
-          break;
-      }
-      $('#successMessage').show();
-    }
-    else {
-      $('#failedMessage').show();
-    }
-  }
 
   handleApproveCourse(course) {
     if (window.confirm('Do you want to approve this course?') === true) {
@@ -171,11 +127,6 @@ class Dashboard extends React.Component {
     const { facebookUsers,
             googleUsers,
             localUsers,
-
-            localTarget,
-            facebookTarget,
-            googleTarget,
-            isTargetOpen,
 
             pendingCourses,
             isCourseOpen,
@@ -350,49 +301,12 @@ class Dashboard extends React.Component {
       : null
     );
 
-    const targetModal = (
-      <Aux>
-      <Modal
-         size="sm"
-         aria-labelledby="contained-modal-title-vcenter"
-         centered
-         show={isTargetOpen}
-       >
-         <Modal.Header>
-           <Modal.Title id="change-user-status">
-             <h3><b>New Target?</b></h3>
-           </Modal.Title>
-         </Modal.Header>
-         <Modal.Body>
-           <input id='targetBox' name='targetBox'
-                   type="text"
-                   placeholder="New target"
-                   className="form-control"/>
-           <div  className='mt-2'>
-               <span style={{ display: 'none' }} id='failedMessage' className='text-danger'>Please type only numbers!</span>
-           </div>
-           <div  className="mt-2">
-               <span style={{ display: 'none' }} id='successMessage' className='text-success'>Change target success!</span>
-           </div>
-         </Modal.Body>
-         <Modal.Footer>
-           <Button className='btn shadow-2' variant="secondary" onClick={() => this.hideModals()}>Close</Button>
-           <Button className='btn shadow-2' variant="primary" onClick={() => this.handleChangeTarget()}>Save</Button>
-         </Modal.Footer>
-       </Modal>
-      </Aux>
-    );
 
     return (
         <Aux>
 
             {/*-------MODAL COURSE-----------*/}
             {courseModal}
-
-            {/*--------------------*/}
-
-            {/*-----MODAL TARGET---------*/}
-            {targetModal}
 
             {/*--------------------------*/}
             <Row>
@@ -554,33 +468,6 @@ class Dashboard extends React.Component {
                                 </div>
                             </div>
                         </Card.Body>
-                        <Card.Body>
-                            <div className="row align-items-center justify-content-center card-active">
-                            <div className="col-8">
-                              <h6 className="text-center m-b-10">
-                                <span className="text-muted m-r-5">Target:</span>
-                                {localTarget}
-                              </h6>
-                              <div className="progress">
-                                <div
-                                  className="progress-bar progress-c-green"
-                                  role="progressbar"
-                                  style={{
-                                    width: `${(localUsers.length / localTarget) * 100}%`,
-                                    height: "6px"
-                                  }}
-                                />
-                              </div>
-                            </div>
-                            <div className="col-4">
-                              <button className="btn label theme-bg text-white f-12"
-                                      onClick={() => this.setState({isTargetOpen: !isTargetOpen, targetType: 'local'})}
-                              >
-                                Target
-                              </button>
-                            </div>
-                          </div>
-                        </Card.Body>
                     </Card>
                 </Col>
                 <Col md={6} xl={4}>
@@ -596,30 +483,6 @@ class Dashboard extends React.Component {
                                 </div>
                             </div>
                         </Card.Body>
-                        <Card.Body>
-                            <div className="row align-items-center justify-content-center card-active">
-                            <div className="col-8">
-                              <h6 className="text-center m-b-10">
-                                <span className="text-muted m-r-5">Target:</span>
-                                {googleTarget}
-                              </h6>
-                              <div className="progress">
-                                <div
-                                  className="progress-bar progress-c-theme"
-                                  role="progressbar"
-                                  style={{ width: `${(googleUsers.length / googleTarget) * 100}%`, height: "6px" }}
-                                />
-                              </div>
-                            </div>
-                            <div className="col-4">
-                              <button className="btn label theme-bg text-white f-12"
-                                      onClick={() => this.setState({isTargetOpen: !isTargetOpen, targetType: 'google'})}
-                              >
-                                Target
-                              </button>
-                            </div>
-                          </div>
-                        </Card.Body>
                     </Card>
                 </Col>
                 <Col xl={4}>
@@ -634,29 +497,6 @@ class Dashboard extends React.Component {
                                     <h5 className="text-c-blue mb-0">Facebook <span className="text-muted">Users</span></h5>
                                 </div>
                             </div>
-                        </Card.Body>
-                        <Card.Body>
-                            <div className="row align-items-center justify-content-center card-active">
-                            <div className="col-8">
-                              <h6 className="text-center m-b-10">
-                                <span className="text-muted m-r-5">Target:</span>{facebookTarget}
-                              </h6>
-                              <div className="progress">
-                                <div
-                                  className="progress-bar progress-c-theme"
-                                  role="progressbar"
-                                  style={{ width: `${(facebookUsers.length / facebookTarget) * 100}%`, height: "6px" }}
-                                />
-                              </div>
-                            </div>
-                            <div className="col-4">
-                              <button className="btn label theme-bg text-white f-12"
-                                      onClick={() => this.setState({isTargetOpen: !isTargetOpen, targetType: 'facebook'})}
-                              >
-                                Target
-                              </button>
-                            </div>
-                          </div>
                         </Card.Body>
                     </Card>
                 </Col>

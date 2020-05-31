@@ -1,5 +1,6 @@
 import React from 'react';
 import {Row, Col, Card, Table, Button, Pagination, Modal} from 'react-bootstrap';
+import ReactStars from 'react-stars'
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
@@ -150,8 +151,12 @@ class FeedbackList extends React.Component {
                                  >
                                    <b>Rate: </b>
                                  </td>
-                                   <td style={{whiteSpace: 'normal'}}
-                                   >{selectedFeedback.rate}</td>
+                                   <td style={{whiteSpace: 'normal'}}>
+                                   <ReactStars
+                                    value={selectedFeedback.rate}
+                                    size={24}
+                                    color2={'#ffd700'} />
+                                   </td>
                                  </tr>
                                  </tbody>
                              </Table>
@@ -248,7 +253,7 @@ class FeedbackList extends React.Component {
                                      <b>Start date: </b>
                                    </td>
                                    <td style={{whiteSpace: 'normal'}}
-                                   >{moment(selectedFeedback.course.startDate).format('YYYY-MM-DD')}</td>
+                                   >{moment(selectedFeedback.course.startDate).format('ll')}</td>
                                  </tr>
                                  <tr>
                                    <td style={{width: '30%', whiteSpace: 'normal'}}
@@ -329,8 +334,8 @@ class FeedbackList extends React.Component {
                                       <th style={{width: '5%'}}>#</th>
                                       <th style={{width: '20%'}}>User</th>
                                       <th style={{width: '20%'}}>Course</th>
-                                      <th style={{width: '25%'}}>Content</th>
-                                      <th style={{width: '10%'}}>Rate</th>
+                                      <th style={{width: '20%'}}>Content</th>
+                                      <th style={{width: '20%'}}>Rate</th>
                                   </tr>
 
                                   <span id='loader'
@@ -358,7 +363,11 @@ class FeedbackList extends React.Component {
                                               {feedback.content}
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                                              {feedback.rate}
+
+                                              <ReactStars
+                                               value={feedback.rate}
+                                               size={24}
+                                               color2={'#ffd700'} />
                                             </td>
                                         </tr>
                                       )
