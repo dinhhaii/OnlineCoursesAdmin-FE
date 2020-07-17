@@ -13,10 +13,11 @@ import { fetchAllCourses, fetchPendingCourses, changeStatus } from './../../acti
 import { fetchAllLessons } from './../../actions/lesson';
 import { fetchAllFeedback } from './../../actions/feedback';
 import { fetchAllInvoices } from './../../actions/invoice';
+import { fetchAllSurveys } from './../../actions/survey';
 
 import Aux from "../../../hoc/_Aux";
 import RevenueLineChart from "./RevenueLineChart";
-import UserLineChart from "./UserLineChart";
+import RateLineChart from "./RateLineChart";
 
 const moment = require('moment');
 
@@ -26,10 +27,6 @@ class Dashboard extends React.Component {
     super(props);
 
     this.state = {
-      facebookUsers: 0,
-      googleUsers: 0,
-      localUsers: 0,
-
       pendingCourses: [],
       selectedCourse: null,
       currentPage: 1,
@@ -45,23 +42,6 @@ class Dashboard extends React.Component {
       history.push('/auth/signin');
     }
 
-    Promise
-      .resolve(this.props.fetchAllUsersAction())
-      .then(() => {
-        const { allUsers } = this.props.userState;
-
-        const fbFilter = allUsers.filter(user => user.type === 'facebook');
-        const ggFilter = allUsers.filter(user => user.type === 'google');
-        const localFilter = allUsers.filter(user => user.type === 'local' && user.role !== 'admin');
-
-        this.setState({
-          facebookUsers: fbFilter,
-          googleUsers: ggFilter,
-          localUsers: localFilter
-        })
-      })
-      .catch(err => console.log(err));
-
       Promise
         .resolve(this.props.fetchPendingCoursesAction())
         .then(() => {
@@ -74,6 +54,7 @@ class Dashboard extends React.Component {
         .catch(err => console.log(err));
 
       this.props.fetchAllCoursesAction();
+      this.props.fetchAllSurveysAction();
       this.props.fetchAllLessonsAction();
       this.props.fetchAllFeedbackAction();
       this.props.fetchAllInvoicesAction();
@@ -124,11 +105,7 @@ class Dashboard extends React.Component {
 
   render() {
 
-    const { facebookUsers,
-            googleUsers,
-            localUsers,
-
-            pendingCourses,
+    const { pendingCourses,
             isCourseOpen,
             selectedCourse,
             currentPage,
@@ -139,6 +116,7 @@ class Dashboard extends React.Component {
     const { allLessons } = this.props.lessonState;
     const { allFeedback } = this.props.feedbackState;
     const { allInvoices } = this.props.invoiceState;
+    const { allSurveys } = this.props.surveyState;
 
     // Logic for displaying current todos
     const indexOfLastCourse = currentPage * coursesPerPage;
@@ -320,7 +298,7 @@ class Dashboard extends React.Component {
                 <Col xl={6}>
                     <Card>
                         <Card.Body>
-                        <UserLineChart allUsers={allUsers}/>
+                        <RateLineChart allSurveys={allSurveys}/>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -453,56 +431,6 @@ class Dashboard extends React.Component {
                     </Card>
                 </Col>
 
-
-                {/*---------------USER TYPE ------------------------------*/}
-                <Col md={6} xl={4}>
-                    <Card className='card-social'>
-                        <Card.Body className='border-bottom'>
-                            <div className="row align-items-center justify-content-center">
-                                <div className="col-auto">
-                                    <i className="feather icon-users text-c-purple f-36"/>
-                                </div>
-                                <div className="col text-right">
-                                    <h3>{localUsers.length}</h3>
-                                    <h5 className="text-c-purple mb-0">Local <span className="text-muted">Users</span></h5>
-                                </div>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col md={6} xl={4}>
-                    <Card className='card-social'>
-                        <Card.Body className='border-bottom'>
-                            <div className="row align-items-center justify-content-center">
-                                <div className="col-auto">
-                                    <i className="fa fa-google-plus text-c-red f-36"/>
-                                </div>
-                                <div className="col text-right">
-                                    <h3>{googleUsers.length}</h3>
-                                    <h5 className="text-c-red mb-0">Google <span className="text-muted">Users</span></h5>
-                                </div>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col xl={4}>
-                    <Card className='card-social'>
-                        <Card.Body className='border-bottom'>
-                            <div className="row align-items-center justify-content-center">
-                                <div className="col-auto">
-                                    <i className="fa fa-facebook text-primary f-36"/>
-                                </div>
-                                <div className="col text-right">
-                                    <h3>{facebookUsers.length}</h3>
-                                    <h5 className="text-c-blue mb-0">Facebook <span className="text-muted">Users</span></h5>
-                                </div>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-
-                {/*----------------------------------------*/}
-
             </Row>
         </Aux>
     );
@@ -515,7 +443,8 @@ const mapStateToProps = state => {
     courseState: state.courseState,
     lessonState: state.lessonState,
     feedbackState: state.feedbackState,
-    invoiceState: state.invoiceState
+    invoiceState: state.invoiceState,
+    surveyState: state.surveyState
   };
 };
 
@@ -526,6 +455,7 @@ const mapDispatchToProps = dispatch => {
     fetchAllLessonsAction: () => dispatch(fetchAllLessons()),
     fetchAllFeedbackAction: () => dispatch(fetchAllFeedback()),
     fetchAllInvoicesAction: () => dispatch(fetchAllInvoices()),
+    fetchAllSurveysAction: () => dispatch(fetchAllSurveys()),
     fetchPendingCoursesAction: () => dispatch(fetchPendingCourses()),
     changeStatusAction: (_idCourse, status) => dispatch(changeStatus(_idCourse, status))
   };

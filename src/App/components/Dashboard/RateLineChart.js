@@ -5,44 +5,27 @@ import HighchartsReact from "highcharts-react-official";
 
 const moment = require('moment');
 
-class UserLineChart extends React.Component {
+class RateLineChart extends React.Component {
 
   render() {
 
-    const { allUsers } = this.props;
+    const { allSurveys } = this.props;
 
-    const localData = [0, 0, 0, 0, 0, 0,
+    const data = [0, 0, 0, 0, 0, 0,
                   0, 0 ,0 ,0 ,0 ,0 ];
 
-    const facebookData = [0, 0, 0, 0, 0, 0,
-                  0, 0 ,0 ,0 ,0 ,0 ];
-
-    const googleData = [0, 0, 0, 0, 0, 0,
-                  0, 0 ,0 ,0 ,0 ,0 ];
-
-    for (let user of allUsers) {
-      switch (user.type) {
-        case 'local':
-          localData[moment(user.createdAt).month() - 1] += 1;
-          break;
-        case 'facebook':
-          facebookData[moment(user.createdAt).month() - 1] += 1;
-          break;
-        case 'google':
-          googleData[moment(user.createdAt).month() - 1] += 1;
-          break;
-        default:
-
-      }
+    for (let survey of allSurveys) {
+      let month = moment(survey.createdAt).month();
+      data[month] += survey.rate;
     }
 
     const options = {
       title: {
-        text: 'Users'
+        text: 'Rates'
       },
 
       subtitle: {
-        text: `Monthly Users Analytics in ${moment().year()}`
+        text: `App Rates from User in ${moment().year()}`
       },
 
       yAxis: {
@@ -71,18 +54,8 @@ class UserLineChart extends React.Component {
 
       series: [
         {
-          name: 'Local',
-          data: localData,
-          color: 'purple'
-        },
-        {
-          name: 'Google',
-          data: googleData,
-          color: 'red'
-        },
-        {
-          name: 'Facebook',
-          data: facebookData,
+          name: 'Star',
+          data: data,
           color: 'blue'
         }
       ],
@@ -115,4 +88,4 @@ class UserLineChart extends React.Component {
   }
 }
 
-export default UserLineChart;
+export default RateLineChart;

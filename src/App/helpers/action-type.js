@@ -64,6 +64,11 @@ export const GET_ALL_LESSONS_SUCCESS = 'GET_ALL_LESSONS_SUCCESS';
 
 
 
+// -------------------------------- SURVEY ---------------------------------------
+// Get All Survey
+export const FETCHING_ALL_SURVEYS = 'FETCHING_ALL_SURVEYS';
+export const GET_ALL_SURVEYS_FAILED = 'GET_ALL_SURVEYS_FAILED';
+export const GET_ALL_SURVEYS_SUCCESS = 'GET_ALL_SURVEYS_SUCCESS';
 
 
 

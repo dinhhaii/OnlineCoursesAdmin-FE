@@ -32,7 +32,6 @@ class UserList extends React.Component {
 
     this.handleSearch = this.handleSearch.bind(this);
     this.handleRoleFilter = this.handleRoleFilter.bind(this);
-    this.handleTypeFilter = this.handleTypeFilter.bind(this);
     this.handleStatusFilder = this.handleStatusFilter.bind(this);
     this.handleResetFilter = this.handleResetFilter.bind(this);
   }
@@ -57,7 +56,6 @@ class UserList extends React.Component {
     handleSearch(e) {
       let value = e.target.value;
       const status = $('#statusFilter').text();
-      const type = $('#typeFilter').text();
       const role = $('#roleFilter').text();
 
       let { allUsers } = this.props.userState;
@@ -65,10 +63,6 @@ class UserList extends React.Component {
 
       if (status !== 'Status') {
         filter = filter.filter(user => user.status === status.toLowerCase());
-      }
-
-      if (type !== 'Type') {
-        filter = filter.filter(user => user.type === type.toLowerCase());
       }
 
       if (role !== 'Role') {
@@ -85,7 +79,6 @@ class UserList extends React.Component {
       $('#roleFilter').text(`${role === 'learner' ? 'Learner' : 'Lecturer'}`);
 
       const status = $('#statusFilter').text();
-      const type = $('#typeFilter').text();
       var filter;
 
       const { allUsers } = this.props.userState;
@@ -93,35 +86,6 @@ class UserList extends React.Component {
 
       if (status !== 'Status') {
         filter = filter.filter(user => user.status === status.toLowerCase());
-      }
-
-      if (type !== 'Type') {
-        filter = filter.filter(user => user.type === type.toLowerCase());
-      }
-
-      this.setState({
-        listUsersWillDisplay: filter
-      });
-    }
-
-    handleTypeFilter(type) {
-
-      $('#typeFilter').text(`${type === 'local' ? 'Local' : type === 'google' ? 'Google' : 'Facebook'}`);
-
-      const status = $('#statusFilter').text();
-      const role = $('#roleFilter').text();
-
-      var filter;
-
-      const { allUsers } = this.props.userState;
-      filter = allUsers.filter(user => user.type === type);
-
-      if (status !== 'Status') {
-        filter = filter.filter(user => user.status === status.toLowerCase());
-      }
-
-      if (role !== 'Role') {
-        filter = filter.filter(user => user.role === role.toLowerCase());
       }
 
       this.setState({
@@ -134,7 +98,6 @@ class UserList extends React.Component {
       $('#statusFilter').text(`${status === 'verified' ? 'Verified' : status === 'unverified' ? 'Unverified' : 'Banned'}`);
 
       const role = $('#roleFilter').text();
-      const type = $('#typeFilter').text();
       var filter;
 
       const { allUsers } = this.props.userState;
@@ -144,10 +107,6 @@ class UserList extends React.Component {
         filter = filter.filter(user => user.role === role.toLowerCase());
       }
 
-      if (type !== 'Type') {
-        filter = filter.filter(user => user.type === type.toLowerCase());
-      }
-
       this.setState({
         listUsersWillDisplay: filter
       });
@@ -155,7 +114,6 @@ class UserList extends React.Component {
 
     handleResetFilter() {
       $('#roleFilter').text('Role');
-      $('#typeFilter').text('Type');
       $('#statusFilter').text('Status');
       $('#searchBox').val('');
 
@@ -285,14 +243,6 @@ class UserList extends React.Component {
                                 <tr>
                                   <td style={{width: '20%', whiteSpace: 'normal'}}
                                   >
-                                    <b>Type: </b>
-                                  </td>
-                                  <td style={{whiteSpace: 'normal'}}
-                                  >{selectedUser.type === 'local' ? 'Local' : selectedUser.type === 'google' ? 'Google' : 'Facebook'}</td>
-                                </tr>
-                                <tr>
-                                  <td style={{width: '20%', whiteSpace: 'normal'}}
-                                  >
                                     <b>Bio: </b>
                                   </td>
                                   <td style={{whiteSpace: 'normal'}}
@@ -375,27 +325,6 @@ class UserList extends React.Component {
                                   </Dropdown.Item>
                               </DropdownButton>
 
-                          {/* Type Filter */}
-
-                              <DropdownButton
-                                  title='Type'
-                                  variant='secondary'
-                                  id='typeFilter'
-                                  key='typeFilter'
-                                  style={{maxWidth: '10%', float: 'left'}}
-                                  className='mb-3 ml-3 mr-3'
-                              >
-                                  <Dropdown.Item eventKey="local" onClick={() => this.handleTypeFilter('local')}>
-                                    Local
-                                  </Dropdown.Item>
-                                  <Dropdown.Item eventKey="google" onClick={() => this.handleTypeFilter('google')}>
-                                    Google
-                                  </Dropdown.Item>
-                                  <Dropdown.Item eventKey="facebook" onClick={() => this.handleTypeFilter('facebook')}>
-                                    Facebook
-                                  </Dropdown.Item>
-                              </DropdownButton>
-
                           {/* Status Filter */}
 
                               <DropdownButton
@@ -426,7 +355,6 @@ class UserList extends React.Component {
                                       <th style={{width: '20%'}}>Full Name</th>
                                       <th style={{width: '20%'}}>Email</th>
                                       <th style={{width: '15%'}}>Role</th>
-                                      <th style={{width: '15%'}}>Type</th>
                                       <th style={{width: '20%'}}>Status</th>
                                   </tr>
 
@@ -453,10 +381,6 @@ class UserList extends React.Component {
                                             </td>
                                             <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
                                               {user.role === 'learner' ? 'Learner' : 'Lecturer'}
-                                            </td>
-                                            <td style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', verticalAlign: 'middle'}}>
-                                              {user.type === 'local' ? 'Local'
-                                              : user.type === 'google' ? 'Google' : 'Facebook'}
                                             </td>
                                             <td>
                                               <Button  size='sm'
