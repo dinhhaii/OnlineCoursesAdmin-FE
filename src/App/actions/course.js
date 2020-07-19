@@ -52,7 +52,7 @@ export function fetchAllCourses() {
   return function(dispatch) {
     dispatch(requestAllCourses());
     return fetch(`${SERVER_URL}/course`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-type': 'application/json; charset=UTF-8'
       }
